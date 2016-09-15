@@ -45,4 +45,4 @@ UN  10.52.0.4  14.43 KB   256     34.0%             4b084d81-21f1-45b6-add9-8fbe
 UN  10.52.1.7  917.91 KB  256     31.9%             9a7437e9-890f-477a-99be-3d8042ddd9d5  rack1
 ```
 
-Keep in mind maintaining a production Cassandra cluster requires some simple but mandatory housekeeping procedures, best described in the official documentation.
+Maintaining a production Cassandra cluster requires some simple but mandatory housekeeping procedures, best described in the official documentation.

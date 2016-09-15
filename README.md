@@ -60,8 +60,8 @@ kubectl create secret tls sysdigcloud-ssl-secret --cert=server.crt --key=server.
 Sysdig Cloud requires MySQL, Cassandra and Redis to properly work. Deployment of stateful services in Kubernetes can be done in several ways. It is recommended to tweak the deployment of those depending on the individual needs. Some examples (mostly meant as guidelines) are:
 
 - [Kubernetes pod](datastores/as_kubernetes_pods): easiest method, useful for test deployments
-- [Kubernetes pod with persistentVolume](datastores/using_persistent_volumes): robust method, useful for deployments where data persistence is critical
-- [External service not running in the same Kubernetes cluster](datastores/k8s_external_services): more flexible method, giving full control to the user about the location and deployment types of the databases
+- [Kubernetes pod with persistent volumes](datastores/using_persistent_volumes): robust method, useful for deployments where data persistence is critical
+- [External services](datastores/external_services): more flexible method, giving full control to the user about the location and deployment types of the databases
 
 ### Step 6: Expose Sysdig Cloud services
 
