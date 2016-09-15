@@ -34,7 +34,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: sysdigcloud-config
-                  key: sysdigcloud.application.jvm.options
+                  key: sysdigcloud.jvm.options
       imagePullSecrets:
         - name: sysdigcloud-pull-secret
       volumes:

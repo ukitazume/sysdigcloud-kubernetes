@@ -36,7 +36,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: sysdigcloud-config
-                  key: sysdigcloud.application.jvm.options
+                  key: sysdigcloud.jvm.options
           readinessProbe:
             httpGet:
               path: /api/ping

@@ -3,49 +3,60 @@ kind: ConfigMap
 metadata:
   name: sysdigcloud-config
 data:
-  ## MySQL service:
-  # configure here the MySQL service endpoint DNS/IP
+  # Required: MySQL endpoint DNS/IP. If MySQL is deployed as a Kubernetes service, 
+  # this will be the service name. If using an external database, put the proper address
   mysql.endpoint: sysdigcloud-mysql
-  # MySQL user
+  # Required: MySQL user
   mysql.user: admin
-  # MySQL password
+  # Required: MySQL password
   mysql.password: password
-  ## Cassandra service:
-  # configure here the Cassandra service endpoint DNS/IP
+  # Required: Cassandra endpoint DNS/IP. If Cassandra is deployed as a Kubernetes service, 
+  # this will be the service name. If using an external database, put the proper address
+  # (the address of a single node will be sufficient)
   cassandra.endpoint: sysdigcloud-cassandra
-  # cassandra replication factor to use
+  # Optional: Cassandra replication factor to use. This parameter will just be applied during the
+  # keyspace creation, no changes are done to an already existing keyspace
   cassandra.replication.factor: "1"
-  # Cassandra  JVM options
+  # Optional: Cassandra JVM options, when Cassandra is started as a Kubernetes service using
+  # the provided manifests. For heavy load environments you'll need to tweak the memory or garbage
+  # collection settings
   cassandra.jvm.options: ""
-  ## Redis service:
-  # configure here the Redis service endpoint DNS/IP
+  # Required: Redis endpoint DNS/IP. If Redis is deployed as a Kubernetes service, 
+  # this will be the service name. If using an external database, put the proper address
   redis.endpoint: sysdigcloud-redis
-  ## SMTP service:
-  # SMTP server address
+  # Optional: SMTP server address, needed for Sysdig Cloud to send email notifications
   smtp.server: ""
-  # SMTP server port
+  # Optional: SMTP server port
   smtp.server.port: "25"
-  # SMTP user (leave empty if your server doesn't require authentication)
+  # Optional: SMTP user (leave empty if your server doesn't require authentication)
   smtp.user: ""
-  # SMTP password (leave empty if your server doesn't require authentication)
+  # Optional: SMTP password (leave empty if your server doesn't require authentication)
   smtp.password: ""
-  # SMTP Secure Connection options
+  # Optional: SMTP Secure Connection options
   smtp.tls: "false"
   smtp.ssl: "false"
-  #From Header for notification
+  # Optional: From Header used for email notifications
   smtp.from.address: ""
-  ## Sysdig Cloud
-  # configure here the collector service endpoint DNS/IP
+  # Required: Collector service endpoint DNS/IP. If the collector needs to be reachable outside the Kubernetes
+  # cluster, this will likely need to be set to the address of the Kubernetes nodes (if using a NodePort service) or the
+  # cloud load balancer created by the service (if using a LoadBalancer service). Otherwise, it can be left
+  # to the default value and the collector will just be routable within the Kubernetes cluster.
   collector.endpoint: sysdigcloud-collector
-  # collector port, if you use a NodePort service set the proper port value here
+  # Required: Collector port. If using a LoadBalancer service for the collector, the port can be left as the default.
+  # If using a NodePort service, this will need to be set to the dynamic port allocated by Kubernetes on the nodes
+  # (obtained via kubectl describe service sysdigcloud-collector)
   collector.port: "6443"
-  # configure here the api service http(s) URL, if you use a Nodeport service set the proper port value here
+  # Required: Api service https URL. If the api needs to be reachable outside the Kubernetes
+  # cluster, this will likely need to be set to the address of the Kubernetes nodes and the dynamic port allocated
+  # by Kubernetes (if using a NodePort service) or the cloud load balancer created by the service (if using a LoadBalancer service). 
+  # Otherwise, it can be left to the default value and the api will just be routable within the Kubernetes cluster.
   api.url: https://sysdigcloud-api:443
-  # Sysdig Cloud default console user
+  # Required: Sysdig Cloud default user. This will be used for the initial login in the web interface
   sysdigcloud.default.user: test@sysdig.com
-  # Sysdig Cloud default console user password
+  # Required: Sysdig Cloud default user password
   sysdigcloud.default.user.password: test
-  # Sysdig Cloud application JVM options
-  sysdigcloud.application.jvm.options: ""
-  # Sysdig Cloud license
+  # Optional: Sysdig Cloud application JVM options. For heavy load environments you'll need to tweak 
+  # the memory or garbage collection settings
+  sysdigcloud.jvm.options: ""
+  # Required: Sysdig Cloud license
   sysdigcloud.license: ""
