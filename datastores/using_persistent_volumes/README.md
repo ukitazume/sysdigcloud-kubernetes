@@ -112,9 +112,6 @@ spec:
                 configMapKeyRef:
                   name: sysdigcloud-config
                   key: cassandra.jvm.options
-          ports:
-            - containerPort: 9042
-              name: cql
           volumeMounts:
             - mountPath: /var/lib/cassandra
               name: data
@@ -203,8 +200,6 @@ spec:
                   key: mysql.password
             - name: MYSQL_DATABASE
               value: draios
-          ports:
-            - containerPort: 3306
           volumeMounts:
             - name: mysql-config
               mountPath: /etc/mysql/my.cnf

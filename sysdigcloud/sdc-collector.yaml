@@ -13,8 +13,6 @@ spec:
       containers:
         - name: collector
           image: quay.io/sysdig/sysdigcloud-backend:353
-          ports:
-          - containerPort: 6666
           volumeMounts:
             - name: logs
               mountPath: /var/log/sysdigcloud

@@ -27,5 +27,3 @@ spec:
         - name: redis
           image: redis:2.8.19
           env:
-          ports:
-            - containerPort: 6379

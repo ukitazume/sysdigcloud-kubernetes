@@ -45,9 +45,6 @@ spec:
                 configMapKeyRef:
                   name: sysdigcloud-config
                   key: cassandra.jvm.options
-          ports:
-            - containerPort: 9042
-              name: cql
           volumeMounts:
             - mountPath: /var/lib/cassandra
               name: data

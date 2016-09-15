@@ -83,8 +83,6 @@ spec:
                   key: mysql.password
             - name: MYSQL_DATABASE
               value: draios
-          ports:
-            - containerPort: 3306
           volumeMounts:
             - name: mysql-config
               mountPath: /etc/mysql/my.cnf

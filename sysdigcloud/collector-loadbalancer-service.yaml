@@ -8,9 +8,6 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: 6666
-      name: insecure-collector
-      targetPort: 6666
     - port: 6443
       name: secure-collector
       targetPort: 6443
