@@ -130,7 +130,7 @@ spec:
 #### - MySQL service and config  
 Create the MySQL config object and MySQL service using kubectl:
 ```
-kubectl create -f manifests/mysql-config.yaml -f manifests/mysql-service.yaml
+kubectl create -f manifests/mysql-config.yaml -f manifests/mysql-service.yaml --namespace sysdigcloud
 ```
 
 #### - Create a volume
@@ -223,5 +223,5 @@ spec:
 ##Setup Redis
 Redis doesn't require persistent storage you can simple deploy it with kubectl:
 ```
-kubectl create -f manifests/redis.yaml
+kubectl create -f manifests/redis.yaml --namespace sysdigcloud
 ```
