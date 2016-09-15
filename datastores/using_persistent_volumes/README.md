@@ -166,6 +166,20 @@ spec:
     pdName: <VOL_NAME> # GCE volume name
     fsType: ext4
 ```
+
+#### - Create a Kubernetes persistent volume claim
+```
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: mysql-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: <DIM> # Dimension of the created volume
+```
 #### - Deploy a MySQL node
 ```
 apiVersion: extensions/v1beta1
