@@ -162,7 +162,7 @@ kubectl patch deployment sysdigcloud-worker -p "{\"spec\":{\"template\":{\"metad
 When experiencing issues, you can collect troubleshooting data that can help the support team. The data can be collected by hand, or we provide a very simple `get_support_bundle.sh` script that takes as an argument the namespace where Sysdig Cloud is deployed and will generate a tarball containing some information (mostly log files):
 
 ```
-$ ./get_support_bundle.sh sysdigcloud
+$ ./scripts/get_support_bundle.sh sysdigcloud
 Getting support logs for sysdigcloud-api-1477528018-4od59
 Getting support logs for sysdigcloud-api-1477528018-ach89
 Getting support logs for sysdigcloud-cassandra-2987866586-fgcm8
