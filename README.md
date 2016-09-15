@@ -65,7 +65,7 @@ Sysdig Cloud requires MySQL, Cassandra and Redis to properly work. Deployment of
 
 ### Step 6: Expose Sysdig Cloud services
 
-To expore the Sysdig Cloud api and collector deployments you can create a Kubernetes `nodePort` or `LoadBalacer` service, depending on the specific needs.
+To expore the Sysdig Cloud api and collector deployments you can create a Kubernetes NodePort or LoadBalacer service, depending on the specific needs.
 
 #### NodePort
 
@@ -103,9 +103,13 @@ After all the components have been deployed, it should be possible to continue t
 
 # Additional topics
 
-## Release pinning
+## Updates
 
-By default, the manifests use the `latest` tag of the Sysdig Cloud Docker images. This means that every time a new pod is created (e.g. scaling activity) the latest stable version of Sysdig Cloud will be pulled and installed. This is not always the desired behavior, so if the user wants to pin the installation to a specific version, that's possible by changing the deployment and setting an alternative tag. For example, to pin a Sysdig Cloud installation to version 353:
+Sysdig Cloud releases are listed [here](https://github.com/draios/sysdigcloud-kubernetes/releases). Each release has a version number (e.g. 353) and specific upgrade notes.
+
+By default, the manifests use the image tag of the latest stable release. This way, scaling activities that occur at a later time will always work on a consistent version of the application. When a new version is released, the upgrade process will need to be run in order to move all the deployments to the newer release.
+
+For the majority of the updates, the format of the manifests does not change in new releases, and the update process is as simple as bumping the version of the Docker images. For example, to upgrade to version 353:
 
 ```
 kubectl set image deployment/sysdigcloud-api api=quay.io/sysdig/sysdigcloud-backend:353 --namespace sysdigcloud
@@ -113,21 +117,11 @@ kubectl set image deployment/sysdigcloud-collector collector=quay.io/sysdig/sysd
 kubectl set image deployment/sysdigcloud-worker worker=quay.io/sysdig/sysdigcloud-backend:353 --namespace sysdigcloud
 ```
 
-## Updates
+Assuming the deployments have more than one replica each, the upgrade process will not cause any downtime.
 
-Sysdig Cloud releases are listed [here](https://github.com/draios/sysdigcloud-kubernetes/releases). Each release has a version number (e.g. 353) and upgrade notes. For the majority of the updates, new manifests will not change, and so the update process is as simple as doing a restart of the Sysdig Cloud deployments if the image in the manifest is pointing to the `latest` tag:
+In some circumstances, the manifests will change with a new release (the typical case being new parameters added to the ConfigMap). In these cases, the upgrade notes will clearly indicate what resources need to be recreated (the user can also inspect the changes by comparing different releases within the GitHub interface). The user should then choose the best upgrade strategy that satisfies the business requirement. In the simplest case, the user would just replace the deployments (causing downtime). In a more elaborate scenario, the user would create a new deployment alongside the old one, and would decommission the old one when the new one comes up, minimizing the downtime (which might still happen in case of some complicated database schema migrations, which will clearly be listed in the upgrade notes).
 
-```
-kubectl patch deployment sysdigcloud-api -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}" --namespace sysdigcloud
-kubectl patch deployment sysdigcloud-collector -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}" --namespace sysdigcloud
-kubectl patch deployment sysdigcloud-worker -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}" --namespace sysdigcloud
-```
-
-If, instead, the user relied on the release pinning, the upgrade will be as simple as bumping the image of the deployments, as listed in the previous section.
-
-In some circumstances, the manifests will change, the typical case being new parameters added to the ConfigMap, or some parameters in the deployment templates will be modified. In these cases, the upgrade notes will clearly indicate what changed. In most cases, the easiest thing to do will be to recreate the ConfigMap and the Deployments. Several strategies can be adopted to minimize the downtime.
-
-Although updating to the latest release is recommended, this repository is easily versioned, and a customer can feel free to stay to a particular release, and will always be able to fetch the specific manifests navigating the specific release.
+Although updating to the latest release is recommended, this repository is versioned, and a customer can feel free to pin a deployment to a particular release, and will always be able to fetch the specific manifests for the older version.
 
 ## Scale components
 
@@ -139,7 +133,7 @@ kubectl --namespace sysdigcloud scale --replicas=2 deployment sysdigcloud-worker
 kubectl --namespace sysdigcloud scale --replicas=2 deployment sysdigcloud-api --namespace sysdigcloud
 ```
 
-It is also recommended to scale the Cassandra cluster (the procedure depends on the type of Cassandra deployment, follow the specific guides for more information).
+It is also recommended to scale the Cassandra cluster (the specific procedure depends on the type of Cassandra deployment, follow the relevant guides for more information).
 
 ## Configuration changes
 
@@ -149,13 +143,21 @@ To change the original installation parameters, the ConfigMap can simply be edit
 kubectl edit configmap/sysdigcloud-config --namespace sysdigcloud
 ```
 
-After updating the ConfigMap, the Sysdig Cloud components need to be restarted in order for the changed to take effect. This can be done by simply forcing a rolling update of the deployments:
+If the ConfigMap is edited on the client side (for example, to keep it synced in a git repository), it can be simply overridden with:
+
+```
+kubectl replace -f sysdigcloud/config.yaml --namespace sysdigcloud
+```
+
+After updating the ConfigMap, the Sysdig Cloud components need to be restarted in order for the changed parameters to take effect. This can be done by simply forcing a rolling update of the deployments. A possible way to do so is:
 
 ```
 kubectl patch deployment sysdigcloud-api -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}" --namespace sysdigcloud
 kubectl patch deployment sysdigcloud-collector -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}" --namespace sysdigcloud
 kubectl patch deployment sysdigcloud-worker -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}" --namespace sysdigcloud
 ```
+
+This will ensure that the application restarts with no downtime (assuming the deployments have more than one replica each).
 
 ## Troubleshooting data
 
