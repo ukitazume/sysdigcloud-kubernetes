@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: collector
-          image: quay.io/sysdig/sysdigcloud-backend
+          image: quay.io/sysdig/sysdigcloud-backend:353
           ports:
           - containerPort: 6666
           volumeMounts:
