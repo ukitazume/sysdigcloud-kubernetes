@@ -94,7 +94,7 @@ spec:
     metadata:
       labels:
         app: sysdigcloud
-        role: cassandra
+        role: cassandra-N # Cassandra node number
     spec:
       containers:
         - image: quay.io/sysdig/cassandra:2.1
