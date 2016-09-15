@@ -22,11 +22,13 @@ kubectl create namespace sysdigcloud
 
 ### Step 2: User settings
 
-The file `sysdigcloud/config.yaml` contains a ConfigMap all the available user settings, edit the file with the proper settings (the most important of which being the Sysdig Cloud license) and then create the Kubernetes object:
+The file `sysdigcloud/config.yaml` contains a ConfigMap with all the available user settings. The file must be edited with the proper settings and then the Kubernetes object can be created:
 
 ```
 kubectl create -f sysdigcloud/config.yaml --namespace sysdigcloud
 ``` 
+
+Most settings can also be edited after the initial deployment (as shown later in this document).
 
 ### Step 3: Quay pull secret
 
@@ -43,13 +45,11 @@ Sysdig Cloud api and collector services use SSL to secure the communication betw
 
 If you want to use a custom SSL secrets, make sure to obtain the respective `server.crt` and `server.key` files, otherwise you can also create a self-signed certificate with:
 
-Create an SSL certificate and deploy it using kubectl:
-
 ```
 openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 -subj "/C=US/ST=CA/L=SanFrancisco/O=ICT/CN=onprem.sysdigcloud.com" -keyout server.key -out server.crt
 ```
 
-Once done, configure a Kubernetes secrets:
+Once done, create a Kubernetes secret:
 
 ```
 kubectl create secret tls sysdigcloud-ssl-secret --cert=server.crt --key=server.key --namespace=sysdigcloud
@@ -57,21 +57,21 @@ kubectl create secret tls sysdigcloud-ssl-secret --cert=server.crt --key=server.
 
 ### Step 5: Datastore deployment
 
-Sysdig Cloud requires MySQL, Cassandra and Redis to properly work. Deployment of stateful services in Kubernetes can happen in several way, it is recommended to tweak the deployment of those depending on the individual needs. Some offered examples are:
+Sysdig Cloud requires MySQL, Cassandra and Redis to properly work. Deployment of stateful services in Kubernetes can be done in several ways. It is recommended to tweak the deployment of those depending on the individual needs. Some examples (mostly meant as guidelines) are:
 
 - [Kubernetes pod](datastores/as_kubernetes_pods): easiest method, useful for test deployments
-- [Kubernetes pod with persistentVolume](datastores/using_persistent_volumes): robust method, useful for fault tolerance environment where data persistence is critical
-- [External service not running in the same Kubernetes cluster](datastores/k8s_external_services): more flexible method, giving full control to the user about the location and deployment of the datastores
+- [Kubernetes pod with persistentVolume](datastores/using_persistent_volumes): robust method, useful for deployments where data persistence is critical
+- [External service not running in the same Kubernetes cluster](datastores/k8s_external_services): more flexible method, giving full control to the user about the location and deployment types of the databases
 
 ### Step 6: Expose Sysdig Cloud services
 
-To access Sysdig Cloud api and collector services you can create a Kubernetes `nodePort` or `LoadBalacer` type, depending on the specific needs.
+To expore the Sysdig Cloud api and collector deployments you can create a Kubernetes `nodePort` or `LoadBalacer` service, depending on the specific needs.
 
 #### NodePort
 
-Using the NodePort type the Kubernetes master will allocate a port on each Node and will proxy that port (the same port number on every Node) into your service.
+Using a NodePort service the Kubernetes master will allocate a port on each node and will proxy that port (the same port number on every Node) towards the service.
 
-It is possible to create a NodePort Service for sysdigcloud api and collector using kubectl and the templates in the sysdigcloud directory:
+It is possible to create a NodePort service for Sysdig Cloud api and collector using kubectl and the templates in the sysdigcloud directory:
 
 ```
 kubectl create -f sysdigcloud/api-nodeport-service.yaml -f sysdigcloud/collector-nodeport-service.yaml --namespace sysdigcloud
@@ -79,9 +79,9 @@ kubectl create -f sysdigcloud/api-nodeport-service.yaml -f sysdigcloud/collector
 
 #### LoadBalancer
 
-On cloud providers which support external load balancers, using a "LoadBalancer" will provision a load balancer for your Service. The actual creation of the load balancer happens asynchronously. Traffic from the external load balancer will be directed at the backend Pods, though exactly how that works depends on the cloud provider.
+On cloud providers which support external load balancers, using a LoadBalancer service will provision a load balancer for the service. The actual creation of the load balancer happens asynchronously. Traffic from the external load balancer will be directed at the backend pods, though exactly how that works depends on the cloud provider.
 
-It is possible to create a LoadBalancer Service for sysdigcloud api and collector using kubectl and the templates in the sysdigcloud folder:
+It is possible to create a LoadBalancer Service for Sysdig Cloud api and collector using kubectl and the templates in the sysdigcloud folder:
 
 ```
 kubectl create -f sysdigcloud/api-loadbalancer-service.yaml -f sysdigcloud/collector-loadbalancer-service.yaml --namespace sysdigcloud
@@ -99,7 +99,7 @@ This command will create three deployments named `sysdigcloud-api`, `sysdigcloud
 
 ### Step 8: Connect to Sysdig Cloud
 
-After all the components have been deployed, it should be possible to continue the installation by opening the browser on the port exposed by the `sysdigcloud-api` service (the specific port depends on the chosen service type).
+After all the components have been deployed, it should be possible to continue the installation by opening the browser on the port exposed by the `sysdigcloud-api` service (the specific port depends on the chosen service type), for example `https://sysdigcloud-api:443`
 
 # Additional topics
 
