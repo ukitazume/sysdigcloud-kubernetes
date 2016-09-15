@@ -1,4 +1,6 @@
-# Sysdig Cloud on Kubernetes deployment guide
+# Sysdig Cloud on Kubernetes
+
+## Installation Guide
 
 ### Requirements
 
@@ -111,6 +113,22 @@ kubectl set image deployment/sysdigcloud-collector collector=quay.io/sysdig/sysd
 kubectl set image deployment/sysdigcloud-worker worker=quay.io/sysdig/sysdigcloud-backend:353 --namespace sysdigcloud
 ```
 
+## Updates
+
+Sysdig Cloud releases are listed [here](https://github.com/draios/sysdigcloud-kubernetes/releases). Each release has a version number (e.g. 353) and upgrade notes. For the majority of the updates, new manifests will not change, and so the update process is as simple as doing a restart of the Sysdig Cloud deployments if the image in the manifest is pointing to the `latest` tag:
+
+```
+kubectl patch deployment sysdigcloud-api -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}" --namespace sysdigcloud
+kubectl patch deployment sysdigcloud-collector -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}" --namespace sysdigcloud
+kubectl patch deployment sysdigcloud-worker -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}" --namespace sysdigcloud
+```
+
+If, instead, the user relied on the release pinning, the upgrade will be as simple as bumping the image of the deployments, as listed in the previous section.
+
+In some circumstances, the manifests will change, the typical case being new parameters added to the ConfigMap, or some parameters in the deployment templates will be modified. In these cases, the upgrade notes will clearly indicate what changed. In most cases, the easiest thing to do will be to recreate the ConfigMap and the Deployments. Several strategies can be adopted to minimize the downtime.
+
+Although updating to the latest release is recommended, this repository is easily versioned, and a customer can feel free to stay to a particular release, and will always be able to fetch the specific manifests navigating the specific release.
+
 ## Scale components
 
 For performance and high availability reasons, it is possible to scale the Sysdig Cloud api, collector and worker by changing the number of replicas on the respective deployments:
@@ -156,5 +174,3 @@ Getting support logs for sysdigcloud-worker-1086626503-4cio9
 Getting support logs for sysdigcloud-worker-1086626503-sdtrc
 Support bundle generated: 1473897425_sysdig_cloud_support_bundle.tgz
 ```
-
-## Updates
