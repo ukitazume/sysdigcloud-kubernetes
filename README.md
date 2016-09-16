@@ -4,7 +4,7 @@
 
 ### Requirements
 
-- Running Kubernetes cluster, kubernetes version >= 1.3.X (this guide has been tested with Kubernetes 1.3.6)
+- Running Kubernetes cluster, Kubernetes version >= 1.3.X (this guide has been tested with Kubernetes 1.3.6)
 - Sysdig Cloud quay.io pull secret
 - Sysdig Cloud license
 
@@ -59,7 +59,7 @@ kubectl create secret tls sysdigcloud-ssl-secret --cert=server.crt --key=server.
 
 Sysdig Cloud requires MySQL, Cassandra and Redis to properly work. Deployment of stateful services in Kubernetes can be done in several ways. It is recommended to tweak the deployment of those depending on the individual needs. Some examples (mostly meant as guidelines) are:
 
-- [Kubernetes pods](datastores/as_kubernetes_pods): atastores deployed within Kubernetes, with optional data persistency
+- [Kubernetes pods](datastores/as_kubernetes_pods): datastores deployed within Kubernetes, with optional data persistency
 - [External services](datastores/external_services): more flexible method, giving full control to the user about the location and deployment types of the databases
 
 ### Step 6: Expose Sysdig Cloud services
