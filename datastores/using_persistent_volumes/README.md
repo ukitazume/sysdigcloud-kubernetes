@@ -1,5 +1,6 @@
 # Datastores as Kubernetes pod with persistent volumes
-Sysdig Cloud datastores can be deployed as Kubernetes pods that uses persistent volumes.
+
+Sysdig Cloud datastores can be deployed as Kubernetes pods that use persistent volumes.
 This guide will cover the creation and the setup of AWS EBS and GCE volumes, for other type of Kubernetes persistent volumes refer to: http://kubernetes.io/docs/user-guide/persistent-volumes/#types-of-persistent-volumes
 
 ##Setup Cassandra cluster
@@ -123,20 +124,25 @@ spec:
             claimName: cassandra-pvc-N # Cassandra node number
 ```
 
-##Setup MySQL
-#### - MySQL service and config  
-Create the MySQL config object and MySQL service using kubectl:
+## MySQL
+
+#### MySQL service and config  
+
+Create the MySQL configuration object and MySQL service using kubectl:
+
 ```
 kubectl create -f manifests/mysql-config.yaml -f manifests/mysql-service.yaml --namespace sysdigcloud
 ```
 
-#### - Create a volume
+#### Create a volume
 
 If you use AWS you can create a volume using the command line `aws ec2 create-volume` or the AWS console.
 If you use GCE you can create a volume using the command line `gcloud compute disks create` or the GCE console.
 
-#### - Create a Kubernetes persistent volume
-for AWS:
+#### Create a Kubernetes persistent volume
+
+For AWS:
+
 ```
 kind: PersistentVolume
 apiVersion: v1
@@ -151,7 +157,9 @@ spec:
     volumeID: <VOL_ID> # EBS volume ID
     fsType: ext4
 ```
-for GCE:
+
+For GCE:
+
 ```
 kind: PersistentVolume
 apiVersion: v1
@@ -167,7 +175,12 @@ spec:
     fsType: ext4
 ```
 
+```
+kubectl create -f volume.yaml
+```
+
 #### - Create a Kubernetes persistent volume claim
+
 ```
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -180,7 +193,9 @@ spec:
     requests:
       storage: <DIM> # Dimension of the created volume
 ```
+
 #### - Deploy a MySQL node
+
 ```
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -230,7 +245,9 @@ spec:
 ```
 
 ##Setup Redis
+
 Redis doesn't require persistent storage you can simple deploy it with kubectl:
+
 ```
 kubectl create -f manifests/redis.yaml --namespace sysdigcloud
 ```

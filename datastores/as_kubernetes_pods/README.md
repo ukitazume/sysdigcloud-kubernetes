@@ -20,7 +20,7 @@ kubectl scale --replicas=3 deployment sysdigcloud-cassandra --namespace sysdigcl
 Immediately after the scaling activity, the new pod will be in joining phase:
 
 ```
-$ kubectl --namespace sysdig exec -it sysdigcloud-cassandra-2987866586-f5kgo -- nodetool status
+$ kubectl --namespace sysdigcloud exec -it sysdigcloud-cassandra-2987866586-f5kgo -- nodetool status
 Datacenter: datacenter1
 =======================
 Status=Up/Down
@@ -34,7 +34,7 @@ UN  10.52.1.7  917.91 KB  256     45.6%             9a7437e9-890f-477a-99be-3d80
 After the bootstrapping process terminates, the new pod will terminate the joining phase and the cluster will be fully operational:
 
 ```
-$ kubectl --namespace sysdig exec -it sysdigcloud-cassandra-2987866586-f5kgo -- nodetool status
+$ kubectl --namespace sysdigcloud exec -it sysdigcloud-cassandra-2987866586-f5kgo -- nodetool status
 Datacenter: datacenter1
 =======================
 Status=Up/Down
