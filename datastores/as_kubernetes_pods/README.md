@@ -1,10 +1,9 @@
 # Datastores as Kubernetes pod
 
-Sysdig Cloud datastores can be deployed as Kubernetes pods. Each pod can be configured to use a local volume (emptyDir) that is only persisted for the lifetime of the pod, or a persistent volume. The provided manifests contain examples for AWS EBS and GCE Disks, for other type of Kubernetes persistent volumes refer to: http://kubernetes.io/docs/user-guide/persistent-volumes/#types-of-persistent-volumes
+Sysdig Cloud datastores can be deployed as Kubernetes pods. Each pod can be configured to use a local volume (emptyDir) that is only persisted for the lifetime of the pod, or a persistent volume. The provided manifests contain examples for AWS EBS and GCE Disks, for other type of Kubernetes persistent volumes refer to http://kubernetes.io/docs/user-guide/persistent-volumes/#types-of-persistent-volumes
 
 If using persistent volumes, those will need to be created separately before deploying the datastore pods.
-If you use AWS you can create a volume using the command line `aws ec2 create-volume` or the AWS console.
-If you use GCE you can create a volume using the command line `gcloud compute disks create` or the GCE console.
+If you use AWS you can create a volume using the command line `aws ec2 create-volume` or the AWS console, If you use GCE you can create a volume using the command line `gcloud compute disks create` or the GCE console.
 
 ## MySQL
 
@@ -36,9 +35,9 @@ To create a Cassandra deployment, the provided manifest under `manifests/cassand
 kubectl create -f manifests/cassandra-deployment.yaml --namespace sysdigcloud
 ```
 
-This creates a Cassandra cluster of size 1. To expand the Cassandra cluster, a new deployment must be created for each additional Cassandra node in the cluster. You can't just scale the replicas of the deployment because each Cassandra pod must get a different persistent volume, so in that sense Cassandra pods are "pets" with unique identities and not "cattles".
+This creates a Cassandra cluster of size 1. To expand the Cassandra cluster, a new deployment must be created for each additional Cassandra node in the cluster. You can't just scale the replicas of the existing deployment because each Cassandra pod must get a different persistent volume, so in that sense Cassandra pods are "pets" with unique identities and not "cattles".
 
-In order for the new Cassandra deployment to automatically join the cluster, some conventions must be followed. In particular, the Cassandra node number must be properly put in the manifest `manifests/cassandra-deployment.yaml` under the entries marked as `# Cassandra node number`.
+In order for the new Cassandra deployment to automatically join the cluster, some conventions must be followed. In particular, the Cassandra node number (1, 2, 3, ...) must be properly put in the manifest `manifests/cassandra-deployment.yaml` under the entries marked as `# Cassandra node number`.
 
 For example, to scale a Cassandra cluster from 2 to 3 nodes, the manifest can be edited as such:
 
