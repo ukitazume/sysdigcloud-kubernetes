@@ -93,5 +93,16 @@ spec:
         - name: mysql-config
           configMap:
             name: sysdigcloud-mysql-config
+        # Uncomment this for emptyDir volumes
         - name: data
           emptyDir: {}
+        # Uncomment this for GCE Disk
+        # - name: data
+        #   gcePersistentDisk:
+        #     pdName: <volume-name>
+        #     fsType: ext4
+        # Uncomment this for AWS EBS
+        # - name: data
+        #   awsElasticBlockStore:
+        #     volumeID: <volume-id>
+        #     fsType: ext4
