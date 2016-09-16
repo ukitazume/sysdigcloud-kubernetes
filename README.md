@@ -4,7 +4,7 @@
 
 ### Requirements
 
-- Running Kubernetes cluster, kubernetes version >= 1.3.X (this guide has been tested with kuberntes 1.3.6)
+- Running Kubernetes cluster, kubernetes version >= 1.3.X (this guide has been tested with Kubernetes 1.3.6)
 - Sysdig Cloud quay.io pull secret
 - Sysdig Cloud license
 
