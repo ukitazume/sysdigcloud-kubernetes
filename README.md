@@ -28,7 +28,7 @@ The file `sysdigcloud/config.yaml` contains a ConfigMap with all the available u
 kubectl create -f sysdigcloud/config.yaml --namespace sysdigcloud
 ``` 
 
-Most settings can also be edited after the initial deployment (as shown later in this document).
+Most settings can also be edited after the initial deployment, as they will be known just after the deployment of some Kubernetes services.
 
 ### Step 3: Quay pull secret
 
@@ -69,6 +69,7 @@ To expose the Sysdig Cloud api and collector deployments you can create a Kubern
 #### NodePort
 
 Using a NodePort service the Kubernetes master will allocate a port on each node and will proxy that port (the same port number on every Node) towards the service.
+After this step, it should be possible to correctly fill all the parameters in the ConfigMap, such as `collector.endpoint`, `collector.port` and `api.url`.
 
 It is possible to create a NodePort service for Sysdig Cloud api and collector using kubectl and the templates in the sysdigcloud directory:
 
