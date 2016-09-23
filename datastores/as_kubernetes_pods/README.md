@@ -5,6 +5,11 @@ Sysdig Cloud datastores can be deployed as Kubernetes pods. Each pod can be conf
 If using persistent volumes, those will need to be created separately before deploying the datastore pods.
 If you use AWS you can create a volume using the command line `aws ec2 create-volume` or the AWS console, If you use GCE you can create a volume using the command line `gcloud compute disks create` or the GCE console.
 
+Please notice that, when running a Kubernetes cluster in multiple zones, special care needs to be taken in maintaining the affinity between zones where the persistent volumes are created and zones where the pods are actually scheduled, since most cloud providers impose limitations. At the time of writing, the current solutions are:
+
+- Use persistent volume claims instead of embedding the volumes inside the pod manifest (like in the following examples): http://kubernetes.io/docs/user-guide/persistent-volumes/#persistentvolumeclaims
+- Manually force the affinity of the datastore deployments to specific zones using the nodeSelector field: http://kubernetes.io/docs/user-guide/node-selection/
+
 ## MySQL
 
 To create a MySQL deployment, the provided manifest under `manifests/mysql.yaml` can be used. By default, it will use a local non-persistent volume (emptyDir), but the manifest contains commented snippets that can be uncommented when using persistent volumes such as AWS EBS or GCE Disks (just replace the volume id from the cloud provider in the snippet):
