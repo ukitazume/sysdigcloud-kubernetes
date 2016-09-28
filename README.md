@@ -99,7 +99,7 @@ This command will create three deployments named `sysdigcloud-api`, `sysdigcloud
 
 ### Step 8: Connect to Sysdig Cloud
 
-After all the components have been deployed, it should be possible to continue the installation by opening the browser on the port exposed by the `sysdigcloud-api` service (the specific port depends on the chosen service type), for example `https://sysdigcloud-api:443`
+After all the components have been deployed and the pods are all in a ready state, it should be possible to continue the installation by opening the browser on the port exposed by the `sysdigcloud-api` service (the specific port depends on the chosen service type), for example `https://sysdigcloud-api:443`
 
 # Additional topics
 
