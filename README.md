@@ -22,7 +22,7 @@ kubectl create namespace sysdigcloud
 
 ### Step 2: User settings
 
-The file `sysdigcloud/config.yaml` contains a ConfigMap with all the available user settings. The file must be edited with the proper settings and then the Kubernetes object can be created:
+The file `sysdigcloud/config.yaml` contains a ConfigMap with all the available user settings. The file must be edited with the proper settings, including the mandatory `sysdigcloud.license`. After editing, then the Kubernetes object can be created:
 
 ```
 kubectl create -f sysdigcloud/config.yaml --namespace sysdigcloud
