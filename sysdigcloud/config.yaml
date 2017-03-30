@@ -14,6 +14,13 @@ data:
   # this will be the service name. If using an external database, put the proper address
   # (the address of a single node will be sufficient)
   cassandra.endpoint: sysdigcloud-cassandra
+  # Optional: enable or disable cassandra authentication and authorization in sysdigcloud cassandra image,
+  # if you want to enable it, make sure to follow the support guide in the official sysdigcloud documentation
+  cassandra.secure: "false"
+  # Optional: Cassandra user
+  cassandra.user: ""
+  # Optional: Cassandra password
+  cassandra.password: ""
   # Optional: Cassandra replication factor to use. This parameter will just be applied during the
   # keyspace creation, no changes are done to an already existing keyspace
   cassandra.replication.factor: "1"
@@ -24,6 +31,8 @@ data:
   # Required: Redis endpoint DNS/IP. If Redis is deployed as a Kubernetes service, 
   # this will be the service name. If using an external database, put the proper address
   redis.endpoint: sysdigcloud-redis
+  # Optional: Redis password
+  redis.password: ""
   # Required: Elasticsearch URL. If Elasticsearch is deployed as a Kubernetes service,
   # this will be the service name. If using an external database, put the proper address
   elasticsearch.url: http://sysdigcloud-elasticsearch

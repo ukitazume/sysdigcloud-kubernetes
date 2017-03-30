@@ -32,6 +32,11 @@ spec:
                 configMapKeyRef:
                   name: sysdigcloud-config
                   key: cassandra.jvm.options
+            - name: CASSANDRA_SECURE
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: cassandra.secure
           volumeMounts:
             - mountPath: /var/lib/cassandra
               name: data
