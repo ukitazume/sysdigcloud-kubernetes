@@ -37,7 +37,6 @@ spec:
                   key: sysdigcloud.jvm.options
           # If you're running multiple replicas, it is advisable to configure the limits below. Limiting resources 
           # can help stabilize rolling updates later down the road.
-
           # resources:
           #   # minimum resources for container
           #   requests:
@@ -47,7 +46,6 @@ spec:
           #   limits:
           #     memory: "64G"
           #     cpu: "32"
-
           readinessProbe:
             httpGet:
               path: /api/ping
