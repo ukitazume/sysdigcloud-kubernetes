@@ -35,10 +35,8 @@ spec:
                 configMapKeyRef:
                   name: sysdigcloud-config
                   key: sysdigcloud.jvm.options
-          # 
           # If you're running multiple replicas, it is advisable to configure the limits below. Limiting resources 
           # can help stabilize rolling updates later down the road.
-          #
 
           # resources:
           #   # minimum resources for container
