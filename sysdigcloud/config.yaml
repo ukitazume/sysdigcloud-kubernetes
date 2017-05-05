@@ -82,3 +82,25 @@ data:
   sysdigcloud.google.oauth.client.id: ""
   # Optional: Sysdig Cloud Google OAuth Client Secret
   sysdigcloud.google.oauth.client.secret: ""
+  # Required: enable or disable Sysdig Cloud LDAP integration
+  sysdigcloud.ldap.enabled: "false"
+  # Optional: LDAP server endpoint (eg: ldaps://1.2.3.4:636)
+  sysdigcloud.ldap.endpoint: ""
+  # Optional: certificate of the LDAP server in PEM format
+  sysdigcloud.ldap.server.cert: ""
+  # Optional: LDAP DN manager (eg: cn=servicer_acccount,OU=Service accounts,DC=demo,DC=com)
+  sysdigcloud.ldap.manager.dn: ""
+  # Optional: LDAP Manager password
+  sysdigcloud.ldap.manager.password: ""
+  # Optional: LDAP root DN
+  sysdigcloud.ldap.root.dn: ""
+  # Optional: LDAP user search base
+  sysdigcloud.ldap.user.search.base: ""
+  # Optional: LDAP user search filter (eg: (&(objectClass=organizationalPerson)(sAMAccountName={0}))
+  sysdigcloud.ldap.user.search.filter: ""
+  # Optional: Use group filtering
+  sysdigcloud.ldap.group.filter.enabled: "false"
+  # Optional: Group search base (eg: OU=ORGANIZATION,OU=Users)
+  sysdigcloud.ldap.group.search.base: ""
+  # Optional: Group search filter (eg: objectclass=group)
+  sysdigcloud.ldap.group.search.filter: ""
