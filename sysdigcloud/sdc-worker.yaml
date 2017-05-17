@@ -20,6 +20,9 @@ spec:
               mountPath: /opt/kubernets_config
             - name: ssl
               mountPath: /opt/certs/
+            # Uncomment this if you use LDAP with custom certificate.
+            #- name: ldap-cert
+            #  mountPath: /opt/ldap_cert/
           env:
             - name: ROLES
               value: worker
@@ -51,3 +54,7 @@ spec:
         - name: ssl
           secret:
             secretName: sysdigcloud-ssl-secret
+        # Uncomment this if you use LDAP with custom certificate.
+        #- name: ldap-cert
+        #  secret:
+        #    secretName: sysdigcloud-ldap-cert

@@ -55,6 +55,14 @@ Once done, create a Kubernetes secret:
 kubectl create secret tls sysdigcloud-ssl-secret --cert=server.crt --key=server.key --namespace=sysdigcloud
 ```
 
+##### Optional: only LDAP users - LDAP certificate
+
+LDAP server certificate in PEM format can be stored in a generic kubernets secret:
+
+```
+kubectl create secret generic sysdigcloud-ldap-cert --from-file=server.crt --namespace=sysdigcloud
+```
+
 ### Step 5: Datastore deployment
 
 Sysdig Cloud requires MySQL, Cassandra, Redis and Elasticsearch to properly work. Deployment of stateful services in Kubernetes can be done in several ways. It is recommended to tweak the deployment of those depending on the individual needs. Some examples (mostly meant as guidelines) are:
