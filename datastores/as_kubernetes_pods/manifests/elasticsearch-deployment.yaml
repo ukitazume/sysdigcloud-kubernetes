@@ -15,10 +15,10 @@ spec:
         - image: quay.io/sysdig/elasticsearch:5.1.1
           name: elasticsearch
           # https://www.elastic.co/blog/bootstrap_checks_annoying_instead_of_devastating
-          # Elasticsearch team decided to force everybody in running ES5 with the following sysctl option:
+          # Elasticsearch team decided to force everybody to run ES5 with the following sysctl option:
           # sysctl -w vm.max_map_count=262144
-          # If you choose to run the container in privileged mode the container will configured the system
-          # parameter and start elasticseach app as elasticsearch user.
+          # If you choose to run the container in privileged mode the container will automatically configured the system
+          # parameter and start elasticseach as elasticsearch user.
           # if you choose to run the container not in privileged mode make sure to configure the vm.max_map_count
           # on all the servers of your cluster
           securityContext:
