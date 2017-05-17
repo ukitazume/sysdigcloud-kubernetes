@@ -86,8 +86,6 @@ data:
   sysdigcloud.ldap.enabled: "false"
   # Optional: LDAP server endpoint (eg: ldaps://1.2.3.4:636)
   sysdigcloud.ldap.endpoint: ""
-  # Optional: certificate of the LDAP server in PEM format
-  sysdigcloud.ldap.server.cert: ""
   # Optional: LDAP DN manager (eg: cn=servicer_acccount,OU=Service accounts,DC=demo,DC=com)
   sysdigcloud.ldap.manager.dn: ""
   # Optional: LDAP Manager password
@@ -95,12 +93,20 @@ data:
   # Optional: LDAP root DN
   sysdigcloud.ldap.root.dn: ""
   # Optional: LDAP user search base
+  # If you specify a relative DN (from the root DN), Sysdid Cloud will further narrow down searches to the sub-tree.
   sysdigcloud.ldap.user.search.base: ""
   # Optional: LDAP user search filter (eg: (&(objectClass=organizationalPerson)(sAMAccountName={0}))
+  # This field determines the query to be run to identify the user record. The query is almost always uid={0} as per defined in RFC 2798.
   sysdigcloud.ldap.user.search.filter: ""
-  # Optional: Use group filtering
-  sysdigcloud.ldap.group.filter.enabled: "false"
-  # Optional: Group search base (eg: OU=ORGANIZATION,OU=Users)
+  # Optional: Group search base
+  # This field determines the query to be run to identify the organizational unit that contains groups.
+  # The query is almost always ou=groups so try that first, though this field may be left blank to search from the root DN.
   sysdigcloud.ldap.group.search.base: ""
-  # Optional: Group search filter (eg: objectclass=group)
+  # Optional: Group search filter (eg: objectclass=groupOfNames)
+  # This field is used to determine if a named group exists. If you know your LDAP server only stores group information
+  # in one specific object class, then you can improve group search performance by restricting the filter to just the required object class.
   sysdigcloud.ldap.group.search.filter: ""
+  # Optional: Group membership filter
+  # The group membership filter field controls the search filter that is used to determine group membership.
+  # You are normally safe leaving this field unchanged, the default value ( | (member={0}) (uniqueMember={0}) (memberUid={1})) will be used.
+  sysdigcloud.ldap.group.membership.filter: ""
