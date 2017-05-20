@@ -57,10 +57,11 @@ kubectl create secret tls sysdigcloud-ssl-secret --cert=server.crt --key=server.
 
 ##### Optional: only LDAP users - LDAP certificate
 
-LDAP server certificate in PEM format can be stored in a generic kubernets secret:
+LDAP server certificate in PEM format can be stored in a generic kubernets secret.
+Create first the file labelled ldap.crt with the certificate content and then the kubernetes secret using the following command line:
 
 ```
-kubectl create secret generic sysdigcloud-ldap-cert --from-file=server.crt --namespace=sysdigcloud
+kubectl create secret generic sysdigcloud-ldap-cert --from-file=ldap.crt --namespace=sysdigcloud
 ```
 
 ### Step 5: Datastore deployment
