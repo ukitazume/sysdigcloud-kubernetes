@@ -95,8 +95,9 @@ data:
   # Optional: LDAP user search base
   # If you specify a relative DN (from the root DN), Sysdig Cloud will further narrow down searches to the sub-tree.
   sysdigcloud.ldap.user.search.base: ""
-  # Optional: LDAP user search filter (eg: (&(objectClass=organizationalPerson)(sAMAccountName={0}))
+  # Optional: LDAP user search filter (eg: (\&(objectClass=organizationalPerson)(sAMAccountName={0})).
   # This field determines the query to be run to identify the user record. The query is almost always uid={0} as per defined in RFC 2798.
+  # NB. Escape special characters like &
   sysdigcloud.ldap.user.search.filter: ""
   # Optional: Group search base (eg: ou=Organization,ou=Users)
   # This field determines the query to be run to identify the organizational unit that contains groups.
