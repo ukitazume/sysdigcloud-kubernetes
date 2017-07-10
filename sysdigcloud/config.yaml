@@ -110,3 +110,6 @@ data:
   # The group membership filter field controls the search filter that is used to determine group membership.
   # You are normally safe leaving this field unchanged, the default value ( | (member={0}) (uniqueMember={0}) (memberUid={1})) will be used.
   sysdigcloud.ldap.group.membership.filter: ""
+  # Optional: Store Sysdig captures using Cassandra instead of S3
+  # NB. This affects cassandra storage
+  sysdigcloud.captures.cassandra.storage: "false"
