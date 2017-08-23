@@ -20,9 +20,12 @@ spec:
               mountPath: /opt/kubernets_config
             - name: ssl
               mountPath: /opt/certs/
-            # Uncomment this if you use LDAP with custom certificate.
-            #- name: ldap-cert
-            #  mountPath: /opt/ldap_cert/
+            # Uncomment this if you need to import self-signed SSL certs
+            #- name: java-certs
+            #  mountPath: /opt/java-certs/
+            # Uncomment this if you want to split sysdgicloud configurations into configs and secrets.
+            #- name: secrets
+            #  mountPath: /opt/kubernets_secrets
           env:
             - name: ROLES
               value: api
@@ -54,7 +57,11 @@ spec:
         - name: ssl
           secret:
             secretName: sysdigcloud-ssl-secret
-        # Uncomment this if you use LDAP with custom certificate.
-        #- name: ldap-cert
+        # Uncomment this if you need to import self-signed SSL certs
+        #- name: java-certs
         #  secret:
-        #    secretName: sysdigcloud-ldap-cert
+        #    secretName: sysdigcloud-java-certs
+        # Uncomment this if you want to split sysdgicloud configurations into configs and secrets.
+        #- name: secrets
+        #  secret:
+        #    secretName: <secret_name>

@@ -12,7 +12,7 @@ spec:
         role: cassandra
     spec:
       containers:
-        - image: quay.io/sysdig/cassandra:2.1
+        - image: quay.io/sysdig/cassandra:2.1.15.0
           name: cassandra
           env:
             - name: CASSANDRA_SERVICE
@@ -37,6 +37,11 @@ spec:
                 configMapKeyRef:
                   name: sysdigcloud-config
                   key: cassandra.secure
+            - name: CASSANDRA_SSL
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: cassandra.ssl.enabled
           volumeMounts:
             - mountPath: /var/lib/cassandra
               name: data

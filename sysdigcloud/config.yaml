@@ -17,10 +17,17 @@ data:
   # Optional: enable or disable cassandra authentication and authorization in sysdigcloud cassandra image,
   # if you want to enable it, make sure to follow the support guide in the official sysdigcloud documentation
   cassandra.secure: "false"
+  # Optional: Enable cassandra internodes and client encryption
+  cassandra.ssl.enabled: "false"
+  # Optional: Specify Cassandra cipher suites to use. This option is available only when using external cassandra clusters.
+  # Comma separated value. Example: "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA"
+  cassandra.ssl.ciphers: ""
   # Optional: Cassandra user
   cassandra.user: ""
   # Optional: Cassandra password
   cassandra.password: ""
+  # Required: CQL native clients port
+  cassandra.port: "9042"
   # Optional: Cassandra replication factor to use. This parameter will just be applied during the
   # keyspace creation, no changes are done to an already existing keyspace
   cassandra.replication.factor: "1"

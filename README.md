@@ -55,13 +55,13 @@ Once done, create a Kubernetes secret:
 kubectl create secret tls sysdigcloud-ssl-secret --cert=server.crt --key=server.key --namespace=sysdigcloud
 ```
 
-##### Optional: only LDAP users - LDAP certificate
+##### Optional: Custom SSL certificates
 
-LDAP server certificate in PEM format can be stored in a generic kubernets secret.
-Create first the file labelled ldap.crt with the certificate content and then the kubernetes secret using the following command line:
+If you want to use services that implement SSL self-signed certificates you can import those certificates and their chains, storing them in PEM format and injecting them as a generic kubernets secret.
+For each certificate you want to import create a file, for example: certs1.crt, cert2.crt, ... and then the kubernetes secret using the following command line:
 
 ```
-kubectl create secret generic sysdigcloud-ldap-cert --from-file=ldap.crt --namespace=sysdigcloud
+kubectl create secret generic sysdigcloud-java-certs --from-file=certs1.crt --from-file=certs2.crt --namespace=sysdigcloud
 ```
 
 ### Step 5: Datastore deployment
