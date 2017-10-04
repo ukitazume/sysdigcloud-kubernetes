@@ -78,6 +78,8 @@ data:
   sysdigcloud.default.user: test@sysdig.com
   # Required: Sysdig Cloud default user password
   sysdigcloud.default.user.password: test
+  # Optional: forward application logs to stdout
+  sysdigcloud.logging.stdout: "false"
   # Optional: Sysdig Cloud application JVM options. For heavy load environments you'll need to tweak 
   # the memory or garbage collection settings
   sysdigcloud.jvm.options: ""
