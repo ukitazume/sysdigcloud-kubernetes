@@ -124,4 +124,4 @@ data:
   sysdigcloud.ldap.group.membership.filter: ""
   # Optional: Store Sysdig captures using Cassandra instead of S3
   # NB. This affects cassandra storage
-  sysdigcloud.captures.cassandra.storage: "false"
+  sysdigcloud.captures.cassandra.storage: "true"
