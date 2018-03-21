@@ -1,0 +1,107 @@
+---
+context: gke_sysdig-disney_us-west1-a_sysdig-disney-qa
+global:
+  sysdigNamespace: sysdigcloud
+  sysdigCloudProvider: GKE
+  sysdigBackendImage: quay.io/sysdig/sysdigcloud-backend:800
+  sysdigFrontendImage: sysdig/agent:latest
+  sysdigCassandraImage: yofti/cassandra:2.2.11
+  sysdigElasticsearchImage: yofti/elasticsearch:5.5.3
+  sysdigRedisImage: yofti/redis:4.0.2
+  sysdigMysqlImage: mysql:5.7
+  sysdigXtrabackupImage: gcr.io/google-samples/xtrabackup:1.0
+
+  sysdigK8sExposeMethod: LoadBalancer
+  #Application Ports
+  sysdigApiExternalPort: 443
+  sysdigApiTargetPort: 443
+  sysdigCollectorExternalPort: 6443
+  sysdigCollectorTargetPort: 6443
+  sysdigRedisExternalPort: 6379
+  sysdigRedisTargetPort: 6379
+  sysdigRedisGossipExternalPort: 16379
+  sysdigRedisGossipInternalPort: 16379
+  sysdigMySqlExternalPort: 3306
+  sysdigMySqlTargetPort: 3306
+
+
+  #servicenames
+  sysdigApiServiceName: sdc-api
+  sysdigCollectorServiceName: sdc-collector
+  sysdigCassandraServiceName: sdc-cassandra
+  sysdigElasticsearchServiceName: sdc-elasticsearch
+  sysdigRedisServiceName: sdc-redis
+  sysdigRedisSlaveServiceName: sdc-redis-slave
+  sysdigMysqlServiceName: sdc-mysql
+  sysdigMysqlSlaveServiceName: sdc-mysql-slave
+
+  #Replica Counts
+  sysdigApiReplicaCount: 1
+  sysdigWorkerReplicaCount: 1
+  sysdigCollectorReplicaCount: 1
+  sysdigMysqlMasterReplicaCount: 1
+  sysdigMysqlSlavesReplicaCount: 2
+  sysdigRedisMasterReplicaCount: 1
+  sysdigRedisSlavesReplicaCount: 2
+  sysdigCassandraReplicaCount: 3
+  sysdigElasticsearchReplicaCount: 3
+
+  #StorageClass defintions
+  sysdigStorageclassName: gce-pd
+  sysdigStorageclassApiVersion: storage.k8s.io/v1
+  sysdigStorageclassProvisioner: kubernetes.io/gce-pd
+  sysdigStorageclassType: pd-ssd
+
+  #PVC disk sizes
+  sysdigCassandraDiskSize: 30Gi
+  sysdigElasticsearchDiskSize: 30Gi
+  sysdigRedisDiskSize: 30Gi
+  sysdigMysqlDiskSize: 30Gi
+
+  #Backend resource allocation
+  apiResourceRequestCpu: 1000m
+  apiResourceRequestMemory: 3Gi
+  apiResourceLimitsCpu: 2000m
+  apiResourceLimitsMemory: 5Gi
+  collectorResourceRequestCpu: 1000m
+  collectorResourceRequestMemory: 3Gi
+  collectorResourceLimitsCpu: 3000m
+  collectorResourceLimitsMemory: 6Gi
+  workerResourceRequestCpu: 1000m
+  workerResourceRequestMemory: 3Gi
+  workerResourceLimitsCpu: 3000m
+  workerResourceLimitsMemory: 6Gi
+
+  #Datastore resource allocation
+  cassandraResourceRequestCpu: 1000m
+  cassandraResourceRequestMemory: 2Gi
+  cassandraResourceLimitsCpu: 3000m
+  cassandraResourceLimitsMemory: 8Gi
+  elasticsearchResourceRequestCpu: 500m
+  elasticsearchResourceRequestMemory: 2Gi
+  elasticsearchResourceLimitsCpu: 2000m
+  elasticsearchResourceLimitsMemory: 4Gi
+  mysqlResourceRequestCpu: 100m
+  mysqlResourceRequestMemory: 2Gi
+  mysqlResourceLimitsCpu: 2000m
+  mysqlResourceLimitsMemory: 4Gi
+  redisResourceRequestCpu: 500m
+  redisResourceRequestMemory: 2Gi
+  redisResourceLimitsCpu: 2000m
+  redisResourceLimitsMemory: 4Gi
+
+include:
+  - name: backend/api
+  - name: backend/collector
+  - name: backend/worker
+  - name: frontend
+  - name: datastores/cassandra
+  - name: datastores/elasticsearch
+  - name: datastores/mysql/master
+  - name: datastores/mysql/slaves
+  - name: datastores/redis/master
+  - name: datastores/redis/slaves
+  - name: datastores/storageclasses/gce-pd
+  - name: datastores/storageclasses/aws-gp2
+  - name: datastores/storageclasses/aws-io1
+

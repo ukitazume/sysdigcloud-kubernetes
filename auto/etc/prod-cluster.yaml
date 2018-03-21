@@ -1,0 +1,71 @@
+---
+global:
+  sysdig.namespace: sysdigcloud
+  sysdig.cloud.provider: GKE
+  sysdig.storageclass.name: gce-pd
+  #Image repos and versions
+  sysdig.backend.image: quay.io/sysdig/sysdigcloud-backend:800
+  sysdig.frontend.image: sysdig/agent:latest
+  sysdig.cassandra.image: yofti/cassandra:2.2.11
+  sysdig.elasticsearch.image: yofti/elasticsearch:5.5.3
+  sysdig.redis.image: yofti/redis:4.0.2
+  sysdig.mysql.image: mysql:5.7
+  #Replica Counts
+  sysdig.api.replica.count: 1
+  sysdig.worker.replica.count: 1
+  sysdig.collector.replica.count: 1
+  sysdig.mysql.master.replica.count: 1
+  sysdig.mysql.slaves.replica.count: 2
+  sysdig.redis.master.replica.count: 1
+  sysdig.redis.slaves.replica.count: 2
+  sysdig.cassandra.replica.count: 3
+  sysdig.elasticsearch.replica.count: 3
+  #PVC disk sizes
+  sysdig.cassandra.disk.size: 30Gi
+  sysdig.elasticsearch.disk.size: 30Gi
+  sysdig.redis.disk.size: 30Gi
+  sysdig.mysql.disk.size: 30Gi
+  sysdig.pvc.aws.iops: 50
+  sysdig.pvc.aws.zones: us-west-2a, us-west-2b, us-west-2c
+  #resource allocation
+  cassandra.resource.request.cpu: 1000m
+  cassandra.resource.request.memory: 2Gi
+  cassandra.resource.limits.cpu: 3000m
+  cassandra.resource.limits.memory: 8Gi
+  elasticsearch.resource.request.cpu: 500m
+  elasticsearch.resource.request.memory: 2Gi
+  elasticsearch.resource.limits.cpu: 2000m
+  elasticsearch.resource.limits.memory: 4Gi
+  mysql.resource.request.cpu: 100m
+  mysql.resource.request.memory: 2Gi
+  mysql.resource.limits.cpu: 2000m
+  mysql.resource.limits.memory: 4Gi
+  redis.resource.request.cpu: 500m
+  redis.resource.request.memory: 2Gi
+  redis.resource.limits.cpu: 2000m
+  redis.resource.limits.memory: 4Gi
+include:
+  - name: backend
+    values:
+      api.resource.request.cpu: 1000m
+  	  api.resource.request.memory: 3Gi
+      api.resource.limits.cpu: 2000m
+      api.resource.limits.memory: 5Gi
+      collector.resource.request.cpu: 1000m
+      collector.resource.request.memory: 3Gi
+      collector.resource.limits.cpu: 3000m
+      collector.resource.limits.memory: 6Gi
+      worker.resource.request.cpu: 1000m
+      worker.resource.request.memory: 3Gi
+      worker.resource.limits.cpu: 3000m
+      worker.resource.limits.memory: 6Gi
+  - name: frontend
+    values:
+      version: 1.0-0e6884d
+      importantFeature: true
+      apiPort: 4567
+  - name: datastores
+    values:
+      version: 1.0-0e6884d
+      importantFeature: true
+      apiPort: 4567

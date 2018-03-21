@@ -1,0 +1,7 @@
+kind: StorageClass
+apiVersion: {{ .sysdigStorageclassApiVersion }}
+metadata:
+  name: {{ .sysdigStorageclassName }}
+provisioner: {{ .sysdigStorageclassProvisioner }}
+parameters:
+  type: {{ .sysdigStorageclassType }}
