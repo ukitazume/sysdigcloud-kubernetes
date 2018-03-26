@@ -127,9 +127,9 @@ stop_datastores()
 
 stop_backend()
 {
-	kubectl delete  -f $SDC_HOME/backend/sdc-api.yaml       | tee -a $LOG_FILE
-	kubectl delete  -f $SDC_HOME/backend/sdc-worker.yaml    | tee -a $LOG_FILE
-	kubectl create  -f $SDC_HOME/backend/sdc-collector.yaml | tee -a $LOG_FILE
+	kubectl delete  -f $SDC_HOME/backend/sdc-api.yaml &      | tee -a $LOG_FILE
+	kubectl delete  -f $SDC_HOME/backend/sdc-worker.yaml &   | tee -a $LOG_FILE
+	kubectl create  -f $SDC_HOME/backend/sdc-collector.yaml& | tee -a $LOG_FILE
 }
 
 print_post_uninstall_banner()
