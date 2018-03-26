@@ -2,7 +2,7 @@
 context: gke_sysdig-disney_us-west1-a_sysdig-disney-qa
 #context: kops.yoftilabs.com
 global:
-  sysdigNamespace: sysdigcloud
+  sysdigNamespace: yofti
   sysdigcloudProvider: GKE
 
   #Images
@@ -141,7 +141,7 @@ include:
       elasticsearchJvmOptions: -Xms2g -Xmx2g
       sysdigcloudJvmOptions: -Xms2g -Xmx2g
       #elasticsearch
-      elasticsearch.service: sdc-elasticsearch
+      elasticsearchService: sdc-elasticsearch
       #Cassandra
       cassandraClusterName: sysdigcloud
       cassandraService: sdc-cassandra

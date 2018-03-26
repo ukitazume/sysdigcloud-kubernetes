@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: sdc-elasticsearch
-  namespace: sysdigcloud
+  namespace: yofti
   labels:
     app: sysdigcloud
     role: elasticsearch
@@ -25,7 +25,7 @@ metadata:
   labels:
     app: sysdigcloud
 spec:
-  serviceName: sysdigcloud
+  serviceName: yofti
   replicas: 3
   selector:
     matchLabels:

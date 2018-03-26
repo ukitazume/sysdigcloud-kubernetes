@@ -2,7 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: sdc-worker
-  namespace: sysdigcloud
+  namespace: yofti
 spec:
   replicas: 1
   template:

@@ -117,26 +117,27 @@ delete_configmaps()
 
 stop_datastores()
 {
-	kubectl delete -f $SDC_HOME/datastores/sdc-mysql-master.yaml &  | tee -a $LOG_FILE
-	kubectl delete -f $SDC_HOME/datastores/sdc-redis-master.yaml &  | tee -a $LOG_FILE
-	kubectl delete -f $SDC_HOME/datastores/sdc-redis-slaves.yaml &  | tee -a $LOG_FILE
-	kubectl delete -f $SDC_HOME/datastores/sdc-cassandra.yaml    &  | tee -a $LOG_FILE
-	kubectl delete -f $SDC_HOME/datastores/sdc-elasticsearch.yaml & | tee -a $LOG_FILE
-	kubectl delete -f $SDC_HOME/datastores/sdc-mysql-slaves.yaml  & | tee -a $LOG_FILE
+
+	kubectl delete -f $SDC_HOME/datastores/sdc-mysql-master.yaml   | tee -a $LOG_FILE &
+	kubectl delete -f $SDC_HOME/datastores/sdc-redis-master.yaml   | tee -a $LOG_FILE &
+	kubectl delete -f $SDC_HOME/datastores/sdc-redis-slaves.yaml   | tee -a $LOG_FILE &
+	kubectl delete -f $SDC_HOME/datastores/sdc-cassandra.yaml      | tee -a $LOG_FILE &
+	kubectl delete -f $SDC_HOME/datastores/sdc-elasticsearch.yaml  | tee -a $LOG_FILE &
+	kubectl delete -f $SDC_HOME/datastores/sdc-mysql-slaves.yaml   | tee -a $LOG_FILE &
 }
 
 stop_backend()
 {
-	kubectl delete  -f $SDC_HOME/backend/sdc-api.yaml &      | tee -a $LOG_FILE
-	kubectl delete  -f $SDC_HOME/backend/sdc-worker.yaml &   | tee -a $LOG_FILE
-	kubectl create  -f $SDC_HOME/backend/sdc-collector.yaml& | tee -a $LOG_FILE
+	kubectl delete  -f $SDC_HOME/backend/sdc-api.yaml       | tee -a $LOG_FILE &
+	kubectl delete  -f $SDC_HOME/backend/sdc-worker.yaml    | tee -a $LOG_FILE &
+	kubectl delete  -f $SDC_HOME/backend/sdc-collector.yaml | tee -a $LOG_FILE &
 }
 
 print_post_uninstall_banner()
 {
 	echo
 	echo "... app deletion order submitted to kubernetes ..."                          | tee -a $LOG_FILE
-	echo "... monitor application by using \`watch kubectl get pods -n sysdigcloud \`" | tee -a $LOG_FILE
+	echo "... monitor application by using \`watch kubectl get pods -n $NAMESPACE \`"  | tee -a $LOG_FILE
 	echo
 	echo
 	echo 

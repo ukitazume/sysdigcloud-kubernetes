@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: sdc-cassandra
-  namespace: sysdigcloud
+  namespace: yofti
   labels:
     app: sysdigcloud
     role: cassandra
@@ -27,7 +27,7 @@ apiVersion: "apps/v1beta1"
 kind: StatefulSet
 metadata:
   name: sdc-cassandra
-  namespace: sysdigcloud
+  namespace: yofti
   labels:
     app: sysdigcloud
     role: cassandra

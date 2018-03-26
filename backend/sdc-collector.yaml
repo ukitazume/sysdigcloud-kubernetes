@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: sdc-collector
-  namespace: sysdigcloud
+  namespace: yofti
   labels:
     app: sysdigcloud
     role: collector
@@ -20,7 +20,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: sdc-collector
-  namespace: sysdigcloud
+  namespace: yofti
 spec:
   replicas: 1
   template:

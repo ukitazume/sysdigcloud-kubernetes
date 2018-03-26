@@ -21,11 +21,11 @@ apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
   name: sdc-elasticsearch 
-  namespace: sysdigcloud
+  namespace: {{ .sysdigNamespace }}
   labels:
     app: sysdigcloud
 spec:
-  serviceName: {{ .sysdigNamespace }}
+  serviceName: sysdigElasticsearchServiceName
   replicas: 3
   selector:
     matchLabels:

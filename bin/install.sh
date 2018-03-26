@@ -134,7 +134,7 @@ create_tls_secret()
 	if [ $? -ne 0 ]	; then
 		kubectl create secret tls sysdigcloud-ssl-secret \
 		--cert=$SDC_HOME/etc/certs/server.crt \
-		--key=$SDC_HOME/etc/certs/server.key --namespace=sysdigcloud >> $LOG_FILE 2>&1
+		--key=$SDC_HOME/etc/certs/server.key --namespace=$NAMESPACE >> $LOG_FILE 2>&1
 
 		if [ $? -ne 0 ]; then
 			echo "... failed to create ssl secret in kubernetes."| tee -a $LOG_FILE
@@ -168,19 +168,19 @@ create_configmaps()
 
 start_datastores()
 {
-	kubectl create -f $SDC_HOME/datastores/sdc-mysql-master.yaml  | tee -a $LOG_FILE
-	kubectl create -f $SDC_HOME/datastores/sdc-redis-master.yaml  | tee -a $LOG_FILE
-	kubectl create -f $SDC_HOME/datastores/sdc-redis-slaves.yaml  | tee -a $LOG_FILE
-	kubectl create -f $SDC_HOME/datastores/sdc-cassandra.yaml     | tee -a $LOG_FILE
-	kubectl create -f $SDC_HOME/datastores/sdc-elasticsearch.yaml | tee -a $LOG_FILE
-	kubectl create -f $SDC_HOME/datastores/sdc-mysql-slaves.yaml  | tee -a $LOG_FILE
+	kubectl create -f $SDC_HOME/datastores/sdc-mysql-master.yaml --namespace $NAMESPACE | tee -a $LOG_FILE
+	kubectl create -f $SDC_HOME/datastores/sdc-redis-master.yaml --namespace $NAMESPACE | tee -a $LOG_FILE
+	kubectl create -f $SDC_HOME/datastores/sdc-redis-slaves.yaml --namespace $NAMESPACE | tee -a $LOG_FILE
+	kubectl create -f $SDC_HOME/datastores/sdc-cassandra.yaml  --namespace $NAMESPACE   | tee -a $LOG_FILE
+	kubectl create -f $SDC_HOME/datastores/sdc-elasticsearch.yaml --namespace $NAMESPACE | tee -a $LOG_FILE
+	kubectl create -f $SDC_HOME/datastores/sdc-mysql-slaves.yaml --namespace $NAMESPACE  | tee -a $LOG_FILE
 }
 
 start_backend()
 {
-	kubectl create  -f $SDC_HOME/backend/sdc-api.yaml       | tee -a $LOG_FILE
-	kubectl create  -f $SDC_HOME/backend/sdc-worker.yaml    | tee -a $LOG_FILE
-	kubectl create  -f $SDC_HOME/backend/sdc-collector.yaml | tee -a $LOG_FILE
+	kubectl create  -f $SDC_HOME/backend/sdc-api.yaml --namespace $NAMESPACE       | tee -a $LOG_FILE
+	kubectl create  -f $SDC_HOME/backend/sdc-worker.yaml --namespace $NAMESPACE    | tee -a $LOG_FILE
+	kubectl create  -f $SDC_HOME/backend/sdc-collector.yaml --namespace $NAMESPACE | tee -a $LOG_FILE
 }
 
 print_post_install_banner()
