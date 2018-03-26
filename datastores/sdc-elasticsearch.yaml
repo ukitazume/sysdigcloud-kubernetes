@@ -21,11 +21,11 @@ apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
   name: sdc-elasticsearch 
-  namespace: sysdigcloud
+  namespace: yofti
   labels:
     app: sysdigcloud
 spec:
-  serviceName: yofti
+  serviceName: sysdigElasticsearchServiceName
   replicas: 3
   selector:
     matchLabels:
