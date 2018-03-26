@@ -117,12 +117,12 @@ delete_configmaps()
 
 stop_datastores()
 {
-	kubectl delete -f $SDC_HOME/datastores/sdc-mysql-master.yaml  | tee -a $LOG_FILE
-	kubectl delete -f $SDC_HOME/datastores/sdc-redis-master.yaml  | tee -a $LOG_FILE
-	kubectl delete -f $SDC_HOME/datastores/sdc-redis-slaves.yaml  | tee -a $LOG_FILE
-	kubectl delete -f $SDC_HOME/datastores/sdc-cassandra.yaml     | tee -a $LOG_FILE
-	kubectl delete -f $SDC_HOME/datastores/sdc-elasticsearch.yaml | tee -a $LOG_FILE
-	kubectl delete -f $SDC_HOME/datastores/sdc-mysql-slaves.yaml  | tee -a $LOG_FILE
+	kubectl delete -f $SDC_HOME/datastores/sdc-mysql-master.yaml &  | tee -a $LOG_FILE
+	kubectl delete -f $SDC_HOME/datastores/sdc-redis-master.yaml &  | tee -a $LOG_FILE
+	kubectl delete -f $SDC_HOME/datastores/sdc-redis-slaves.yaml &  | tee -a $LOG_FILE
+	kubectl delete -f $SDC_HOME/datastores/sdc-cassandra.yaml    &  | tee -a $LOG_FILE
+	kubectl delete -f $SDC_HOME/datastores/sdc-elasticsearch.yaml & | tee -a $LOG_FILE
+	kubectl delete -f $SDC_HOME/datastores/sdc-mysql-slaves.yaml  & | tee -a $LOG_FILE
 }
 
 stop_backend()
@@ -154,7 +154,7 @@ delete_namespace()
 	        No ) exit 1;;
 	    esac
 	done
-	kubectl delete namespace sysdigcloud 
+
 	kubectl get namespace $NAMESPACE >> $LOG_FILE 2>&1
 	if [ $? -eq 0 ]	; then
 		kubectl delete namespace $NAMESPACE >> $LOG_FILE 2>&1 

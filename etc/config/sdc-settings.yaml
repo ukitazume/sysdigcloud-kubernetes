@@ -140,6 +140,8 @@ include:
       cassandraJvmOptions: -Xms2g -Xmx2g
       elasticsearchJvmOptions: -Xms2g -Xmx2g
       sysdigcloudJvmOptions: -Xms2g -Xmx2g
+      #elasticsearch
+      elasticsearch.service: sdc-elasticsearch
       #Cassandra
       cassandraClusterName: sysdigcloud
       cassandraService: sdc-cassandra

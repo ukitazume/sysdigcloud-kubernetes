@@ -196,7 +196,7 @@ print_post_install_banner()
 }
 
 #main{}
-print_env_variables
+#print_env_variables
 print_banner
 prompt_install
 create_namespace
@@ -204,7 +204,7 @@ create_storageclasses
 create_ssl_certs
 create_tls_secret
 create_configmaps
-#start_datastores
-#echo "... about to sleep 90 before starting backend"
-#sleep 90
-#start_backend
+start_datastores
+echo "... about to sleep 90 before starting backend"
+sleep 90
+start_backend
