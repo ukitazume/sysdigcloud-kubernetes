@@ -39,10 +39,12 @@ data:
   sysdigcloud.jvm.options: "-Xms2g -Xmx2g"
   #elasticsearch
   elasticsearch.service: "sdc-elasticsearch"
+  elasticsearch.cluster.name: "sysdigcloud"
+  elasticsearch.minimum.master.nodes: "1"
   #Cassandra
   cassandra.cluster.name: "sysdigcloud"
   cassandra.service: "sdc-cassandra"
-  cassandra.seeds: "sdc-cassandra-0.sdc-cassandra.sysdigcloud.svc.cluster.local, sdc-cassandra-1.sdc-cassandra.sysdigcloud.svc.cluster.local, sdc-cassandra-2.sdc-cassandra.sysdigcloud.svc.cluster.local"
+  cassandra.seeds: "sdc-cassandra-0"
   cassandra.seed.provider: "io.k8s.cassandra.KubernetesSeedProvider"
   cassandra.endpoint.snitch: "GoogleCloudSnitch"
   #cassandra.endpoint.snitch: "EC2Snitch"

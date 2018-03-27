@@ -142,10 +142,12 @@ include:
       sysdigcloudJvmOptions: -Xms2g -Xmx2g
       #elasticsearch
       elasticsearchService: sdc-elasticsearch
+      elasticsearchClusterName: sysdigcloud
+      elasticsearchMinimumMasterNodes: 1
       #Cassandra
       cassandraClusterName: sysdigcloud
       cassandraService: sdc-cassandra
-      cassandraSeeds: sdc-cassandra-0.sdc-cassandra.sysdigcloud.svc.cluster.local, sdc-cassandra-1.sdc-cassandra.sysdigcloud.svc.cluster.local, sdc-cassandra-2.sdc-cassandra.sysdigcloud.svc.cluster.local 
+      cassandraSeeds: sdc-cassandra-0.sdc-cassandra
       cassandraSeedProvider: io.k8s.cassandra.KubernetesSeedProvider
       cassandraEndpointSnitch: GoogleCloudSnitch
       #cassandra.endpoint.snitch: EC2Snitch

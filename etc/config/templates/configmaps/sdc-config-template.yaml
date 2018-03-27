@@ -39,6 +39,8 @@ data:
   sysdigcloud.jvm.options: "{{ .sysdigcloudJvmOptions }}"
   #elasticsearch
   elasticsearch.service: "{{ .elasticsearchService }}"
+  elasticsearch.cluster.name: "{{ .elasticsearchClusterName }}"
+  elasticsearch.minimum.master.nodes: "{{ .elasticsearchMinimumMasterNodes }}"
   #Cassandra
   cassandra.cluster.name: "{{ .cassandraClusterName }}"
   cassandra.service: "{{ .cassandraService }}"

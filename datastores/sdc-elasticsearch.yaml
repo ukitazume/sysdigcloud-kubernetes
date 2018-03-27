@@ -25,7 +25,7 @@ metadata:
   labels:
     app: sysdigcloud
 spec:
-  serviceName: sysdigElasticsearchServiceName
+  serviceName: sdc-elasticsearch
   replicas: 3
   selector:
     matchLabels:

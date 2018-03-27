@@ -88,10 +88,10 @@ spec:
           ordinal=${BASH_REMATCH[1]}
           if [[ $ordinal -eq 0 ]]; then 
             # Clone data from previous peer. You are server-id=200 ie first slave. replicate from master
-            ncat --recv-only sdc-mysql-0.sdc-mysql.sysdigcloud.svc.cluster.local 3307 | xbstream -x -C /var/lib/mysql
+            ncat --recv-only sdc-mysql-0.sdc-mysql 3307 | xbstream -x -C /var/lib/mysql
           else
             # Clone data from previous peer. 
-            ncat --recv-only sdc-mysql-slave-$(($ordinal-1)).sdc-mysql-slave.sysdigcloud.svc.cluster.local 3307 | xbstream -x -C /var/lib/mysql
+            ncat --recv-only sdc-mysql-slave-$(($ordinal-1)).sdc-mysql 3307 | xbstream -x -C /var/lib/mysql
           fi
           # Prepare the backup.
           xtrabackup --user=root --password=$MYSQL_ROOT_PASSWORD --prepare --target-dir=/var/lib/mysql
@@ -201,7 +201,7 @@ spec:
             mv change_master_to.sql.in change_master_to.sql.orig
             mysql -u root -p$MYSQL_ROOT_PASSWORD -h 127.0.0.1 <<EOF
           $(<change_master_to.sql.orig),
-            MASTER_HOST='sdc-mysql-0.sdc-mysql.sysdigcloud.svc.cluster.local',
+            MASTER_HOST='sdc-mysql-0.sdc-mysql'
             MASTER_USER='root',
             MASTER_PASSWORD='$MYSQL_ROOT_PASSWORD'
             MASTER_CONNECT_RETRY=10;

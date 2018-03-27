@@ -78,11 +78,16 @@ spec:
           initialDelaySeconds: 15
           timeoutSeconds: 5            
         env:
-          - name: CASSANDRA_SEEDS
+          #- name: CASSANDRA_SEEDS
+          #  valueFrom:
+          #      configMapKeyRef:
+          #        name: sysdigcloud-config
+          #        key: cassandra.seeds
+          - name: CASSANDRA_SEED_PROVIDER
             valueFrom:
                 configMapKeyRef:
                   name: sysdigcloud-config
-                  key: cassandra.seeds
+                  key: cassandra.seed.provider          
           - name: CASSANDRA_SERVICE
             valueFrom:
                 configMapKeyRef:
