@@ -9,8 +9,8 @@ metadata:
 spec:
   clusterIP: None
   ports:
-    - port: 3306
-      targetPort: 3306
+    - port: {{ .sysdigMySqlExternalPort }}
+      targetPort: {{ .sysdigMySqlTargetPort }}
       name: sql
   selector:
     app: sysdigcloud
@@ -91,7 +91,7 @@ spec:
             ncat --recv-only sdc-mysql-0.sdc-mysql 3307 | xbstream -x -C /var/lib/mysql
           else
             # Clone data from previous peer. 
-            ncat --recv-only sdc-mysql-slave-$(($ordinal-1)).sdc-mysql 3307 | xbstream -x -C /var/lib/mysql
+            ncat --recv-only sdc-mysql-slave-$(($ordinal-1)).sdc-mysql-slave 3307 | xbstream -x -C /var/lib/mysql
           fi
           # Prepare the backup.
           xtrabackup --user=root --password=$MYSQL_ROOT_PASSWORD --prepare --target-dir=/var/lib/mysql
@@ -124,7 +124,7 @@ spec:
           value: draios
         ports:
         - name: mysql
-          containerPort: 3306
+          containerPort: {{ .sysdigMySqlTargetPort }}
         volumeMounts:
         - name: data
           mountPath: /var/lib/mysql
@@ -168,7 +168,7 @@ spec:
               key: mysql.root.password
         ports:
         - name: xtrabackup
-          containerPort: 3307
+          containerPort: {{ .sysdigXtrabackupPort }}
         command:
         - bash
         - "-c"

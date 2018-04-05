@@ -9,8 +9,8 @@ metadata:
 spec:
   clusterIP: None
   ports:
-    - port: 3306
-      targetPort: 3306
+    - port: {{ .sysdigMySqlExternalPort }}
+      targetPort: {{ .sysdigMySqlTargetPort }}
       name: sql
   selector:
     app: sysdigcloud
@@ -77,7 +77,7 @@ spec:
           value: draios
         ports:
         - name: mysql
-          containerPort: 3306
+          containerPort: {{ .sysdigMySqlTargetPort }}
         volumeMounts:
         - name: data
           mountPath: /var/lib/mysql
@@ -121,7 +121,7 @@ spec:
               key: mysql.root.password
         ports:
         - name: xtrabackup
-          containerPort: 3307
+          containerPort: {{ .sysdigXtrabackupPort }}
         command:
         - bash
         - "-c"

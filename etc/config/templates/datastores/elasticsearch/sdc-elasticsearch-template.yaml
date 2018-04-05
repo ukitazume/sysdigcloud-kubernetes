@@ -9,9 +9,9 @@ metadata:
 spec:
   clusterIP: None
   ports:
-    - port: 9200
+    - port: {{ .sysdigElasticsearchApiPort }}
       name: api
-    - port: 9300
+    - port: {{ .sysdigElasticsearchTransportPort }}
       name: transport-protocol
   selector:
     app: sysdigcloud
@@ -26,7 +26,7 @@ metadata:
     app: sysdigcloud
 spec:
   serviceName: {{ .sysdigElasticsearchServiceName }}
-  replicas: 3
+  replicas: {{ .sysdigElasticsearchReplicaCount }}
   selector:
     matchLabels:
       app: sysdigcloud

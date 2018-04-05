@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: sdc-mysql-slave
-  namespace: yofti
+  namespace: sysdigcloud
   labels:
     app: sysdigcloud
     role: mysql-slave
@@ -20,7 +20,7 @@ apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
   name: sdc-mysql-slave
-  namespace: yofti
+  namespace: sysdigcloud
   labels:
     app: sysdigcloud
     role: mysql-slave
@@ -91,7 +91,7 @@ spec:
             ncat --recv-only sdc-mysql-0.sdc-mysql 3307 | xbstream -x -C /var/lib/mysql
           else
             # Clone data from previous peer. 
-            ncat --recv-only sdc-mysql-slave-$(($ordinal-1)).sdc-mysql 3307 | xbstream -x -C /var/lib/mysql
+            ncat --recv-only sdc-mysql-slave-$(($ordinal-1)).sdc-mysql-slave 3307 | xbstream -x -C /var/lib/mysql
           fi
           # Prepare the backup.
           xtrabackup --user=root --password=$MYSQL_ROOT_PASSWORD --prepare --target-dir=/var/lib/mysql

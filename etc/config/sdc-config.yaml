@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: sysdigcloud-pull-secret
-  namespace: yofti
+  namespace: sysdigcloud
 data:
   .dockerconfigjson: "ewogICJhdXRocyI6IHsKICAgICJxdWF5LmlvIjogewogICAgICAiYXV0aCI6ICJjM2x6WkdsbkszbHZablJwWDIxaGEyOXVibVZ1T2pWRVJrOUpPRGhPUkZoVVdFdFpSVFJRUWpsRVNUSklUalV4TVVkQlZGTklXVlF5UkVZNU9GTk1WbE5GUVRRek5GWllWVXBSVFZaWlRsRkNORmM1VkZVPSIsCiAgICAgICJlbWFpbCI6ICIiCiAgICB9CiAgfQp9"
 type: kubernetes.io/dockerconfigjson
@@ -11,7 +11,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: sysdigcloud-config
-  namespace: yofti
+  namespace: sysdigcloud
 data:
   #License
   sysdigcloud.license: "58945591e7864e5da1bcc403cc1a9e9b6fc311b186df29b655913e693e51fdb93152fe356068aa57dc399dafbbd0130f404a337780f4221131342645247cee8808ac1163911c12927b3885405330d49177b2213159b93d94724823e7aabb81b024dfe95eedbf46c3a8f2be3965c7b822983d87c8a7bf81951328b22af32e08eb64662f18d93d524a9d5f7b6d8846ba83"
@@ -44,7 +44,7 @@ data:
   #Cassandra
   cassandra.cluster.name: "sysdigcloud"
   cassandra.service: "sdc-cassandra"
-  cassandra.seeds: "sdc-cassandra-0"
+  cassandra.seeds: "sdc-cassandra-0.sdc-cassandra.sysdigcloud.svc.cluster.local"
   cassandra.seed.provider: "io.k8s.cassandra.KubernetesSeedProvider"
   cassandra.endpoint.snitch: "GoogleCloudSnitch"
   #cassandra.endpoint.snitch: "EC2Snitch"
@@ -85,7 +85,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: sysdigcloud-mysql-config
-  namespace: yofti
+  namespace: sysdigcloud
   labels:
     app: sysdigcloud
 data:
@@ -129,7 +129,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: sysdigcloud-mysql-config-slave
-  namespace: yofti
+  namespace: sysdigcloud
   labels:
     app: sysdigcloud-mysql-slave
 data:
@@ -173,7 +173,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: sysdigcloud-redis-config
-  namespace: yofti
+  namespace: sysdigcloud
   labels:
     app: sysdigcloud
     role: redis
@@ -193,7 +193,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: sysdigcloud-redis-config-slave
-  namespace: yofti
+  namespace: sysdigcloud
   labels:
     app: sysdigcloud
     role: redis-slave
@@ -209,6 +209,6 @@ data:
     appendonly yes
     protected-mode no
     slave-serve-stale-data yes
-    slaveof sdc-redis-0.sdc-redis.sysdigcloud.svc.cluster.local 6379
+    slaveof sdc-redis-0.sdc-redis 6379
 
 

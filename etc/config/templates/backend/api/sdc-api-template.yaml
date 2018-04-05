@@ -9,9 +9,9 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: 443
+    - port: {{ .sysdigApiExternalPort }}
       name: secure-api
-      targetPort: 443
+      targetPort: {{ .sysdigApiTargetPort }}
   selector:
     app: sysdigcloud
     role: api

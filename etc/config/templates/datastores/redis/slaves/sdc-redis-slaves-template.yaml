@@ -9,11 +9,11 @@ metadata:
 spec:
   clusterIP: None
   ports:
-  - port: 6379
-    targetPort: 6379
+  - port: {{ .sysdigRedisExternalPort }}
+    targetPort: {{ .sysdigRedisTargetPort }}
     name: client
-  - port: 16379
-    targetPort: 16379
+  - port: {{ .sysdigRedisGossipExternalPort }}
+    targetPort: {{ .sysdigRedisGossipInternalPort }}
     name: gossip
   selector:
     app: sysdigcloud
@@ -50,9 +50,9 @@ spec:
                 name: sysdigcloud-config
                 key: redis.password
         ports:
-        - containerPort: 6379
+        - containerPort: {{ .sysdigRedisTargetPort }}
           name: client
-        - containerPort: 16379
+        - containerPort: {{ .sysdigRedisGossipInternalPort }}
           name: gossip
         command: ["redis-server"]
         args: ["/conf/redis.conf"]

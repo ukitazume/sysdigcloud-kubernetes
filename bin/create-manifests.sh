@@ -11,6 +11,8 @@ kontemplate template $SDC_SETTINGS_FILE -i templates/configmaps/ > $SDC_HOME/etc
 
 #create manifests for datastores
 kontemplate template $SDC_SETTINGS_FILE -i templates/datastores/storageclasses/gce-pd/ > $SDC_HOME/datastores/storageclasses/sdc-storageclass.yaml
+#kontemplate template $SDC_SETTINGS_FILE -i templates/datastores/storageclasses/aws-io1/ > $SDC_HOME/datastores/storageclasses/sdc-storageclass.yaml
+#kontemplate template $SDC_SETTINGS_FILE -i templates/datastores/storageclasses/aws-gp2/ > $SDC_HOME/datastores/storageclasses/sdc-storageclass.yaml
 kontemplate template $SDC_SETTINGS_FILE -i templates/datastores/cassandra/ > $SDC_HOME/datastores/sdc-cassandra.yaml
 kontemplate template $SDC_SETTINGS_FILE -i templates/datastores/elasticsearch/ > $SDC_HOME/datastores/sdc-elasticsearch.yaml
 kontemplate template $SDC_SETTINGS_FILE -i templates/datastores/mysql/master/ > $SDC_HOME/datastores/sdc-mysql-master.yaml

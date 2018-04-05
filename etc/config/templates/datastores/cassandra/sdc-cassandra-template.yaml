@@ -9,15 +9,15 @@ metadata:
 spec:
   clusterIP: None
   ports:
-    - port: 9042
+    - port: {{ .sysdigCassandraCqlPort }}
       name: cql
-    - port: 9160
+    - port: {{ .sysdigCassandraThriftPort }}
       name: thrift
-    - port: 7000
+    - port: {{ .sysdigCassandraIntraNodePort }}
       name: intra-node
-    - port: 7001
+    - port: {{ .sysdigCassandraIntraNodeTlsPort }}
       name: tls-intra-node
-    - port: 7199
+    - port: {{ .sysdigCassandraJmxPort }}
       name: jmx
   selector:
     app: sysdigcloud
@@ -34,6 +34,10 @@ metadata:
 spec:
   serviceName: {{ .sysdigCassandraServiceName }}
   replicas: {{ .sysdigCassandraReplicaCount }}
+  selector:
+    matchLabels:
+      app: sysdigcloud
+      role: cassandra    
   template:
     metadata:
       labels:
@@ -44,16 +48,16 @@ spec:
       - name: cassandra
         image: {{ .sysdigCassandraImage }}
         ports:
-        - containerPort: 7000
-          name: intra-node
-        - containerPort: 7001
-          name: tls-intra-node
-        - containerPort: 7199
-          name: jmx
-        - containerPort: 9042
-          name: cql
-        - containerPort: 9160
-          name: thrift
+          - containerPort: {{ .sysdigCassandraCqlPort }}
+            name: cql
+          - containerPort: {{ .sysdigCassandraThriftPort }}
+            name: thrift
+          - containerPort: {{ .sysdigCassandraIntraNodePort }}
+            name: intra-node
+          - containerPort: {{ .sysdigCassandraIntraNodeTlsPort }}
+            name: tls-intra-node
+          - containerPort: {{ .sysdigCassandraJmxPort }}
+            name: jmx
         resources:
           requests:
            cpu: {{ .cassandraResourceRequestCpu }}
@@ -78,16 +82,16 @@ spec:
           initialDelaySeconds: 15
           timeoutSeconds: 5            
         env:
-          #- name: CASSANDRA_SEEDS
-          #  valueFrom:
-          #      configMapKeyRef:
-          #        name: sysdigcloud-config
-          #        key: cassandra.seeds
-          - name: CASSANDRA_SEED_PROVIDER
+          - name: CASSANDRA_SEEDS
             valueFrom:
                 configMapKeyRef:
                   name: sysdigcloud-config
-                  key: cassandra.seed.provider          
+                  key: cassandra.seeds
+         # - name: CASSANDRA_SEED_PROVIDER
+         #   valueFrom:
+         #     configMapKeyRef:
+         #         name: sysdigcloud-config
+         #         key: cassandra.seed.provider          
           - name: CASSANDRA_SERVICE
             valueFrom:
                 configMapKeyRef:
@@ -123,6 +127,14 @@ spec:
                 configMapKeyRef:
                   name: sysdigcloud-config
                   key: cassandra.ssl.enabled
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
         volumeMounts:
         - name: data
           mountPath: /var/lib/cassandra

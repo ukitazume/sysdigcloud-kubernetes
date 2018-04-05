@@ -1,9 +1,12 @@
 ---
-context: gke_sysdig-disney_us-west1-a_sysdig-disney-qa
+#context: gke_sysdig-disney_us-west1-a_sysdig-disney-qa
 #context: kops.yoftilabs.com
 global:
-  sysdigNamespace: yofti
+  sysdigNamespace: sysdigcloud
   sysdigcloudProvider: GKE
+  sysdigPullSecret: ewogICJhdXRocyI6IHsKICAgICJxdWF5LmlvIjogewogICAgICAiYXV0aCI6ICJjM2x6WkdsbkszbHZablJwWDIxaGEyOXVibVZ1T2pWRVJrOUpPRGhPUkZoVVdFdFpSVFJRUWpsRVNUSklUalV4TVVkQlZGTklXVlF5UkVZNU9GTk1WbE5GUVRRek5GWllWVXBSVFZaWlRsRkNORmM1VkZVPSIsCiAgICAgICJlbWFpbCI6ICIiCiAgICB9CiAgfQp9
+  sysdigcloudLicense: 58945591e7864e5da1bcc403cc1a9e9b6fc311b186df29b655913e693e51fdb93152fe356068aa57dc399dafbbd0130f404a337780f4221131342645247cee8808ac1163911c12927b3885405330d49177b2213159b93d94724823e7aabb81b024dfe95eedbf46c3a8f2be3965c7b822983d87c8a7bf81951328b22af32e08eb64662f18d93d524a9d5f7b6d8846ba83
+
 
   #Images
   sysdigBackendImage: quay.io/sysdig/sysdigcloud-backend:800
@@ -13,6 +16,18 @@ global:
   sysdigRedisImage: yofti/redis:4.0.2
   sysdigMysqlImage: mysql:5.7
   sysdigXtrabackupImage: gcr.io/google-samples/xtrabackup:1.0
+
+  #Replica Counts
+  sysdigApiReplicaCount: 1
+  sysdigWorkerReplicaCount: 1
+  sysdigCollectorReplicaCount: 1
+  sysdigMysqlMasterReplicaCount: 1
+  sysdigMysqlSlavesReplicaCount: 2
+  sysdigRedisMasterReplicaCount: 1
+  sysdigRedisSlavesReplicaCount: 2
+  sysdigCassandraReplicaCount: 3
+  sysdigElasticsearchReplicaCount: 3
+
 
   #Application Ports
   sysdigK8sExposeMethod: LoadBalancer
@@ -26,6 +41,14 @@ global:
   sysdigRedisGossipInternalPort: 16379
   sysdigMySqlExternalPort: 3306
   sysdigMySqlTargetPort: 3306
+  sysdigXtrabackupPort: 3307
+  sysdigCassandraCqlPort: 9042
+  sysdigCassandraThriftPort: 9160
+  sysdigCassandraIntraNodePort: 7000
+  sysdigCassandraIntraNodeTlsPort: 7001
+  sysdigCassandraJmxPort: 7199
+  sysdigElasticsearchApiPort: 9200
+  sysdigElasticsearchTransportPort: 9300
 
 
   #servicenames
@@ -38,30 +61,27 @@ global:
   sysdigMysqlServiceName: sdc-mysql
   sysdigMysqlSlaveServiceName: sdc-mysql-slave
 
-  #Replica Counts
-  sysdigApiReplicaCount: 1
-  sysdigWorkerReplicaCount: 1
-  sysdigCollectorReplicaCount: 1
-  sysdigMysqlMasterReplicaCount: 1
-  sysdigMysqlSlavesReplicaCount: 2
-  sysdigRedisMasterReplicaCount: 1
-  sysdigRedisSlavesReplicaCount: 2
-  sysdigCassandraReplicaCount: 3
-  sysdigElasticsearchReplicaCount: 3
 
-  #StorageClass defintions for GKE
+  #StorageClass defintions for GKE/GCE type pd-ssd
   sysdigStorageclassName: gce-pd
   sysdigStorageclassApiVersion: storage.k8s.io/v1
   sysdigStorageclassProvisioner: kubernetes.io/gce-pd
   sysdigStorageclassType: pd-ssd
 
-  #StorageClass defintions for AWS
+  #StorageClass defintions for AWS type io1
   #sysdigStorageclassName: aws-io1
   #sysdigStorageclassApiVersion: storage.k8s.io/v1
   #sysdigStorageclassProvisioner: kubernetes.io/aws-ebs
   #sysdigStorageclassType: io1
   #sysdigStorageclassZones: us-west-2a, us-west-2b, us-west-2c
   #sysdigStorageclassIopsPerGb: 50
+
+  #StorageClass defintions for AWS type gp2
+  #sysdigStorageclassName: aws-io1
+  #sysdigStorageclassApiVersion: storage.k8s.io/v1
+  #sysdigStorageclassProvisioner: kubernetes.io/aws-ebs
+  #sysdigStorageclassType: gp2
+  #sysdigStorageclassZones: us-west-2a, us-west-2b, us-west-2c
 
   #PVC disk sizes
   sysdigCassandraDiskSize: 30Gi
@@ -117,8 +137,6 @@ include:
   - name: templates/configmaps
     values:
       configmapName: sysdigcloud-config
-      sysdigPullSecret: ewogICJhdXRocyI6IHsKICAgICJxdWF5LmlvIjogewogICAgICAiYXV0aCI6ICJjM2x6WkdsbkszbHZablJwWDIxaGEyOXVibVZ1T2pWRVJrOUpPRGhPUkZoVVdFdFpSVFJRUWpsRVNUSklUalV4TVVkQlZGTklXVlF5UkVZNU9GTk1WbE5GUVRRek5GWllWVXBSVFZaWlRsRkNORmM1VkZVPSIsCiAgICAgICJlbWFpbCI6ICIiCiAgICB9CiAgfQp9
-      sysdigcloudLicense: 58945591e7864e5da1bcc403cc1a9e9b6fc311b186df29b655913e693e51fdb93152fe356068aa57dc399dafbbd0130f404a337780f4221131342645247cee8808ac1163911c12927b3885405330d49177b2213159b93d94724823e7aabb81b024dfe95eedbf46c3a8f2be3965c7b822983d87c8a7bf81951328b22af32e08eb64662f18d93d524a9d5f7b6d8846ba83
       elasticsearchUrl: http://sdc-elasticsearch
       redisEndpoint: sdc-redis
       cassandraEndpoint: sdc-cassandra
@@ -147,10 +165,10 @@ include:
       #Cassandra
       cassandraClusterName: sysdigcloud
       cassandraService: sdc-cassandra
-      cassandraSeeds: sdc-cassandra-0.sdc-cassandra
+      cassandraSeeds: sdc-cassandra-0
       cassandraSeedProvider: io.k8s.cassandra.KubernetesSeedProvider
       cassandraEndpointSnitch: GoogleCloudSnitch
-      #cassandra.endpoint.snitch: EC2Snitch
+      #cassandraEndpointSnitch: EC2Snitch
       cassandraStartRpc: "true"
       cassandraSecure: "false"
       cassandraSslEnabled: "false"

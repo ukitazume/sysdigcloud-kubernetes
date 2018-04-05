@@ -61,6 +61,9 @@ print_banner()
 	printf "%s\n" "Your current Kubernetes context is:"
 	printf "Current Context: %s\n" $CURRENT_CONTEXT
 	printf "Current Cluster: %s\n" $CURRENT_CLUSTER
+	printf '\n%.0s' {1..2}
+	printf "%s\n" "Installer is configured for namespace $NAMESPACE."
+	printf "%s\n" "Namespace $NAMESPACE will be created if it doesn't exist."
 	printf '+%.0s' {1..100}
 	printf '\n'
 }

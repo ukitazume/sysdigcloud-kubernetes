@@ -21,7 +21,7 @@
 
 sdc-kubernetes is an on-prem version of [Sysdig Monitor](https://sysdig.com/product/monitor/), a SAAS offering by Sysdig Inc for monitoring containerized envrionments. The official on-prem Kubernetes guide can be found [here](https://github.com/draios/sysdigcloud-kubernetes). This repo is the result of a personal, on-going proof-of-concept project on improving certain aspects of Kubernetes deployment.
 
-Here is a list of the highlights:
+Here is a list of the improvements:
 
 - **Introduction of Statefulsets**
 	Replication Sets and their improved kin, Deployment Sets are good for stateless loads. But if you have states, like we do in our database (datastore) layer, you do need Stateful Sets.
@@ -31,26 +31,15 @@ Here is a list of the highlights:
 	All datastore components are now highly-available running in Stateful sets with replicas >= 3. Cassandra and Elasticsearch are full active/active cluster rings. Mysql and Redis are currently setup with master/slave replications. 
 - **Performance improvements due to addition of "read-only" services**
 	With the addition of Mysql and Redis slaves, we now have new endpoints in Kubernetes for read-only access. Backend components can point their read operations to the slaves and thereby minimize the load on the master instances.
-- **All configurations consolidated into a single file**
-  etc/sdc-config.yaml holds every configurable parameter.
+- **Templatized deployment**
+  $SDC_HOME/etc/config/sdc-settings.yaml holds every configurable parameter in the deployment.
+  Templates in $SDC_HOME/etc/config/templates will be populated by variables from the sdc-settings file. Manifests are created in $SDC_HOME/{datastores,backend,frontend,etc}
 - **Addition of rudimentary install.sh and uninstall.sh scripts.**
 - **Support for Multi Availability Zone (multi AZ) deployments**
 	As long as the underlying Kubernetes is deployed in Multi-AZ mode, we can run on it. 
+- **Improved images for better peformance.**
+  Check out the $SDC_HOME/docker-images folder for images used in this deployment
 
-Some lowlights and TODOs:
-
-- **Remove clear text passwords from configMap**
-	Switch to Kubernetes secret. Easy to do. Need backend help. They need to request for a different variable from configMap. P.S. Look in the install.sh under the lab directory to see how secrets are configured for Google CloudSQL.
-- **Redis cluster support**
-	File a feature request for dev to support clustered redis. Seems like an easy code fix. We can get rid of the master/slave redis setup and go for a full cluster
-- **AWS snitch for Cassandra**
-	Yes, we can run on a multi-AZ k8s cluster. But our Cassandra is not really aware of it. It uses the 'simple' snitch. We could have Cassandra racks distributed accross zones.
-- **Support non-cloud deployments**
-	We can still do Statefulsets even if we don't have cloud providers. We can use local disks with PVC's. If we have access to SAN's, we could use products like [portworx](http://portworx.com)
-- **Better install/uninstall**
-	Error checking, logging. Add stop/start scripts?
-- **Hard-codes zones in Storageclasses**
-	The only things that makes us multi-AZ is where our StorageClasses request disk from. Do they do it from one zone or many? And which ones? Pay special attention to your storageclasses, persistent volume claims and zones when deploying this package. Modify existing Storageclasses to fit your needs.
 
 
 ## Infrastructure Overview <a id="Infrastructure-Overview"></a>
@@ -79,14 +68,15 @@ Datastores (redis, mysql, elasticsearch and cassandra) are stateful. They are co
 - Sysdig Cloud quay.io pull secret
 - Sysdig Cloud license
 - kubectl installed on your machine and communicating with the Kubernetes cluster
+- [kontemplate] (https://github.com/tazjin/kontemplate) is required for templatized deployment.
 
 ## Installation Guide <a id="Installation-Guide"></a>
 
 1. Clone this repository to your machine
-	`git clone https://github.com/yofti/sdc-kubernetes`
-2. Put your sysdig license and quay key in `etc/licenses/`. Name the files `license.uri` and `quay.uri` respectively.
-3. `cd aws` or `cd gke` depending on your cloud provider.
-4. Run ./install.sh
+	`git clone https://github.com/draios/sysdigcloud-kubernetes.git`
+2. Edit the file `$SDC_HOME/etc/config/sdc-settings.yaml`. This file is the master settings file for the whole deployment. Every editable parameter in the deployment from number of replicas to resource limits are defined in this file. Pay special attention to the following variables: `sysdigPullSecret`, `sysdigcloudLicense`, `sysdigNamespace` and `sysdigcloudProvider`.
+3. Run `$SDC_HOME/bin/create-manfiests.sh`. This will create usable Kubernetes manifests in yaml format and puts them under the appropriate directories under $SDC_HOME. 
+4. Run `$SDC_HOME/bin/install.sh` to install and run the application.  
 
 
 ## Confirm Installation  <a id="Confirm-Installation"></a>
@@ -367,35 +357,102 @@ NB: This step destroys data. Irretrievably.
 Too much typing with kubectl
 
 ```
-$alias
+#kubernetes
 alias k='kubectl'
-alias kc='kubectl create'
-alias kd='kubectl describe'
-alias kdd='kubectl describe deployment'
-alias kdds='kubectl describe daemonset'
-alias kdl='kubectl delete'
-alias kdp='kubectl describe pod'
-alias kdrc='kubectl describe rc'
-alias kdrs='kubectl describe rs'
-alias kds='kubectl describe service'
-alias kdss='kubectl describe statefulset'
-alias ke='kubectl exec -i -t'
 alias kg='kubectl get'
-alias kgc='kubectl get configmap'
+alias kv='kubectl version'
+alias kcgc='kubectl config get-contexts'
+alias kgp='kubectl get pods'
+alias kgn='kubectl get nodes'
+alias kgs='kubectl get svc'
+alias kgsvc='kubectl get svc'
 alias kgd='kubectl get deployment'
 alias kgds='kubectl get daemonset'
-alias kgn='kubectl get nodes'
-alias kgns='kubectl get namespace'
-alias kgp='kubectl get pods'
+alias kgrs='kubectl get rs'
+alias kgc='kubectl get configmap'
+alias kgr='kubectl get role'
+alias kgss='kubectl get statefulset'
 alias kgpv='kubectl get pv'
 alias kgpvc='kubectl get pvc'
-alias kgrc='kubectl get rc'
-alias kgrs='kubectl get rs'
-alias kgs='kubectl get svc'
 alias kgsc='kubectl get storageclass'
-alias kgss='kubectl get statefulset'
+alias kgcs='kubectl get cs'
+alias kgrc='kubectl get rc'
+alias kgep='kubectl get ep'
+alias kgcm='kubectl get cm'
+alias kgns='kubectl get namespace'
+alias kd='kubectl describe'
+alias kdp='kubectl describe pod'
+alias kdn='kubectl describe node'
+alias kdns='kubectl describe namespace'
+alias kdd='kubectl describe deployment'
+alias kdds='kubectl describe daemonset'
+alias kds='kubectl describe service'
+alias kdsvc='kubectl describe service'
+alias kdss='kubectl describe statefulset'
+alias kdsc='kubectl describe storageclass'
+alias kdpv='kubectl describe pv'
+alias kdpvc='kubectl describe pvc'
+alias kdrs='kubectl describe rs'
+alias kdrc='kubectl describe rc'
+alias kdr='kubectl describe role'
+alias kdc='kubectl describe configmap'
+alias kdcm='kubectl describe cm'
+alias kdep='kubectl describe ep'
+alias kc='kubectl create'
+alias kdl='kubectl delete'
 alias kl='kubectl logs'
 alias klf='kubectl logs -f'
+alias ke='kubectl exec -i -t'
+ta() {
+ if [ $# -eq 0 ]; then
+	{
+ 		kubectl exec $(kubectl get pods | grep -m1 api|awk '{print $1}') -- tail -f /var/log/sysdigcloud/api/backend.log
+	} else {
+ 		kubectl exec $1 -- tail -f /var/log/sysdigcloud/api/backend.log
+	}
+ fi
+}
+
+tw() {
+ if [ $# -eq 0 ]; then
+	{
+ 		kubectl exec $(kubectl get pods | grep -m1 worker|awk '{print $1}') -- tail -f /var/log/sysdigcloud/worker/backend.log
+	} else {
+ 		kubectl exec $1 -- tail -f /var/log/sysdigcloud/worker/backend.log
+	}
+ fi
+}
+
+tc() {
+ if [ $# -eq 0 ]; then
+	{
+ 		kubectl exec $(kubectl get pods | grep -m1 collector|awk '{print $1}') -- tail -f /var/log/sysdigcloud/collector/backend.log
+	} else {
+ 		kubectl exec $1 -- tail -f /var/log/sysdigcloud/collector/backend.log
+	}
+ fi
+}
+
+
+nts() {
+ if [ $# -eq 0 ]; then
+   {
+      kubectl exec $(kubectl get pods | grep -m1 cassandra|awk '{print $1}') -- nodetool status
+   } else {
+      kubectl exec $1 -- nodetool status
+   }
+ fi
+}
+
+esch() {
+ if [ $# -eq 0 ]; then
+   {
+      kubectl exec $(kubectl get pods | grep -m1 elasticsearch|awk '{print $1}') -- bash -c 'curl -s http://$(hostname -i):9200/_cluster/health?pretty'
+   } else {
+      kubectl exec $1 -- bash -c 'curl -s http://$(hostname -i):9200/_cluster/health?pretty'
+   }
+ fi
+}
 ```
 * Master your Kubectl configs and contexts
 

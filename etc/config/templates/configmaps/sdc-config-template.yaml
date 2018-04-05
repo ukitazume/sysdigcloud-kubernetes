@@ -44,7 +44,7 @@ data:
   #Cassandra
   cassandra.cluster.name: "{{ .cassandraClusterName }}"
   cassandra.service: "{{ .cassandraService }}"
-  cassandra.seeds: "{{ .cassandraSeeds }}"
+  cassandra.seeds: "{{ .cassandraSeeds }}.{{ .cassandraService }}.{{ .sysdigNamespace }}.svc.cluster.local"
   cassandra.seed.provider: "{{ .cassandraSeedProvider }}"
   cassandra.endpoint.snitch: "{{ .cassandraEndpointSnitch }}"
   #cassandra.endpoint.snitch: "EC2Snitch"
@@ -209,5 +209,5 @@ data:
     appendonly yes
     protected-mode no
     slave-serve-stale-data yes
-    slaveof sdc-redis-0.sdc-redis.sysdigcloud.svc.cluster.local 6379
+    slaveof sdc-redis-0.sdc-redis 6379
 

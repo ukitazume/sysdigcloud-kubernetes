@@ -3,7 +3,7 @@
 # Global Variables
 NOW=$(date "+%Y.%m.%d-%H.%M.%S")
 SDC_HOME=".."
-LOG_FILE=$SDC_HOME/logs/install/install-$NOW.log
+LOG_FILE=$SDC_HOME/logs/uninstall/uninstall-$NOW.log
 SETTINGS_FILE="$SDC_HOME/etc/config/sdc-settings.yaml"
 NAMESPACE=$(egrep sysdigNamespace $SETTINGS_FILE |awk '{print $2}')
 BACKEND_VERSION=$(egrep sysdigBackendImage $SETTINGS_FILE | awk -F: '{print $3}')
@@ -61,6 +61,9 @@ print_banner()
 	printf "%s\n" "Your current Kubernetes context is:"
 	printf "Current Context: %s\n" $CURRENT_CONTEXT
 	printf "Current Cluster: %s\n" $CURRENT_CLUSTER
+	printf '\n%.0s' {1..2}
+	printf "%s\n" "Uinstaller is configured for namespace $NAMESPACE."
+	printf "%s\n" "Namespace $NAMESPACE will be removed if you answer \"yes\" to the prompt."
 	printf '+%.0s' {1..100}
 	printf '\n'
 }
@@ -96,7 +99,7 @@ delete_ssl_certs()
 {
 	rm $SDC_HOME/etc/certs/server.key 
 	rm $SDC_HOME/etc/certs/server.crt
-	echo "...deleted ssl certs."
+	echo "...deleted ssl certs." | tee -a $LOG_FILE
 	
 }
 
@@ -111,26 +114,26 @@ delete_tls_secret()
 
 delete_configmaps()
 {
-	kubectl delete -f $SDC_HOME/etc/config/sdc-config.yaml | tee -a $LOG_FILE
-	echo "... deleted configmaps."
+	kubectl delete -f $SDC_HOME/etc/config/sdc-config.yaml >> $LOG_FILE 2>&1 &
+	echo "... deleted configmaps." | tee -a $LOG_FILE
 }
 
 stop_datastores()
 {
 
-	kubectl delete -f $SDC_HOME/datastores/sdc-mysql-master.yaml   | tee -a $LOG_FILE &
-	kubectl delete -f $SDC_HOME/datastores/sdc-redis-master.yaml   | tee -a $LOG_FILE &
-	kubectl delete -f $SDC_HOME/datastores/sdc-redis-slaves.yaml   | tee -a $LOG_FILE &
-	kubectl delete -f $SDC_HOME/datastores/sdc-cassandra.yaml      | tee -a $LOG_FILE &
-	kubectl delete -f $SDC_HOME/datastores/sdc-elasticsearch.yaml  | tee -a $LOG_FILE &
-	kubectl delete -f $SDC_HOME/datastores/sdc-mysql-slaves.yaml   | tee -a $LOG_FILE &
+	kubectl delete -f $SDC_HOME/datastores/sdc-mysql-master.yaml   >> $LOG_FILE 2>&1 &
+	kubectl delete -f $SDC_HOME/datastores/sdc-redis-master.yaml   >> $LOG_FILE 2>&1 &
+	kubectl delete -f $SDC_HOME/datastores/sdc-redis-slaves.yaml   >> $LOG_FILE 2>&1 &
+	kubectl delete -f $SDC_HOME/datastores/sdc-cassandra.yaml      >> $LOG_FILE 2>&1 &
+	kubectl delete -f $SDC_HOME/datastores/sdc-elasticsearch.yaml  >> $LOG_FILE 2>&1 &
+	kubectl delete -f $SDC_HOME/datastores/sdc-mysql-slaves.yaml   >> $LOG_FILE 2>&1 &
 }
 
 stop_backend()
 {
-	kubectl delete  -f $SDC_HOME/backend/sdc-api.yaml       | tee -a $LOG_FILE &
-	kubectl delete  -f $SDC_HOME/backend/sdc-worker.yaml    | tee -a $LOG_FILE &
-	kubectl delete  -f $SDC_HOME/backend/sdc-collector.yaml | tee -a $LOG_FILE &
+	kubectl delete  -f $SDC_HOME/backend/sdc-api.yaml       >> $LOG_FILE 2>&1 &
+	kubectl delete  -f $SDC_HOME/backend/sdc-worker.yaml    >> $LOG_FILE 2>&1 &
+	kubectl delete  -f $SDC_HOME/backend/sdc-collector.yaml >> $LOG_FILE 2>&1 &
 }
 
 print_post_uninstall_banner()
@@ -147,6 +150,7 @@ print_post_uninstall_banner()
 delete_namespace()
 {
 
+	clear
 	echo "Do you wish to delete the namespace $NAMESPACE?"
 	echo "NB: Removing the namespace will remove all Persistent Volume Claims (PVCs) and their associated Persistent Volumes (PVs)."
 	select yn in "Yes" "No"; do
@@ -180,4 +184,5 @@ delete_ssl_certs
 delete_tls_secret
 stop_datastores
 stop_backend
+sleep 5
 delete_namespace
