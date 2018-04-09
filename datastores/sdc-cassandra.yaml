@@ -47,6 +47,7 @@ spec:
       containers:
       - name: cassandra
         image: yofti/cassandra:2.2.11
+        imagePullPolicy: Always
         ports:
           - containerPort: 9042
             name: cql
