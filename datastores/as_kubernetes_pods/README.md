@@ -18,6 +18,8 @@ To create a MySQL deployment, the provided manifest under `manifests/mysql.yaml`
 kubectl create -f manifests/mysql.yaml --namespace sysdigcloud
 ```
 
+If testing at high scale, note the increased `max_connections` setting in `manifests/mysql.yaml`.
+
 ## Redis
 
 Redis doesn't require persistent storage, so it can be simply deployed as:
