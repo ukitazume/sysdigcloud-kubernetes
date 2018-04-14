@@ -35,6 +35,10 @@ data:
     sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
     # Disabling symbolic-links is recommended to prevent assorted security risks
     symbolic-links=0
+    # This increase of max_connections from the default of 151 to 1024 has been
+    # tested as adequate for an environment with up to 24 API/Worker/Collector
+    # components (8 of each) and 4000 Agents of incoming traffic. The MySQL
+    # container also consumed as much as 1 GB of memory in this test.
     max_connections=1024
     !includedir /etc/mysql/conf.d/
 ---
