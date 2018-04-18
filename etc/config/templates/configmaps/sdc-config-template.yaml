@@ -47,7 +47,6 @@ data:
   cassandra.seeds: "{{ .cassandraSeeds }}.{{ .cassandraService }}.{{ .sysdigNamespace }}.svc.cluster.local"
   cassandra.seed.provider: "{{ .cassandraSeedProvider }}"
   cassandra.endpoint.snitch: "{{ .cassandraEndpointSnitch }}"
-  #cassandra.endpoint.snitch: "EC2Snitch"
   cassandra.start.rpc: "{{ .cassandraStartRpc }}"
   cassandra.secure: "{{ .cassandraSecure }}"
   cassandra.ssl.enabled: "{{ .cassandraSslEnabled }}"

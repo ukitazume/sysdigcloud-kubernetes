@@ -12,6 +12,10 @@ spec:
       labels:
         name: sysdig-agent
     spec:
+      tolerations:
+      - key: "node-role.kubernetes.io/master"
+        operator: "Exists"
+        effect: "NoSchedule"
       volumes:
       - name: dshm
         emptyDir:
@@ -40,20 +44,20 @@ spec:
       containers:
       - name: sysdig-agent
         image: sysdig/agent
-#        imagePullPolicy: Always                            #OPTIONAL - Always pull the latest container image tag 
+        imagePullPolicy: Always                            #OPTIONAL - Always pull the latest container image tag 
         securityContext:
          privileged: true
         env:
         - name: ACCESS_KEY                                  #REQUIRED - replace with your Sysdig Cloud access key
-          value: efac419c-655f-438a-8156-d65339878fc8
+          value: e14f3a20-79ff-4b9c-beaa-c823b7155bb1
 #        - name: RUN_MODE                                   #OPTIONAL - driverless mode (limited functionality. No kernel module. Minimum agent version 0.51.0)
 #          value: "nodriver" 
         - name: COLLECTOR_PORT                             #OPTIONAL - on-prem install only
           value: "6443"
         - name: TAGS                                       #OPTIONAL
-          value: linux:ubuntu-16.04,cloud:gke,cluster:gke_sysdig-disney_us-west1-a_sysdig-disney-qa,backend:776 
+          value: os:ubuntu-16.04,orechestrator:k8s,cloud_provider:aws,cluster:kubeadmin@yoftilabs.com,backend:800 
         - name: COLLECTOR                                  #OPTIONAL - on-prem install only
-          value: 35.230.77.70
+          value: a0759f03840b011e88b9a061203ba4d1-1293667587.us-east-1.elb.amazonaws.com
         - name: SECURE                                     #OPTIONAL - on-prem install only       
           value: "true"
         - name: CHECK_CERTIFICATE                          #OPTIONAL - on-prem install only
@@ -82,4 +86,3 @@ spec:
           readOnly: true
         - mountPath: /dev/shm
           name: dshm
-

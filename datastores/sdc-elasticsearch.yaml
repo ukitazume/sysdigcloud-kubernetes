@@ -88,7 +88,7 @@ spec:
   - metadata:
       name: data
     spec:
-      storageClassName: gce-pd
+      storageClassName: aws-io1
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:

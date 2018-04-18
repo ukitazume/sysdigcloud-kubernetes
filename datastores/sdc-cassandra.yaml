@@ -148,5 +148,5 @@ spec:
       resources:
         requests:
           storage: 30Gi
-      storageClassName: gce-pd
+      storageClassName: aws-io1
 

@@ -6,4 +6,4 @@ provisioner: {{ .sysdigStorageclassProvisioner }}
 parameters:
   type: {{ .sysdigStorageclassType }}
   zones: {{ .sysdigStorageclassZones }}
-  iopsPerGB: {{ .sysdigStorageclassIopsPerGb }}
+  iopsPerGB: "{{ .sysdigStorageclassIopsPerGb }}"

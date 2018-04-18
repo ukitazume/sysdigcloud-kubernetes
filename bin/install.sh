@@ -106,7 +106,7 @@ create_namespace()
 
 create_storageclasses()
 {
-	kubectl create -f $SDC_HOME/datastores/storageclasses/ >> $LOG_FILE 2>&1
+	kubectl apply -f $SDC_HOME/datastores/storageclasses/ >> $LOG_FILE 2>&1
 	if [ $? -ne 0 ]; then
 		echo "... failed to create storageclasses."| tee -a $LOG_FILE
 		echo "     ... continuing."
@@ -155,7 +155,7 @@ create_configmaps()
 {
 	kubectl get configmap sysdigcloud-config --namespace $NAMESPACE>> $LOG_FILE 2>&1
 	if [ $? -ne 0 ]	; then
-		kubectl create -f $SDC_HOME/etc/config/sdc-config.yaml  --namespace $NAMESPACE
+		kubectl apply -f $SDC_HOME/etc/config/sdc-config.yaml  --namespace $NAMESPACE
 		if [ $? -ne 0 ]; then
 			echo "... failed to create configmap in kubernetes."| tee -a $LOG_FILE
 			exit 1
@@ -171,19 +171,19 @@ create_configmaps()
 
 start_datastores()
 {
-	kubectl create -f $SDC_HOME/datastores/sdc-mysql-master.yaml --namespace $NAMESPACE | tee -a $LOG_FILE
-	kubectl create -f $SDC_HOME/datastores/sdc-redis-master.yaml --namespace $NAMESPACE | tee -a $LOG_FILE
-	kubectl create -f $SDC_HOME/datastores/sdc-redis-slaves.yaml --namespace $NAMESPACE | tee -a $LOG_FILE
-	kubectl create -f $SDC_HOME/datastores/sdc-cassandra.yaml  --namespace $NAMESPACE   | tee -a $LOG_FILE
-	kubectl create -f $SDC_HOME/datastores/sdc-elasticsearch.yaml --namespace $NAMESPACE | tee -a $LOG_FILE
-	kubectl create -f $SDC_HOME/datastores/sdc-mysql-slaves.yaml --namespace $NAMESPACE  | tee -a $LOG_FILE
+	kubectl apply -f $SDC_HOME/datastores/sdc-mysql-master.yaml --namespace $NAMESPACE | tee -a $LOG_FILE
+	kubectl apply -f $SDC_HOME/datastores/sdc-redis-master.yaml --namespace $NAMESPACE | tee -a $LOG_FILE
+	kubectl apply -f $SDC_HOME/datastores/sdc-redis-slaves.yaml --namespace $NAMESPACE | tee -a $LOG_FILE
+	kubectl apply -f $SDC_HOME/datastores/sdc-cassandra.yaml  --namespace $NAMESPACE   | tee -a $LOG_FILE
+	kubectl apply -f $SDC_HOME/datastores/sdc-elasticsearch.yaml --namespace $NAMESPACE | tee -a $LOG_FILE
+	kubectl apply -f $SDC_HOME/datastores/sdc-mysql-slaves.yaml --namespace $NAMESPACE  | tee -a $LOG_FILE
 }
 
 start_backend()
 {
-	kubectl create  -f $SDC_HOME/backend/sdc-api.yaml --namespace $NAMESPACE       | tee -a $LOG_FILE
-	kubectl create  -f $SDC_HOME/backend/sdc-worker.yaml --namespace $NAMESPACE    | tee -a $LOG_FILE
-	kubectl create  -f $SDC_HOME/backend/sdc-collector.yaml --namespace $NAMESPACE | tee -a $LOG_FILE
+	kubectl apply  -f $SDC_HOME/backend/sdc-api.yaml --namespace $NAMESPACE       | tee -a $LOG_FILE
+	kubectl apply  -f $SDC_HOME/backend/sdc-worker.yaml --namespace $NAMESPACE    | tee -a $LOG_FILE
+	kubectl apply  -f $SDC_HOME/backend/sdc-collector.yaml --namespace $NAMESPACE | tee -a $LOG_FILE
 }
 
 print_post_install_banner()

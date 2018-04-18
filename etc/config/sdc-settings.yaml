@@ -3,7 +3,7 @@
 #context: kops.yoftilabs.com
 global:
   sysdigNamespace: sysdigcloud
-  sysdigcloudProvider: gcp 
+  #sysdigcloudProvider: gcp 
   sysdigcloudProvider: aws
   sysdigPullSecret: 
   sysdigcloudLicense: 
@@ -30,60 +30,24 @@ global:
   sysdigElasticsearchReplicaCount: 3
 
 
-  #Application Ports
-  sysdigK8sExposeMethod: LoadBalancer
-  #sysdigK8sExposeMethod: NodePort
-  sysdigApiExternalPort: 443
-  sysdigApiTargetPort: 443
-  sysdigCollectorExternalPort: 6443
-  sysdigCollectorTargetPort: 6443
-  sysdigRedisExternalPort: 6379
-  sysdigRedisTargetPort: 6379
-  sysdigRedisGossipExternalPort: 16379
-  sysdigRedisGossipInternalPort: 16379
-  sysdigMySqlExternalPort: 3306
-  sysdigMySqlTargetPort: 3306
-  sysdigXtrabackupPort: 3307
-  sysdigCassandraCqlPort: 9042
-  sysdigCassandraThriftPort: 9160
-  sysdigCassandraIntraNodePort: 7000
-  sysdigCassandraIntraNodeTlsPort: 7001
-  sysdigCassandraJmxPort: 7199
-  sysdigElasticsearchApiPort: 9200
-  sysdigElasticsearchTransportPort: 9300
-
-
-  #servicenames
-  sysdigApiServiceName: sdc-api
-  sysdigCollectorServiceName: sdc-collector
-  sysdigCassandraServiceName: sdc-cassandra
-  sysdigElasticsearchServiceName: sdc-elasticsearch
-  sysdigRedisServiceName: sdc-redis
-  sysdigRedisSlaveServiceName: sdc-redis-slave
-  sysdigMysqlServiceName: sdc-mysql
-  sysdigMysqlSlaveServiceName: sdc-mysql-slave
-
 
   #StorageClass defintions for GKE/GCE type pd-ssd
-  sysdigStorageclassName: gce-pd
-  sysdigStorageclassApiVersion: storage.k8s.io/v1
-  sysdigStorageclassProvisioner: kubernetes.io/gce-pd
-  sysdigStorageclassType: pd-ssd
+  #sysdigStorageclassName: gce-pd
+  #sysdigStorageclassProvisioner: kubernetes.io/gce-pd
+  #sysdigStorageclassType: pd-ssd
 
   #StorageClass defintions for AWS type io1
-  #sysdigStorageclassName: aws-io1
-  #sysdigStorageclassApiVersion: storage.k8s.io/v1
-  #sysdigStorageclassProvisioner: kubernetes.io/aws-ebs
-  #sysdigStorageclassType: io1
-  #sysdigStorageclassZones: us-west-2a, us-west-2b, us-west-2c
-  #sysdigStorageclassIopsPerGb: 50
+  sysdigStorageclassName: aws-io1
+  sysdigStorageclassProvisioner: kubernetes.io/aws-ebs
+  sysdigStorageclassType: io1
+  sysdigStorageclassZones: us-east-1e
+  sysdigStorageclassIopsPerGb: 50
 
   #StorageClass defintions for AWS type gp2
-  #sysdigStorageclassName: aws-io1
-  #sysdigStorageclassApiVersion: storage.k8s.io/v1
+  #sysdigStorageclassName: aws-gp2
   #sysdigStorageclassProvisioner: kubernetes.io/aws-ebs
   #sysdigStorageclassType: gp2
-  #sysdigStorageclassZones: us-west-2a, us-west-2b, us-west-2c
+  #sysdigStorageclassZones: us-east-1e
 
   #PVC disk sizes
   sysdigCassandraDiskSize: 30Gi
@@ -122,6 +86,40 @@ global:
   redisResourceRequestMemory: 2Gi
   redisResourceLimitsCpu: 2000m
   redisResourceLimitsMemory: 4Gi
+
+  #Application Ports
+  sysdigK8sExposeMethod: LoadBalancer
+  #sysdigK8sExposeMethod: NodePort
+  sysdigApiExternalPort: 443
+  sysdigApiTargetPort: 443
+  sysdigCollectorExternalPort: 6443
+  sysdigCollectorTargetPort: 6443
+  sysdigRedisExternalPort: 6379
+  sysdigRedisTargetPort: 6379
+  sysdigRedisGossipExternalPort: 16379
+  sysdigRedisGossipInternalPort: 16379
+  sysdigMySqlExternalPort: 3306
+  sysdigMySqlTargetPort: 3306
+  sysdigXtrabackupPort: 3307
+  sysdigCassandraCqlPort: 9042
+  sysdigCassandraThriftPort: 9160
+  sysdigCassandraIntraNodePort: 7000
+  sysdigCassandraIntraNodeTlsPort: 7001
+  sysdigCassandraJmxPort: 7199
+  sysdigElasticsearchApiPort: 9200
+  sysdigElasticsearchTransportPort: 9300
+
+
+  #servicenames
+  sysdigApiServiceName: sdc-api
+  sysdigCollectorServiceName: sdc-collector
+  sysdigCassandraServiceName: sdc-cassandra
+  sysdigElasticsearchServiceName: sdc-elasticsearch
+  sysdigRedisServiceName: sdc-redis
+  sysdigRedisSlaveServiceName: sdc-redis-slave
+  sysdigMysqlServiceName: sdc-mysql
+  sysdigMysqlSlaveServiceName: sdc-mysql-slave
+
 include:
   - name: templates/backend/api
   - name: templates/backend/collector
@@ -169,8 +167,8 @@ include:
       cassandraService: sdc-cassandra
       cassandraSeeds: sdc-cassandra-0
       cassandraSeedProvider: io.k8s.cassandra.KubernetesSeedProvider
-      cassandraEndpointSnitch: GoogleCloudSnitch
-      #cassandraEndpointSnitch: EC2Snitch
+      #cassandraEndpointSnitch: GoogleCloudSnitch
+      cassandraEndpointSnitch: Ec2Snitch
       cassandraStartRpc: "true"
       cassandraSecure: "false"
       cassandraSslEnabled: "false"

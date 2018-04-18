@@ -45,22 +45,25 @@ spec:
          privileged: true
         env:
         - name: ACCESS_KEY                                  #REQUIRED - replace with your Sysdig Cloud access key
-          value: efac419c-655f-438a-8156-d65339878fc8
-#        - name: RUN_MODE                                   #OPTIONAL - driverless mode (limited functionality. No kernel module. Minimum agent version 0.51.0)
-#          value: "nodriver" 
+          value: c54dd3c6-edaa-4234-9e92-ff736e891b09
         - name: COLLECTOR_PORT                             #OPTIONAL - on-prem install only
           value: "6443"
         - name: TAGS                                       #OPTIONAL
-          value: linux:ubuntu-16.04,cloud:gke,cluster:gke_sysdig-disney_us-west1-a_sysdig-disney-qa,backend:776 
+          value: linux:ubuntu,dept:dev,local:nyc 
         - name: COLLECTOR                                  #OPTIONAL - on-prem install only
-          value: 35.230.77.70
+          value: aa09f558c3cc911e8a7d506cc9c96693-101015003.us-east-1.elb.amazonaws.com
         - name: SECURE                                     #OPTIONAL - on-prem install only       
           value: "true"
-        - name: CHECK_CERTIFICATE                          #OPTIONAL - on-prem install only
-          value: "false"
-        - name: ADDITIONAL_CONF                            #OPTIONAL pass additional parameters to the agent such as authentication example provided here
-          value: "dev_new_k8s: true"
-#          value: "k8s_uri: https://myacct:mypass@localhost:4430\nk8s_ca_certificate: k8s-ca.crt\nk8s_ssl_verify_certificate: true"
+#        - name: CHECK_CERTIFICATE                          #OPTIONAL - on-prem install only
+#          value: "false"
+#        - name: SYSDIG_PROBE_URL                           #OPTIONAL - on-prem airgappepd install only. sysdig/agent 0.79.0 and higher 
+#          value: "http://<custom URL>" 
+       - name: ADDITIONAL_CONF                            #OPTIONAL pass additional parameters to the agent such as authentication example provided here
+         value: |
+#              k8s_uri: https://myacct:mypass@localhost:4430
+#              k8s_ca_certificate: k8s-ca.crt\nk8s_ssl_verify_certificate: true
+             dev_new_k8s: true
+             prometheus: enabled
         volumeMounts:
         - mountPath: /host/var/run/docker.sock
           name: docker-sock
