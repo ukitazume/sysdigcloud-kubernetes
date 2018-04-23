@@ -1,59 +1,56 @@
 ---
-#context: gke_sysdig-disney_us-west1-a_sysdig-disney-qa
-#context: kops.yoftilabs.com
 global:
-  sysdigNamespace: sysdigcloud
-  #sysdigcloudProvider: gcp 
-  sysdigcloudProvider: aws
-  sysdigPullSecret: 
-  sysdigcloudLicense: 
+  namespace: sysdigcloud
+  provider: gcp 
+  #Provider: aws
+  pullSecret: ""
+  license:  ""
 
 
   #Images
-  sysdigBackendImage: quay.io/sysdig/sysdigcloud-backend:800
-  sysdigFrontendImage: sysdig/agent:0.78.1
-  sysdigCassandraImage: yofti/cassandra:2.2.11
-  sysdigElasticsearchImage: yofti/elasticsearch:5.5.3
-  sysdigRedisImage: yofti/redis:4.0.2
-  sysdigMysqlImage: mysql:5.7
-  sysdigXtrabackupImage: gcr.io/google-samples/xtrabackup:1.0
+  backendImage: quay.io/sysdig/sysdigcloud-backend:858
+  frontendImage: sysdig/agent
+  cassandraImage: yofti/cassandra:2.2.11
+  elasticsearchImage: yofti/elasticsearch:5.5.3
+  redisImage: yofti/redis:4.0.2
+  mysqlImage: mysql:5.7
+  xtrabackupImage: gcr.io/google-samples/xtrabackup:1.0
 
   #Replica Counts
-  sysdigApiReplicaCount: 1
-  sysdigWorkerReplicaCount: 1
-  sysdigCollectorReplicaCount: 1
-  sysdigMysqlMasterReplicaCount: 1
-  sysdigMysqlSlavesReplicaCount: 2
-  sysdigRedisMasterReplicaCount: 1
-  sysdigRedisSlavesReplicaCount: 2
-  sysdigCassandraReplicaCount: 3
-  sysdigElasticsearchReplicaCount: 3
+  apiReplicaCount: 1
+  workerReplicaCount: 1
+  collectorReplicaCount: 1
+  mysqlMasterReplicaCount: 1
+  mysqlSlavesReplicaCount: 2
+  redisMasterReplicaCount: 1
+  redisSlavesReplicaCount: 2
+  cassandraReplicaCount: 3
+  elasticsearchReplicaCount: 3
 
 
 
   #StorageClass defintions for GKE/GCE type pd-ssd
-  #sysdigStorageclassName: gce-pd
-  #sysdigStorageclassProvisioner: kubernetes.io/gce-pd
-  #sysdigStorageclassType: pd-ssd
+  storageclassName: gce-pd
+  storageclassProvisioner: kubernetes.io/gce-pd
+  storageclassType: pd-ssd
 
   #StorageClass defintions for AWS type io1
-  sysdigStorageclassName: aws-io1
-  sysdigStorageclassProvisioner: kubernetes.io/aws-ebs
-  sysdigStorageclassType: io1
-  sysdigStorageclassZones: us-east-1e
-  sysdigStorageclassIopsPerGb: 50
+  #storageclassName: aws-io1
+  #storageclassType: io1
+  #storageclassZones: us-east-1e
+  #storageclassIopsPerGb: 50
 
   #StorageClass defintions for AWS type gp2
-  #sysdigStorageclassName: aws-gp2
-  #sysdigStorageclassProvisioner: kubernetes.io/aws-ebs
-  #sysdigStorageclassType: gp2
-  #sysdigStorageclassZones: us-east-1e
+  #storageclassName: aws-gp2
+  #storageclassProvisioner: kubernetes.io/aws-ebs
+  #storageclassType: gp2
+  #storageclassZones: us-east-1e
 
   #PVC disk sizes
-  sysdigCassandraDiskSize: 30Gi
-  sysdigElasticsearchDiskSize: 30Gi
-  sysdigRedisDiskSize: 30Gi
-  sysdigMysqlDiskSize: 30Gi
+  cassandraDiskSize: 50Gi
+  elasticsearchDiskSize: 10Gi
+  redisDiskSize: 10Gi
+  mysqlDiskSize: 10Gi
 
   #Backend resource allocation
   apiResourceRequestCpu: 1000m
@@ -62,7 +59,7 @@ global:
   apiResourceLimitsMemory: 5Gi
   collectorResourceRequestCpu: 1000m
   collectorResourceRequestMemory: 3Gi
-  collectorResourceLimitsCpu: 3000m
+  collectorResourceLimitsCpu: 6000m
   collectorResourceLimitsMemory: 6Gi
   workerResourceRequestCpu: 1000m
   workerResourceRequestMemory: 3Gi
@@ -71,9 +68,9 @@ global:
 
   #Datastore resource allocation
   cassandraResourceRequestCpu: 1000m
-  cassandraResourceRequestMemory: 2Gi
-  cassandraResourceLimitsCpu: 3000m
-  cassandraResourceLimitsMemory: 8Gi
+  cassandraResourceRequestMemory: 4Gi
+  cassandraResourceLimitsCpu: 6000m
+  cassandraResourceLimitsMemory: 12Gi
   elasticsearchResourceRequestCpu: 500m
   elasticsearchResourceRequestMemory: 2Gi
   elasticsearchResourceLimitsCpu: 2000m
@@ -88,37 +85,42 @@ global:
   redisResourceLimitsMemory: 4Gi
 
   #Application Ports
-  sysdigK8sExposeMethod: LoadBalancer
-  #sysdigK8sExposeMethod: NodePort
-  sysdigApiExternalPort: 443
-  sysdigApiTargetPort: 443
-  sysdigCollectorExternalPort: 6443
-  sysdigCollectorTargetPort: 6443
-  sysdigRedisExternalPort: 6379
-  sysdigRedisTargetPort: 6379
-  sysdigRedisGossipExternalPort: 16379
-  sysdigRedisGossipInternalPort: 16379
-  sysdigMySqlExternalPort: 3306
-  sysdigMySqlTargetPort: 3306
-  sysdigXtrabackupPort: 3307
-  sysdigCassandraCqlPort: 9042
-  sysdigCassandraThriftPort: 9160
-  sysdigCassandraIntraNodePort: 7000
-  sysdigCassandraIntraNodeTlsPort: 7001
-  sysdigCassandraJmxPort: 7199
-  sysdigElasticsearchApiPort: 9200
-  sysdigElasticsearchTransportPort: 9300
+  k8sExposeMethod: LoadBalancer
+  #K8sExposeMethod: NodePort
+  apiExternalPort: 443
+  apiTargetPort: 443
+  collectorExternalPort: 6443
+  collectorTargetPort: 6443
+  redisExternalPort: 6379
+  redisTargetPort: 6379
+  redisGossipExternalPort: 16379
+  redisGossipInternalPort: 16379
+  mySqlExternalPort: 3306
+  mySqlTargetPort: 3306
+  xtrabackupPort: 3307
+  cassandraCqlPort: 9042
+  cassandraThriftPort: 9160
+  cassandraIntraNodePort: 7000
+  cassandraIntraNodeTlsPort: 7001
+  cassandraJmxPort: 7199
+  elasticsearchApiPort: 9200
+  elasticsearchTransportPort: 9300
 
 
   #servicenames
-  sysdigApiServiceName: sdc-api
-  sysdigCollectorServiceName: sdc-collector
-  sysdigCassandraServiceName: sdc-cassandra
-  sysdigElasticsearchServiceName: sdc-elasticsearch
-  sysdigRedisServiceName: sdc-redis
-  sysdigRedisSlaveServiceName: sdc-redis-slave
-  sysdigMysqlServiceName: sdc-mysql
-  sysdigMysqlSlaveServiceName: sdc-mysql-slave
+  apiServiceName: sdc-api
+  collectorServiceName: sdc-collector
+  cassandraServiceName: sdc-cassandra
+  elasticsearchServiceName: sdc-elasticsearch
+  redisServiceName: sdc-redis
+  redisSlaveServiceName: sdc-redis-slave
+  mysqlServiceName: sdc-mysql
+  mysqlSlaveServiceName: sdc-mysql-slave
+
+  #frontend configuration
+  collectorUrl: collector.sysdigcloud.com
+  accessKey: f65322d7-da0c-44ea-b365-2506bb0db382
+  agentTags: os:ubuntu-16.04,orechestrator:k8s,cloud_provider:gke,cluster:sysdig-disney,backend_version:858,owner:yofti
 
 include:
   - name: templates/backend/api
@@ -145,8 +147,8 @@ include:
       collectorPort: "6443"
       apiUrl: https://sdc-api:443
       #passwords
-      sysdigcloudDefaultUser: test@sysdig.com
-      sysdigcloudDefaultUserPassword: test
+      defaultUser: test@sysdig.com
+      defaultUserPassword: test
       cassandraUser: ""
       cassandraPassword: ""
       redisPassword: ""
@@ -154,10 +156,10 @@ include:
       mysqlPassword: password
       mysqlRootUser: root
       mysqlRootPassword: password
-      #jvm options
-      cassandraJvmOptions: -Xms2g -Xmx2g
+      #options
+      cassandraJvmOptions: -Xms2g -Xmx4g
       elasticsearchJvmOptions: -Xms2g -Xmx2g
-      sysdigcloudJvmOptions: -Xms2g -Xmx2g
+      jvmOptions: -Xms2g -Xmx4g -Xmn1g
       #elasticsearch
       elasticsearchService: sdc-elasticsearch
       elasticsearchClusterName: sysdigcloud
@@ -167,15 +169,15 @@ include:
       cassandraService: sdc-cassandra
       cassandraSeeds: sdc-cassandra-0
       cassandraSeedProvider: io.k8s.cassandra.KubernetesSeedProvider
-      #cassandraEndpointSnitch: GoogleCloudSnitch
-      cassandraEndpointSnitch: Ec2Snitch
+      cassandraEndpointSnitch: GoogleCloudSnitch
+      #cassandraEndpointSnitch: Ec2Snitch
       cassandraStartRpc: "true"
       cassandraSecure: "false"
       cassandraSslEnabled: "false"
       cassandraSslCiphers: ""
       cassandraPort: "9042"
       cassandraReplicationFactor: "3"
-      sysdigcloudCapturesCassandraStorage: "true"
+      capturesCassandraStorage: "true"
       #smtp
       smtpServer: ""
       smtpServerPort: "25"
@@ -185,19 +187,19 @@ include:
       smtpSsl: "false"
       smtpFromAddress: ""
       #logging
-      sysdigcloudLoggingStdout: "true"
+      loggingStdout: "true"
       #Auth and LDAP
-      sysdigcloudRestrictPasswordLogin: "false"
-      sysdigcloudOauthAllowedDomainsList: ""
-      sysdigcloudGoogleOauthClientId: ""
-      sysdigcloudGoogleOauthClientSecret: ""
-      sysdigcloudLdapEnabled: "false"
-      sysdigcloudLdapEndpoint: ""
-      sysdigcloudLdapManagerDn: ""
-      sysdigcloudLdapManagerPassword: ""
-      sysdigcloudLdapRootDn: ""
-      sysdigcloudLdapUserSearchBase: ""
-      sysdigcloudLdapUserSearchFilter: ""
-      sysdigcloudLdapGroupSearchBase: ""
-      sysdigcloudLdapGroupSearchFilter: ""
-      sysdigcloudLdapGroupMembershipFilter: ""
+      restrictPasswordLogin: "false"
+      oauthAllowedDomainsList: ""
+      googleOauthClientId: ""
+      googleOauthClientSecret: ""
+      ldapEnabled: "false"
+      ldapEndpoint: ""
+      ldapManagerDn: ""
+      ldapManagerPassword: ""
+      ldapRootDn: ""
+      ldapUserSearchBase: ""
+      ldapUserSearchFilter: ""
+      ldapGroupSearchBase: ""
+      ldapGroupSearchFilter: ""
+      ldapGroupMembershipFilter: ""

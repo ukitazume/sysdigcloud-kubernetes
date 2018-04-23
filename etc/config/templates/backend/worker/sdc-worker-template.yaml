@@ -2,9 +2,9 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: sdc-worker
-  namespace: {{ .sysdigNamespace }}
+  namespace: {{ .namespace }}
 spec:
-  replicas: {{ .sysdigWorkerReplicaCount }}
+  replicas: {{ .workerReplicaCount }}
   template:
     metadata:
       labels:
@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: worker
-          image: {{ .sysdigBackendImage }}
+          image: {{ .backendImage }}
           volumeMounts:
             - name: logs
               mountPath: /var/log/sysdigcloud

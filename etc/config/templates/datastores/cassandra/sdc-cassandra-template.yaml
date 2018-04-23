@@ -1,23 +1,23 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .sysdigCassandraServiceName }}
-  namespace: {{ .sysdigNamespace }}
+  name: {{ .cassandraServiceName }}
+  namespace: {{ .namespace }}
   labels:
     app: sysdigcloud
     role: cassandra
 spec:
   clusterIP: None
   ports:
-    - port: {{ .sysdigCassandraCqlPort }}
+    - port: {{ .cassandraCqlPort }}
       name: cql
-    - port: {{ .sysdigCassandraThriftPort }}
+    - port: {{ .cassandraThriftPort }}
       name: thrift
-    - port: {{ .sysdigCassandraIntraNodePort }}
+    - port: {{ .cassandraIntraNodePort }}
       name: intra-node
-    - port: {{ .sysdigCassandraIntraNodeTlsPort }}
+    - port: {{ .cassandraIntraNodeTlsPort }}
       name: tls-intra-node
-    - port: {{ .sysdigCassandraJmxPort }}
+    - port: {{ .cassandraJmxPort }}
       name: jmx
   selector:
     app: sysdigcloud
@@ -27,13 +27,13 @@ apiVersion: "apps/v1beta1"
 kind: StatefulSet
 metadata:
   name: sdc-cassandra
-  namespace: {{ .sysdigNamespace }}
+  namespace: {{ .namespace }}
   labels:
     app: sysdigcloud
     role: cassandra
 spec:
-  serviceName: {{ .sysdigCassandraServiceName }}
-  replicas: {{ .sysdigCassandraReplicaCount }}
+  serviceName: {{ .cassandraServiceName }}
+  replicas: {{ .cassandraReplicaCount }}
   selector:
     matchLabels:
       app: sysdigcloud
@@ -46,17 +46,18 @@ spec:
     spec:
       containers:
       - name: cassandra
-        image: {{ .sysdigCassandraImage }}
+        image: {{ .cassandraImage }}
+        imagePullPolicy: Always
         ports:
-          - containerPort: {{ .sysdigCassandraCqlPort }}
+          - containerPort: {{ .cassandraCqlPort }}
             name: cql
-          - containerPort: {{ .sysdigCassandraThriftPort }}
+          - containerPort: {{ .cassandraThriftPort }}
             name: thrift
-          - containerPort: {{ .sysdigCassandraIntraNodePort }}
+          - containerPort: {{ .cassandraIntraNodePort }}
             name: intra-node
-          - containerPort: {{ .sysdigCassandraIntraNodeTlsPort }}
+          - containerPort: {{ .cassandraIntraNodeTlsPort }}
             name: tls-intra-node
-          - containerPort: {{ .sysdigCassandraJmxPort }}
+          - containerPort: {{ .cassandraJmxPort }}
             name: jmx
         resources:
           requests:
@@ -147,5 +148,5 @@ spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: {{ .sysdigCassandraDiskSize }}
-      storageClassName: {{ .sysdigStorageclassName }}
+          storage: {{ .cassandraDiskSize }}
+      storageClassName: {{ .storageclassName }}

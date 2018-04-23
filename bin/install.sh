@@ -5,9 +5,9 @@ NOW=$(date "+%Y.%m.%d-%H.%M.%S")
 SDC_HOME=".."
 LOG_FILE=$SDC_HOME/logs/install/install-$NOW.log
 SETTINGS_FILE="$SDC_HOME/etc/config/sdc-settings.yaml"
-NAMESPACE=$(egrep sysdigNamespace $SETTINGS_FILE |awk '{print $2}')
-BACKEND_VERSION=$(egrep sysdigBackendImage $SETTINGS_FILE | awk -F: '{print $3}')
-FRONTEND_VERSION=$(egrep sysdigFrontendImage $SETTINGS_FILE | awk -F: '{print $3}')
+NAMESPACE=$(egrep namespace $SETTINGS_FILE |awk '{print $2}')
+BACKEND_VERSION=$(egrep backendImage $SETTINGS_FILE | awk -F: '{print $3}')
+FRONTEND_VERSION=$(egrep frontendImage $SETTINGS_FILE | awk -F: '{print $3}')
 K8S_CLIENT_VERSION=$(kubectl version | egrep ^Client | awk -F, '{print $3}')
 K8S_SERVER_VERSION=$(kubectl version | egrep ^Server | awk -F, '{print $3}')
 CURRENT_CONTEXT=$(kubectl config get-contexts|egrep '^\*'|awk '{print $2}')
@@ -186,6 +186,11 @@ start_backend()
 	kubectl apply  -f $SDC_HOME/backend/sdc-collector.yaml --namespace $NAMESPACE | tee -a $LOG_FILE
 }
 
+start_frontend()
+{
+	kubectl apply -f $SDC_HOME/frontend/ --namespace $NAMESPACE | tee -a $LOG_FILE
+}
+
 print_post_install_banner()
 {
 	echo
@@ -196,6 +201,24 @@ print_post_install_banner()
 	echo
 	echo 
 	kubectl get pods -n $NAMESPACE| tee -a $LOG_FILE 	
+}
+
+print_service_urls()
+{
+	local api_url
+	local collector_url
+
+	api_url=$(kubectl describe service sdc-api --namespace $NAMESPACE |egrep '^LoadBalancer Ingress:'|awk  '{print $3}') | tee -a $LOG_FILE
+	collector_url=$(kubectl describe service sdc-collector --namespace $NAMESPACE |egrep '^LoadBalancer Ingress:'|awk  '{print $3}') | tee -a $LOG_FILE
+	printf '\n'
+	printf '+%.0s' {1..100}
+	printf '\n%.0s' {1..3}
+	printf "API URL: %s\n" $api_url
+	printf "Collector URL: %s\n" $collector_url
+	printf '\n%.0s' {1..3}
+	printf '+%.0s' {1..100}
+	printf '\n'
+
 }
 
 #main{}
@@ -211,3 +234,6 @@ start_datastores
 echo "... about to sleep 90 before starting backend"
 sleep 90
 start_backend
+start_frontend
+print_post_install_banner
+#print_service_urls

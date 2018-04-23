@@ -1,17 +1,17 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .sysdigElasticsearchServiceName }}
-  namespace: {{ .sysdigNamespace }}
+  name: {{ .elasticsearchServiceName }}
+  namespace: {{ .namespace }}
   labels:
     app: sysdigcloud
     role: elasticsearch
 spec:
   clusterIP: None
   ports:
-    - port: {{ .sysdigElasticsearchApiPort }}
+    - port: {{ .elasticsearchApiPort }}
       name: api
-    - port: {{ .sysdigElasticsearchTransportPort }}
+    - port: {{ .elasticsearchTransportPort }}
       name: transport-protocol
   selector:
     app: sysdigcloud
@@ -21,12 +21,12 @@ apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
   name: sdc-elasticsearch 
-  namespace: {{ .sysdigNamespace }}
+  namespace: {{ .namespace }}
   labels:
     app: sysdigcloud
 spec:
-  serviceName: {{ .sysdigElasticsearchServiceName }}
-  replicas: {{ .sysdigElasticsearchReplicaCount }}
+  serviceName: {{ .elasticsearchServiceName }}
+  replicas: {{ .elasticsearchReplicaCount }}
   selector:
     matchLabels:
       app: sysdigcloud
@@ -45,7 +45,7 @@ spec:
           privileged: true
       containers:
         - name: elasticsearch
-          image: {{ .sysdigElasticsearchImage }}
+          image: {{ .elasticsearchImage }}
           securityContext:
             capabilities:
               add:
@@ -88,8 +88,8 @@ spec:
   - metadata:
       name: data
     spec:
-      storageClassName: {{ .sysdigStorageclassName }}
+      storageClassName: {{ .storageclassName }}
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: {{ .sysdigElasticsearchDiskSize }}
+          storage: {{ .elasticsearchDiskSize }}

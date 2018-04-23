@@ -4,7 +4,6 @@ apiVersion: extensions/v1beta1
 kind: DaemonSet                     
 metadata:
   name: sysdig-agent
-  namespace: sysdigcloud
   labels:
     app: sysdig-agent
 spec:
@@ -50,7 +49,7 @@ spec:
          privileged: true
         env:
         - name: ACCESS_KEY                                  #REQUIRED - replace with your Sysdig Cloud access key
-          value: f65322d7-da0c-44ea-b365-2506bb0db382
+          value: c0bbfd4d-c866-467a-bd11-464578e204ae
         #- name: RUN_MODE                                   #OPTIONAL - driverless mode (limited functionality. No kernel module. Minimum agent version 0.51.0)
         #  value: "nodriver" 
         #- name: COLLECTOR_PORT                             #OPTIONAL - on-prem install only
@@ -58,14 +57,15 @@ spec:
         - name: TAGS                                       #OPTIONAL
           value: os:ubuntu-16.04,orechestrator:k8s,cloud_provider:gke,cluster:sysdig-disney,backend_version:858,owner:yofti
         #- name: COLLECTOR                                  #OPTIONAL - on-prem install only
-        #  value: collector.sysdigcloud.com 
+        #  value: 35.199.178.193
         #- name: SECURE                                     #OPTIONAL - on-prem install only       
         #  value: "true"
         #- name: CHECK_CERTIFICATE                          #OPTIONAL - on-prem install only
         #  value: "false"
         - name: ADDITIONAL_CONF                            #OPTIONAL pass additional parameters to the agent such as authentication example provided here
           value: |
-              dev_new_k8s: true 
+              dev_new_k8s: true
+              prometheus: enabled
               app_checks:
                 - name: elasticsearch
                   check_module: elastic
@@ -95,4 +95,3 @@ spec:
           readOnly: true
         - mountPath: /dev/shm
           name: dshm
-

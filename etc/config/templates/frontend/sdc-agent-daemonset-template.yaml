@@ -4,6 +4,7 @@ apiVersion: extensions/v1beta1
 kind: DaemonSet                     
 metadata:
   name: sysdig-agent
+  namespace: {{ .namespace }}
   labels:
     app: sysdig-agent
 spec:
@@ -12,6 +13,10 @@ spec:
       labels:
         name: sysdig-agent
     spec:
+      tolerations:
+      - key: "node-role.kubernetes.io/master"
+        operator: "Exists"
+        effect: "NoSchedule"
       volumes:
       - name: dshm
         emptyDir:
@@ -39,31 +44,36 @@ spec:
  #    serviceAccount: sysdigcloud                           #OPTIONAL - OpenShift service account for OpenShift
       containers:
       - name: sysdig-agent
-        image: sysdig/agent
-#        imagePullPolicy: Always                            #OPTIONAL - Always pull the latest container image tag 
+        image: {{ .frontendImage }}
+        imagePullPolicy: Always                            #OPTIONAL - Always pull the latest container image tag 
         securityContext:
          privileged: true
         env:
         - name: ACCESS_KEY                                  #REQUIRED - replace with your Sysdig Cloud access key
-          value: c54dd3c6-edaa-4234-9e92-ff736e891b09
-        - name: COLLECTOR_PORT                             #OPTIONAL - on-prem install only
-          value: "6443"
+          value: {{ .accessKey }}
+        #- name: RUN_MODE                                   #OPTIONAL - driverless mode (limited functionality. No kernel module. Minimum agent version 0.51.0)
+        #  value: "nodriver" 
+        #- name: COLLECTOR_PORT                             #OPTIONAL - on-prem install only
+        #  value: "6443"
         - name: TAGS                                       #OPTIONAL
-          value: linux:ubuntu,dept:dev,local:nyc 
-        - name: COLLECTOR                                  #OPTIONAL - on-prem install only
-          value: aa09f558c3cc911e8a7d506cc9c96693-101015003.us-east-1.elb.amazonaws.com
-        - name: SECURE                                     #OPTIONAL - on-prem install only       
-          value: "true"
-#        - name: CHECK_CERTIFICATE                          #OPTIONAL - on-prem install only
-#          value: "false"
-#        - name: SYSDIG_PROBE_URL                           #OPTIONAL - on-prem airgappepd install only. sysdig/agent 0.79.0 and higher 
-#          value: "http://<custom URL>" 
-       - name: ADDITIONAL_CONF                            #OPTIONAL pass additional parameters to the agent such as authentication example provided here
-         value: |
-#              k8s_uri: https://myacct:mypass@localhost:4430
-#              k8s_ca_certificate: k8s-ca.crt\nk8s_ssl_verify_certificate: true
-             dev_new_k8s: true
-             prometheus: enabled
+          value: {{ .agentTags }}
+        #- name: COLLECTOR                                  #OPTIONAL - on-prem install only
+        #  value: {{ .collectorUrl }} 
+        #- name: SECURE                                     #OPTIONAL - on-prem install only       
+        #  value: "true"
+        #- name: CHECK_CERTIFICATE                          #OPTIONAL - on-prem install only
+        #  value: "false"
+        - name: ADDITIONAL_CONF                            #OPTIONAL pass additional parameters to the agent such as authentication example provided here
+          value: |
+              dev_new_k8s: true 
+              app_checks:
+                - name: elasticsearch
+                  check_module: elastic
+                  pattern:
+                    port: 9200
+                    comm: java
+                  conf:
+                    url: http://$(hostname -i):9200
         volumeMounts:
         - mountPath: /host/var/run/docker.sock
           name: docker-sock

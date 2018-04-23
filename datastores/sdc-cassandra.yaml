@@ -47,6 +47,7 @@ spec:
       containers:
       - name: cassandra
         image: yofti/cassandra:2.2.11
+        imagePullPolicy: Always
         ports:
           - containerPort: 9042
             name: cql
@@ -61,10 +62,10 @@ spec:
         resources:
           requests:
            cpu: 1000m
-           memory: 2Gi
+           memory: 4Gi
           limits:
-           cpu: 3000m
-           memory: 8Gi
+           cpu: 6000m
+           memory: 12Gi
         securityContext:
           capabilities:
             add:
@@ -147,6 +148,6 @@ spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 30Gi
-      storageClassName: aws-io1
+          storage: 50Gi
+      storageClassName: gce-pd
 

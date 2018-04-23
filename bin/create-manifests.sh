@@ -4,7 +4,7 @@ SDC_HOME="../"
 SDC_CONFIG="$SDC_HOME/etc/config"
 SDC_TEMPLATES="$SDC_CONFIG/templates"
 SDC_SETTINGS_FILE="$SDC_CONFIG/sdc-settings.yaml"
-PVC_TYPE="$(egrep 'sysdigStorageclassName'  $SDC_SETTINGS_FILE |egrep -v '#'|awk -F: '{print $2}')"
+PVC_TYPE="$(egrep 'storageclassName'  $SDC_SETTINGS_FILE |egrep -v '#'|awk -F: '{print $2}')"
 
 
 #create manifests for configmaps

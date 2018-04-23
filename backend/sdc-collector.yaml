@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
         - name: collector
-          image: quay.io/sysdig/sysdigcloud-backend:800
+          image: quay.io/sysdig/sysdigcloud-backend:858
           volumeMounts:
             - name: logs
               mountPath: /var/log/sysdigcloud
@@ -44,7 +44,7 @@ spec:
               cpu: 1000m
               memory: 3Gi
             limits:
-              cpu: 3000m
+              cpu: 6000m
               memory: 6Gi
           env:
             - name: ROLES

@@ -1,16 +1,16 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .sysdigMysqlServiceName }}
-  namespace: {{ .sysdigNamespace }}
+  name: {{ .mysqlServiceName }}
+  namespace: {{ .namespace }}
   labels:
     app: sysdigcloud
     role: mysql
 spec:
   clusterIP: None
   ports:
-    - port: {{ .sysdigMySqlExternalPort }}
-      targetPort: {{ .sysdigMySqlTargetPort }}
+    - port: {{ .mySqlExternalPort }}
+      targetPort: {{ .mySqlTargetPort }}
       name: sql
   selector:
     app: sysdigcloud
@@ -20,13 +20,13 @@ apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
   name: sdc-mysql
-  namespace: {{ .sysdigNamespace }}
+  namespace: {{ .namespace }}
   labels:
     app: sysdigcloud
     role: mysql
 spec:
-  serviceName: {{ .sysdigMysqlServiceName }}
-  replicas: {{ .sysdigMysqlMasterReplicaCount }}
+  serviceName: {{ .mysqlServiceName }}
+  replicas: {{ .mysqlMasterReplicaCount }}
   selector:
     matchLabels:
       app: sysdigcloud
@@ -39,7 +39,7 @@ spec:
     spec:
       initContainers:
       - name: init-mysql
-        image: {{ .sysdigMysqlImage }}
+        image: {{ .mysqlImage }}
         command:
         - bash
         - "-c"
@@ -56,7 +56,7 @@ spec:
           mountPath: /mnt/config-map      
       containers:
       - name: mysql
-        image: {{ .sysdigMysqlImage }}
+        image: {{ .mysqlImage }}
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
@@ -77,7 +77,7 @@ spec:
           value: draios
         ports:
         - name: mysql
-          containerPort: {{ .sysdigMySqlTargetPort }}
+          containerPort: {{ .mySqlTargetPort }}
         volumeMounts:
         - name: data
           mountPath: /var/lib/mysql
@@ -112,7 +112,7 @@ spec:
           periodSeconds: 2
           timeoutSeconds: 1
       - name: xtrabackup
-        image: {{ .sysdigXtrabackupImage }}
+        image: {{ .xtrabackupImage }}
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
@@ -121,7 +121,7 @@ spec:
               key: mysql.root.password
         ports:
         - name: xtrabackup
-          containerPort: {{ .sysdigXtrabackupPort }}
+          containerPort: {{ .xtrabackupPort }}
         command:
         - bash
         - "-c"
@@ -152,8 +152,8 @@ spec:
   - metadata:
       name: data
     spec:
-      storageClassName: {{ .sysdigStorageclassName }}
+      storageClassName: {{ .storageclassName }}
       accessModes: ["ReadWriteOnce"]
       resources:
         requests:
-          storage: {{ .sysdigMysqlDiskSize }}
+          storage: {{ .mysqlDiskSize }}

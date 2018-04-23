@@ -1,19 +1,19 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .sysdigRedisServiceName }}
-  namespace: {{ .sysdigNamespace }}
+  name: {{ .redisServiceName }}
+  namespace: {{ .namespace }}
   labels:
     app: sysdigcloud
     role: redis
 spec:
   clusterIP: None
   ports:
-  - port: {{ .sysdigRedisExternalPort }}
-    targetPort: {{ .sysdigRedisTargetPort }}
+  - port: {{ .redisExternalPort }}
+    targetPort: {{ .redisTargetPort }}
     name: client
-  - port: {{ .sysdigRedisGossipExternalPort }}
-    targetPort: {{ .sysdigRedisGossipInternalPort }}
+  - port: {{ .redisGossipExternalPort }}
+    targetPort: {{ .redisGossipInternalPort }}
     name: gossip
   selector:
     app: sysdigcloud
@@ -23,12 +23,12 @@ apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
   name: sdc-redis
-  namespace: {{ .sysdigNamespace }}
+  namespace: {{ .namespace }}
   labels:
     app: sysdigcloud
 spec:
-  serviceName: {{ .sysdigRedisServiceName }}
-  replicas: {{ .sysdigRedisMasterReplicaCount }}
+  serviceName: {{ .redisServiceName }}
+  replicas: {{ .redisMasterReplicaCount }}
   selector:
      matchLabels:
         app: sysdigcloud
@@ -40,7 +40,7 @@ spec:
     spec:
       containers:
       - name: redis-cluster
-        image: {{ .sysdigRedisImage }}
+        image: {{ .redisImage }}
         env:
           - name: REDIS_PASSWORD
             valueFrom:
@@ -48,9 +48,9 @@ spec:
                 name: sysdigcloud-config
                 key: redis.password
         ports:
-        - containerPort: {{ .sysdigRedisTargetPort }}
+        - containerPort: {{ .redisTargetPort }}
           name: client
-        - containerPort: {{ .sysdigRedisGossipInternalPort }}
+        - containerPort: {{ .redisGossipInternalPort }}
           name: gossip
         command: ["redis-server"]
         args: ["/conf/redis.conf"]
@@ -85,8 +85,8 @@ spec:
   - metadata:
       name: data
     spec:
-      storageClassName: {{ .sysdigStorageclassName }}
+      storageClassName: {{ .storageclassName }}
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: {{ .sysdigRedisDiskSize }}
+          storage: {{ .redisDiskSize }}

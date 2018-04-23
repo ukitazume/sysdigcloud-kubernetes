@@ -1,17 +1,17 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .sysdigCollectorServiceName }}
-  namespace: {{ .sysdigNamespace }}
+  name: {{ .collectorServiceName }}
+  namespace: {{ .namespace }}
   labels:
     app: sysdigcloud
     role: collector
 spec:
   type: LoadBalancer
   ports:
-    - port: {{ .sysdigCollectorExternalPort }}
+    - port: {{ .collectorExternalPort }}
       name: secure-collector
-      targetPort: {{ .sysdigCollectorTargetPort }}
+      targetPort: {{ .collectorTargetPort }}
   selector:
     app: sysdigcloud
     role: collector
@@ -20,9 +20,9 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: sdc-collector
-  namespace: {{ .sysdigNamespace }}
+  namespace: {{ .namespace }}
 spec:
-  replicas: {{ .sysdigCollectorReplicaCount }}
+  replicas: {{ .collectorReplicaCount }}
   template:
     metadata:
       labels:
@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
         - name: collector
-          image: {{ .sysdigBackendImage }}
+          image: {{ .backendImage }}
           volumeMounts:
             - name: logs
               mountPath: /var/log/sysdigcloud

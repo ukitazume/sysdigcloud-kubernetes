@@ -1,9 +1,8 @@
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
-  name: aws-io1
-provisioner: kubernetes.io/aws-ebs
+  name: gce-pd
+provisioner: kubernetes.io/gce-pd
 parameters:
-  type: io1
-  zones: us-east-1e
-  iopsPerGB: "50"
+  type: pd-ssd
+

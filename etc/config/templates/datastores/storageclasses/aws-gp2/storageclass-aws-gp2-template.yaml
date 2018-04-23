@@ -1,8 +1,8 @@
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
-  name: {{ .sysdigStorageclassName }}
-provisioner: {{ .sysdigStorageclassProvisioner }}
+  name: {{ .storageclassName }}
+provisioner: {{ .storageclassProvisioner }}
 parameters:
-  type: {{ .sysdigStorageclassType }}
-  zones: {{ .sysdigStorageclassZones }}
+  type: {{ .storageclassType }}
+  zones: {{ .storageclassZones }}

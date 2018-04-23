@@ -1,16 +1,16 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .sysdigMysqlSlaveServiceName }}
-  namespace: {{ .sysdigNamespace }}
+  name: {{ .mysqlSlaveServiceName }}
+  namespace: {{ .namespace }}
   labels:
     app: sysdigcloud
     role: mysql-slave
 spec:
   clusterIP: None
   ports:
-    - port: {{ .sysdigMySqlExternalPort }}
-      targetPort: {{ .sysdigMySqlTargetPort }}
+    - port: {{ .mySqlExternalPort }}
+      targetPort: {{ .mySqlTargetPort }}
       name: sql
   selector:
     app: sysdigcloud
@@ -20,13 +20,13 @@ apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
   name: sdc-mysql-slave
-  namespace: {{ .sysdigNamespace }}
+  namespace: {{ .namespace }}
   labels:
     app: sysdigcloud
     role: mysql-slave
 spec:
-  serviceName: {{ .sysdigMysqlSlaveServiceName }}
-  replicas: {{ .sysdigMysqlSlavesReplicaCount }}
+  serviceName: {{ .mysqlSlaveServiceName }}
+  replicas: {{ .mysqlSlavesReplicaCount }}
   selector:
     matchLabels:
       app: sysdigcloud
@@ -39,7 +39,7 @@ spec:
     spec:
       initContainers:
       - name: init-mysql
-        image: {{ .sysdigMysqlImage }}
+        image: {{ .mysqlImage }}
         command:
         - bash
         - "-c"
@@ -59,7 +59,7 @@ spec:
         - name: config-map
           mountPath: /mnt/config-map
       - name: clone-mysql
-        image: {{ .sysdigXtrabackupImage }}
+        image: {{ .xtrabackupImage }}
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
@@ -103,7 +103,7 @@ spec:
           mountPath: /etc/mysql/conf.d
       containers:
       - name: mysql
-        image: {{ .sysdigMysqlImage }}
+        image: {{ .mysqlImage }}
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
@@ -124,7 +124,7 @@ spec:
           value: draios
         ports:
         - name: mysql
-          containerPort: {{ .sysdigMySqlTargetPort }}
+          containerPort: {{ .mySqlTargetPort }}
         volumeMounts:
         - name: data
           mountPath: /var/lib/mysql
@@ -159,7 +159,7 @@ spec:
           periodSeconds: 2
           timeoutSeconds: 1
       - name: xtrabackup
-        image: {{ .sysdigXtrabackupImage }}
+        image: {{ .xtrabackupImage }}
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
@@ -168,7 +168,7 @@ spec:
               key: mysql.root.password
         ports:
         - name: xtrabackup
-          containerPort: {{ .sysdigXtrabackupPort }}
+          containerPort: {{ .xtrabackupPort }}
         command:
         - bash
         - "-c"
@@ -233,8 +233,8 @@ spec:
   - metadata:
       name: data
     spec:
-      storageClassName: {{ .sysdigStorageclassName }}
+      storageClassName: {{ .storageclassName }}
       accessModes: ["ReadWriteOnce"]
       resources:
         requests:
-          storage: {{ .sysdigMysqlDiskSize }}
+          storage: {{ .mysqlDiskSize }}
