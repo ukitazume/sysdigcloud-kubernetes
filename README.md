@@ -126,7 +126,15 @@ kubectl set image deployment/sysdigcloud-collector collector=quay.io/sysdig/sysd
 kubectl set image deployment/sysdigcloud-worker worker=quay.io/sysdig/sysdigcloud-backend:353 --namespace sysdigcloud
 ```
 
-Assuming the deployments have more than one replica each, the upgrade process will not cause any downtime.
+Assuming the deployments have more than one replica each, these commands will trigger rolling update process for each component. If you have configured container resource limits and you do not have spare resources in your cluster, before you update the image version, you should scale the replicas down by 1. For example, if you have 5 API component replicas running:
+
+```
+kubectl scale --replicas=4 deployment sysdigcloud-api --namespace sysdigcloud
+kubectl set image deployment/sysdigcloud-api api=quay.io/sysdig/sysdigcloud-backend:353 --namespace sysdigcloud
+kubectl scale --replicas=5 deployment sysdigcloud-api --namespace sysdigcloud
+```
+
+This will ensure the smooth upgrade process and will not cause any downtime.
 
 In some circumstances, the manifests will change with a new release (the typical case being new parameters added to the ConfigMap). In these cases, the upgrade notes will clearly indicate what resources need to be recreated (the user can also inspect the changes by comparing different releases within the GitHub interface). The user should then choose the best upgrade strategy that satisfies the business requirement. In the simplest case, the user would just replace the deployments (causing downtime). In a more elaborate scenario, the user would create a new deployment alongside the old one, and would decommission the old one when the new one comes up, minimizing the downtime (which might still happen in case of some complicated database schema migrations, which will clearly be listed in the upgrade notes).
 
