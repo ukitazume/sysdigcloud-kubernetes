@@ -24,7 +24,9 @@ sdc-kubernetes is an on-prem version of [Sysdig Monitor](https://sysdig.com/prod
 Here is a list of the improvements:
 
 - **Introduction of Statefulsets**
-	Replication Sets and their improved kin, Deployment Sets are good for stateless loads. But if you have states, like we do in our database (datastore) layer, you do need Stateful Sets.
+    
+    **NOTE**: Kubernetes statefulsets are stable (GA) in version 1.9. Using on earlier version may have adverse affects.
+    Replication Sets and their improved kin, Deployment Sets are good for stateless loads. But if you have states, like we do in our database (datastore) layer, you do need Stateful Sets.
 - **Introduction of persistence to datastores**
 	The key that makes Stateful Sets magical is the use of Persistent Volume Claims. PODs can now ask for block disks from the cloud provider dynamically. The disks can be encrypted, adjusted for IOPS specific performance and they can also be Snapshoted for backups.
 - **Elimination of SPOF's (single points of failure)**
