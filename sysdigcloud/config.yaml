@@ -96,6 +96,19 @@ data:
   sysdigcloud.google.oauth.client.secret: ""
   # Required: enable or disable Sysdig Cloud LDAP integration
   sysdigcloud.ldap.enabled: "false"
+  # ==== BEGIN DEPRECATED LDAP OPTIONS ====
+  # NOTE: The following series of optional LDAP settings are deprecated starting
+  # with version 890. If you have been using LDAP in a version older than 890,
+  # you should keep your settings intact until you successfully upgrade to 890
+  # or newer, at which time your settings from this ConfigMap will be migrated
+  # to a new API-based LDAP configuration. Once running version 890 or newer,
+  # you can remove these optional settings from this ConfigMap and only need to
+  # ensure the boolean setting for "sysdigcloud.ldap.enabled" above remains and
+  # is set to "true". See this support article for details on the API-based
+  # LDAP configuration:
+  #
+  #   https://sysdigdocs.atlassian.net/wiki/spaces/LDAP/pages/203620377/LDAP+Authentication+Configuration
+  #
   # Optional: LDAP server endpoint (eg: ldaps://1.2.3.4:636)
   sysdigcloud.ldap.endpoint: ""
   # Optional: LDAP DN manager (eg: cn=servicer_acccount,ou=Service accounts,dc=demo,dc=com)
@@ -124,4 +137,5 @@ data:
   sysdigcloud.ldap.group.membership.filter: ""
   # Optional: Store Sysdig captures using Cassandra instead of S3
   # NB. This affects cassandra storage
+  # ==== END DEPRECATED LDAP OPTIONS ====
   sysdigcloud.captures.cassandra.storage: "true"
