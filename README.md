@@ -282,6 +282,18 @@ $kubectl -n sysdigcloud scale --replicas=4 statefulset sdc-mysql-slave
 $kubectl -n sysdigcloud scale --replicas=4 statefulset sdc-redis-slave
 ```
 
+<<<<<<< HEAD
+=======
+Assuming the deployments have more than one replica each, these commands will trigger rolling update process for each component. If you have configured container resource limits and you do not have spare resources in your cluster, before you update the image version, you should scale the replicas down by 1. For example, if you have 5 API component replicas running:
+
+```
+kubectl scale --replicas=4 deployment sysdigcloud-api --namespace sysdigcloud
+kubectl set image deployment/sysdigcloud-api api=quay.io/sysdig/sysdigcloud-backend:353 --namespace sysdigcloud
+kubectl scale --replicas=5 deployment sysdigcloud-api --namespace sysdigcloud
+```
+
+This will ensure the smooth upgrade process and will not cause any downtime.
+>>>>>>> master
 
 #### Modifying configMap <a id="Modifying-configMap"></a>
 
