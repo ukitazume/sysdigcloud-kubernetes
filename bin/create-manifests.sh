@@ -11,13 +11,13 @@ kontemplate template $SDC_SETTINGS_FILE -i templates/configmaps/ > $SDC_HOME/etc
 
 #create manifests for datastores
 
-if [ $PVC_TYPE == "gce-pd" ]; then
+if [[ $PVC_TYPE == "gce-pd" ]]; then
     kontemplate template $SDC_SETTINGS_FILE -i templates/datastores/storageclasses/gce-pd/ > $SDC_HOME/datastores/storageclasses/sdc-storageclass.yaml
 
-elif [ $PVC_TYPE == "aws-io1" ]; then
+elif [[ $PVC_TYPE == "aws-io1" ]]; then
 	kontemplate template $SDC_SETTINGS_FILE -i templates/datastores/storageclasses/aws-io1/ > $SDC_HOME/datastores/storageclasses/sdc-storageclass.yaml
 
-elif [ $PVC_TYPE -eq "aws-gp2" ]; then
+elif [[ $PVC_TYPE -eq "aws-gp2" ]]; then
 	kontemplate template $SDC_SETTINGS_FILE -i templates/datastores/storageclasses/aws-gp2/ > $SDC_HOME/datastores/storageclasses/sdc-storageclass.yaml
 fi
 
