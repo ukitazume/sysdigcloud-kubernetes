@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SDC_HOME="../"
+SDC_HOME="$(dirname $0)/.."
 SDC_CONFIG="$SDC_HOME/etc/config"
 SDC_TEMPLATES="$SDC_CONFIG/templates"
 SDC_SETTINGS_FILE="$SDC_CONFIG/sdc-settings.yaml"

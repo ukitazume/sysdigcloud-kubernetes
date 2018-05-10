@@ -2,7 +2,7 @@
 
 # Global Variables
 NOW=$(date "+%Y.%m.%d-%H.%M.%S")
-SDC_HOME=".."
+SDC_HOME="$(dirname $0)/.."
 
 mkdir -p ${SDC_HOME}/logs/install
 
@@ -83,13 +83,13 @@ create_namespace()
     if [ $? -ne 0 ]    ; then
         kubectl create namespace ${NAMESPACE} >> $LOG_FILE 2>&1
         if [ $? -eq 0 ] ; then
-            echo "... namespace ${NAMESPACE} created." | tee -a $LOG_FILE
+            echo "--> namespace ${NAMESPACE} created." | tee -a $LOG_FILE
         else
-            echo "... failed to create namespace ${NAMESPACE}." | tee -a $LOG_FILE
+            echo "--> failed to create namespace ${NAMESPACE}." | tee -a $LOG_FILE
             exit 1
         fi
     else
-        echo "... namespace ${NAMESPACE} already exists." | tee -a $LOG_FILE
+        echo "--> namespace ${NAMESPACE} already exists." | tee -a $LOG_FILE
     fi
 }
 
@@ -97,10 +97,10 @@ create_storageclasses()
 {
     kubectl apply -f ${SDC_HOME}/datastores/storageclasses/ >> $LOG_FILE 2>&1
     if [ $? -ne 0 ]; then
-        echo "... failed to create storageclasses." | tee -a $LOG_FILE
+        echo "--> failed to create storageclasses." | tee -a $LOG_FILE
         echo "     ... continuing."
     else
-        echo "... storageclasses created." | tee -a $LOG_FILE
+        echo "--> storageclasses created." | tee -a $LOG_FILE
     fi
 }
 
@@ -112,10 +112,10 @@ create_ssl_certs()
     -keyout ${SDC_HOME}/etc/certs/server.key -out ${SDC_HOME}/etc/certs/server.crt >> $LOG_FILE 2>&1
 
     if [ $? -ne 0 ]; then
-        echo "... failed to create ssl certs." | tee -a $LOG_FILE
+        echo "--> failed to create ssl certs." | tee -a $LOG_FILE
         exit 1
     else
-        echo "... ssl certs created." | tee -a $LOG_FILE
+        echo "--> ssl certs created." | tee -a $LOG_FILE
     fi
 }
 
@@ -129,13 +129,13 @@ create_tls_secret()
         --key=${SDC_HOME}/etc/certs/server.key --namespace=${NAMESPACE} >> $LOG_FILE 2>&1
 
         if [ $? -ne 0 ]; then
-            echo "... failed to create ssl secret in kubernetes." | tee -a $LOG_FILE
+            echo "--> failed to create ssl secret in kubernetes." | tee -a $LOG_FILE
             exit 1
         else
-            echo "... ssl secret created in kubernetes. " | tee -a $LOG_FILE
+            echo "--> ssl secret created in kubernetes. " | tee -a $LOG_FILE
         fi
     else
-        echo "... ssl secret sysdigcloud-ssl-secret already exists."| tee -a $LOG_FILE
+        echo "--> ssl secret sysdigcloud-ssl-secret already exists."| tee -a $LOG_FILE
     fi
 }
 
@@ -145,13 +145,13 @@ create_configmaps()
     if [ $? -ne 0 ]    ; then
         kubectl apply -f ${SDC_HOME}/etc/config/sdc-config.yaml  -n ${NAMESPACE}
         if [ $? -ne 0 ]; then
-            echo "... failed to create configmap in kubernetes." | tee -a $LOG_FILE
+            echo "--> failed to create configmap in kubernetes." | tee -a $LOG_FILE
             exit 1
         else
-            echo "... configmaps created in kubernetes. " | tee -a $LOG_FILE
+            echo "--> configmaps created in kubernetes. " | tee -a $LOG_FILE
         fi
     else
-        echo "...  configmap already exists." | tee -a $LOG_FILE
+        echo "-->  configmap already exists." | tee -a $LOG_FILE
     fi
 }
 
@@ -180,9 +180,9 @@ start_frontend()
 print_post_install_banner()
 {
     echo
-    echo "... app successfully submitted to kubernetes ..." | tee -a $LOG_FILE
-    echo "... monitor application by using \`watch kubectl get pods -n sysdigcloud \`" | tee -a $LOG_FILE
-    echo "... wait until the sdc-api, sdc-collector and sdc-worker pods are started. " | tee -a $LOG_FILE
+    echo "--> app successfully submitted to kubernetes ..." | tee -a $LOG_FILE
+    echo "--> monitor application by using \`watch kubectl get pods -n sysdigcloud \`" | tee -a $LOG_FILE
+    echo "--> wait until the sdc-api, sdc-collector and sdc-worker pods are started. " | tee -a $LOG_FILE
     echo
     echo
     echo
@@ -219,7 +219,7 @@ create_ssl_certs
 create_tls_secret
 create_configmaps
 start_datastores
-echo "... sleeping 90 secs before starting backend"
+echo "--> sleeping 90 secs before starting backend"
 sleep 90
 start_backend
 start_frontend

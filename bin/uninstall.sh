@@ -2,7 +2,7 @@
 
 # Global Variables
 NOW=$(date "+%Y.%m.%d-%H.%M.%S")
-SDC_HOME=".."
+SDC_HOME="$(dirname $0)/.."
 
 mkdir -p $SDC_HOME/logs/uninstall
 
@@ -80,9 +80,9 @@ delete_storageclasses()
 {
     kubectl delete -f $SDC_HOME/datastores/storageclasses/ -n ${NAMESPACE} >> $LOG_FILE 2>&1
     if [ $? -eq 0 ]; then
-        echo "... deleted storageclasses." | tee -a $LOG_FILE
+        echo "--> deleted storageclasses." | tee -a $LOG_FILE
     else
-        echo "... failed to delete storageclasses." | tee -a $LOG_FILE
+        echo "--> failed to delete storageclasses." | tee -a $LOG_FILE
     fi
 }
 
@@ -97,13 +97,13 @@ delete_tls_secret()
 {
     #create ssl-secret in kubernetes if it doesn't exist already
     kubectl delete secret sysdigcloud-ssl-secret -n ${NAMESPACE} >> $LOG_FILE 2>&1
-    echo "... deleted ssl secret sysdigcloud-ssl-secret." | tee -a $LOG_FILE
+    echo "--> deleted ssl secret sysdigcloud-ssl-secret." | tee -a $LOG_FILE
 }
 
 delete_configmaps()
 {
     kubectl delete -f $SDC_HOME/etc/config/sdc-config.yaml >> $LOG_FILE 2>&1
-    echo "... deleted configmaps." | tee -a $LOG_FILE
+    echo "--> deleted configmaps." | tee -a $LOG_FILE
 }
 
 stop_datastores()
@@ -126,8 +126,8 @@ stop_backend()
 print_post_uninstall_banner()
 {
     echo
-    echo "... app deletion order submitted to kubernetes ..." | tee -a $LOG_FILE
-    echo "... monitor application by using \`watch kubectl get pods -n ${NAMESPACE} \`" | tee -a $LOG_FILE
+    echo "--> app deletion order submitted to kubernetes ..." | tee -a $LOG_FILE
+    echo "--> monitor application by using \`watch kubectl get pods -n ${NAMESPACE} \`" | tee -a $LOG_FILE
     echo
     echo
     echo
@@ -150,13 +150,13 @@ delete_namespace()
     if [ $? -eq 0 ]    ; then
         kubectl delete namespace ${NAMESPACE} >> $LOG_FILE 2>&1
         if [ $? -eq 0 ] ; then
-            echo "... namespace ${NAMESPACE} deleted." | tee -a $LOG_FILE
+            echo "--> namespace ${NAMESPACE} deleted." | tee -a $LOG_FILE
         else
-            echo "... failed to delete namespace ${NAMESPACE}." | tee -a $LOG_FILE
+            echo "--> failed to delete namespace ${NAMESPACE}." | tee -a $LOG_FILE
             exit 1
         fi
     else
-        echo "... namespace ${NAMESPACE} doesn't exist." | tee -a $LOG_FILE
+        echo "--> namespace ${NAMESPACE} doesn't exist." | tee -a $LOG_FILE
     fi
 }
 
