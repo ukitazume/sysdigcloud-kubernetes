@@ -9,7 +9,6 @@ USER root
 #RUN yum -y install telnet htop atop net-tools iotop && yum clean all
 #RUN rm -rf /var/cache/yum
 
-
 # copying custom-entrypoint and configuration (elasticsearch.yml, log4j2.properties)
 # to their respective directories in /usr/share/elasticsearch (already the WORKDIR)
 COPY docker-entrypoint.sh /

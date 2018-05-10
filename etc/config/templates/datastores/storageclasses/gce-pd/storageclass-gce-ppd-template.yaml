@@ -5,3 +5,4 @@ metadata:
 provisioner: {{ .storageclassProvisioner }}
 parameters:
   type: {{ .storageclassType }}
+

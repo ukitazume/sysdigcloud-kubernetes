@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -76,4 +77,3 @@ spec:
         - name: ssl
           secret:
             secretName: sysdigcloud-ssl-secret
-

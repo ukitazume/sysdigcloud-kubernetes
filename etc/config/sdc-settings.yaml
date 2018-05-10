@@ -6,7 +6,6 @@ global:
   pullSecret: ""
   license:  ""
 
-
   #Images
   backendImage: quay.io/sysdig/sysdigcloud-backend:858
   frontendImage: sysdig/agent
@@ -26,8 +25,6 @@ global:
   redisSlavesReplicaCount: 2
   cassandraReplicaCount: 3
   elasticsearchReplicaCount: 3
-
-
 
   #StorageClass defintions for GKE/GCE type pd-ssd
   storageclassName: gce-pd
