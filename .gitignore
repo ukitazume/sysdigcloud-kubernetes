@@ -1,8 +1,8 @@
 .DS_Store
 .DS_Store?
+
 *.log
 *.uri
+
 server.crt
 server.key
-sysdig-disney*.json
-.idea/

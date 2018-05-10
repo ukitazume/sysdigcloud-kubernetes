@@ -12,5 +12,4 @@ password	include		system-auth
 session		include		system-auth
 session		include		postlogin
 session		optional	pam_xauth.so
-session     	required      	pam_limits.so
-
+session		required	pam_limits.so
