@@ -117,7 +117,7 @@ global:
   #frontend configuration
   collectorUrl: collector.sysdigcloud.com
   accessKey: f65322d7-da0c-44ea-b365-2506bb0db382
-  agentTags: os:ubuntu-16.04,orechestrator:k8s,cloud_provider:gke,cluster:sysdig-disney,backend_version:858,owner:yofti
+  agentTags: os:ubuntu-16.04,orechestrator:k8s,cloud_provider:gke,cluster:acme,backend_version:858,owner:acme
 
 include:
   - name: templates/backend/api
