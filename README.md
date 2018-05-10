@@ -283,19 +283,10 @@ $kubectl -n sysdigcloud scale --replicas=4 statefulset sdc-redis-slave
 ```
 
 
-#### Modifying configMap <a id="Modifying-configMap"></a>
 
-This deployment creates a bunch of configMaps:
-```
-$ kubectl -n sysdigcloud get configmap
-NAME                             DATA      AGE
-sysdigcloud-config               48        2d
-sysdigcloud-mysql-config         7         2d
-sysdigcloud-mysql-config-slave   7         2d
-sysdigcloud-redis-config         2         2d
-sysdigcloud-redis-config-slave   2         2d
 
-```
+
+
 
 You can edit a particular configMap:
 `kubectl -n sysdigcloud edit configmap sysdigcloud-config`
