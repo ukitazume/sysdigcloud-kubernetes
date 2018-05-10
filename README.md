@@ -120,13 +120,13 @@ It will be `ad0d03112c70611e79d6006e5a830746-1802392156.us-west-1.elb.amazonaws.
 
     $ kubectl -n sysdigcloud describe service sdc-api
     Name:            sdc-api
-    Namespace:        sysdigcloud
-    Labels:            app=sysdigcloud
-                    role=api
-    Annotations:    <none>
+    Namespace:       sysdigcloud
+    Labels:          app=sysdigcloud
+                     role=api
+    Annotations:     <none>
     Selector:        app=sysdigcloud,role=api
     Type:            LoadBalancer
-    IP:                10.3.0.36
+    IP:              10.3.0.36
     LoadBalancer Ingress:    ad0d03112c70611e79d6006e5a830746-1802392156.us-west-1.elb.amazonaws.com
     Port:            secure-api    443/TCP
     NodePort:        secure-api    32253/TCP
@@ -136,20 +136,20 @@ It will be `ad0d03112c70611e79d6006e5a830746-1802392156.us-west-1.elb.amazonaws.
       FirstSeen    LastSeen    Count    From            SubObjectPath    Type        Reason            Message
       ---------    --------    -----    ----            -------------    --------    ------            -------
       33m        33m        1    service-controller            Normal        CreatingLoadBalancer    Creating load balancer
-      33m        33m        1    service-controller            Normal        CreatedLoadBalancer        Created load balancer
+      33m        33m        1    service-controller            Normal        CreatedLoadBalancer     Created load balancer
 
 
 Describe the sdc-collector service to see the full collector endpoint URL. It will be `ad0e5cf87c70611e79d6006e5a830746-257288196.us-west-1.elb.amazonaws.com` in this case. This will be the URL that agents (frontend) use to connect to this backend.
 
     $ kubectl -n sysdigcloud describe service sdc-collector
     Name:            sdc-collector
-    Namespace:        sysdigcloud
-    Labels:            app=sysdigcloud
-                role=collector
-    Annotations:        <none>
+    Namespace:       sysdigcloud
+    Labels:          app=sysdigcloud
+                     role=collector
+    Annotations:     <none>
     Selector:        app=sysdigcloud,role=collector
     Type:            LoadBalancer
-    IP:            10.3.0.203
+    IP:              10.3.0.203
     LoadBalancer Ingress:    ad0e5cf87c70611e79d6006e5a830746-257288196.us-west-1.elb.amazonaws.com
     Port:            secure-collector    6443/TCP
     NodePort:        secure-collector    31063/TCP
@@ -159,7 +159,7 @@ Describe the sdc-collector service to see the full collector endpoint URL. It wi
       FirstSeen    LastSeen    Count    From            SubObjectPath    Type        Reason            Message
       ---------    --------    -----    ----            -------------    --------    ------            -------
       34m        34m        1    service-controller            Normal        CreatingLoadBalancer    Creating load balancer
-      33m        33m        1    service-controller            Normal        CreatedLoadBalancer        Created load balancer
+      33m        33m        1    service-controller            Normal        CreatedLoadBalancer     Created load balancer
 
 
 In the above example, you'd go to `http://ad0d03112c70611e79d6006e5a830746-1802392156.us-west-1.elb.amazonaws.com` to access the main Monitor GUI.
@@ -287,7 +287,7 @@ $kubectl -n sysdigcloud scale --replicas=4 statefulset sdc-redis-slave
 
 This deployment creates a bunch of configMaps:
 ```
-yofti-macbook2:aws yoftimakonnen$ kubectl -n sysdigcloud get configmap
+$ kubectl -n sysdigcloud get configmap
 NAME                             DATA      AGE
 sysdigcloud-config               48        2d
 sysdigcloud-mysql-config         7         2d
@@ -298,12 +298,12 @@ sysdigcloud-redis-config-slave   2         2d
 ```
 
 You can edit a particular configMap:
-`$kubectl -n sysdigcloud edit configmap sysdigcloud-config`
+`kubectl -n sysdigcloud edit configmap sysdigcloud-config`
 
 The preferred method would be to edit the file `etc/sdc-config.yaml` and replace the whole configMap set
 ```
-$vi etc/sdc-config.yaml
-$kubectl -n sysdigcloud replace configmap -f etc/sdc-config.yaml
+vi etc/sdc-config.yaml
+kubectl -n sysdigcloud replace configmap -f etc/sdc-config.yaml
 ```
 
 After updating the ConfigMap, the Sysdig Cloud components need to be restarted in order for the changed parameters to take effect. This can be done by simply forcing a rolling update of the deployments. A possible way to do so is:
@@ -325,7 +325,7 @@ image: quay.io/sysdig/sysdigcloud-backend:658
 ```
 In this case, we are running version 658 of the backend. 
 
-To upgrade to version 702 (the latest), we have two options:
+To upgrade to version 893 (the latest), we have two options:
 
 1. Edit the backend files' yaml defintions. Add the right tag for the image `sysdigcloud-backend` like:
 ```
@@ -335,17 +335,16 @@ and restart the app.
 
 2. You can do a rolling update if downtimes are sensitive.
 ```
-kubectl set image deployment/sdc-api api=quay.io/sysdig/sysdigcloud-backend:702 -n sysdigcloud
-kubectl set image deployment/sdc-collector collector=quay.io/sysdig/sysdigcloud-backend:702 -n sysdigcloud
-kubectl set image deployment/sdc-worker worker=quay.io/sysdig/sysdigcloud-backend:702 -n sysdigcloud
+kubectl set image deployment/sdc-api api=quay.io/sysdig/sysdigcloud-backend:893 -n sysdigcloud
+kubectl set image deployment/sdc-collector collector=quay.io/sysdig/sysdigcloud-backend:893 -n sysdigcloud
+kubectl set image deployment/sdc-worker worker=quay.io/sysdig/sysdigcloud-backend:893 -n sysdigcloud
 ```
 
 #### Uninstall <a id="Uninstall"></a>
 
 To completely remove the sdc-kubernetes application, run the following commands
 ```
-$uninstall.sh
-$kubectl delete namespace sysdigcloud
+uninstall.sh
 ```
 This will shutdown all components and by destorying the namespace, it will destroy the PVC's.
 
@@ -354,137 +353,40 @@ NB: This step destroys data. Irretrievably.
 
 ## Tips and Tricks <a id="Tips-and-Tricks"></a>
 
-* Use aliases. 
-
-Too much typing with kubectl
-
-```
-#kubernetes
-alias k='kubectl'
-alias kg='kubectl get'
-alias kv='kubectl version'
-alias kcgc='kubectl config get-contexts'
-alias kgp='kubectl get pods'
-alias kgn='kubectl get nodes'
-alias kgs='kubectl get svc'
-alias kgsvc='kubectl get svc'
-alias kgd='kubectl get deployment'
-alias kgds='kubectl get daemonset'
-alias kgrs='kubectl get rs'
-alias kgc='kubectl get configmap'
-alias kgr='kubectl get role'
-alias kgss='kubectl get statefulset'
-alias kgpv='kubectl get pv'
-alias kgpvc='kubectl get pvc'
-alias kgsc='kubectl get storageclass'
-alias kgcs='kubectl get cs'
-alias kgrc='kubectl get rc'
-alias kgep='kubectl get ep'
-alias kgcm='kubectl get cm'
-alias kgns='kubectl get namespace'
-alias kd='kubectl describe'
-alias kdp='kubectl describe pod'
-alias kdn='kubectl describe node'
-alias kdns='kubectl describe namespace'
-alias kdd='kubectl describe deployment'
-alias kdds='kubectl describe daemonset'
-alias kds='kubectl describe service'
-alias kdsvc='kubectl describe service'
-alias kdss='kubectl describe statefulset'
-alias kdsc='kubectl describe storageclass'
-alias kdpv='kubectl describe pv'
-alias kdpvc='kubectl describe pvc'
-alias kdrs='kubectl describe rs'
-alias kdrc='kubectl describe rc'
-alias kdr='kubectl describe role'
-alias kdc='kubectl describe configmap'
-alias kdcm='kubectl describe cm'
-alias kdep='kubectl describe ep'
-alias kc='kubectl create'
-alias kdl='kubectl delete'
-alias kl='kubectl logs'
-alias klf='kubectl logs -f'
-alias ke='kubectl exec -i -t'
-ta() {
- if [ $# -eq 0 ]; then
-    {
-         kubectl exec $(kubectl get pods | grep -m1 api|awk '{print $1}') -- tail -f /var/log/sysdigcloud/api/backend.log
-    } else {
-         kubectl exec $1 -- tail -f /var/log/sysdigcloud/api/backend.log
-    }
- fi
-}
-
-tw() {
- if [ $# -eq 0 ]; then
-    {
-         kubectl exec $(kubectl get pods | grep -m1 worker|awk '{print $1}') -- tail -f /var/log/sysdigcloud/worker/backend.log
-    } else {
-         kubectl exec $1 -- tail -f /var/log/sysdigcloud/worker/backend.log
-    }
- fi
-}
-
-tc() {
- if [ $# -eq 0 ]; then
-    {
-         kubectl exec $(kubectl get pods | grep -m1 collector|awk '{print $1}') -- tail -f /var/log/sysdigcloud/collector/backend.log
-    } else {
-         kubectl exec $1 -- tail -f /var/log/sysdigcloud/collector/backend.log
-    }
- fi
-}
-
-
-nts() {
- if [ $# -eq 0 ]; then
-   {
-      kubectl exec $(kubectl get pods | grep -m1 cassandra|awk '{print $1}') -- nodetool status
-   } else {
-      kubectl exec $1 -- nodetool status
-   }
- fi
-}
-
-esch() {
- if [ $# -eq 0 ]; then
-   {
-      kubectl exec $(kubectl get pods | grep -m1 elasticsearch|awk '{print $1}') -- bash -c 'curl -s http://$(hostname -i):9200/_cluster/health?pretty'
-   } else {
-      kubectl exec $1 -- bash -c 'curl -s http://$(hostname -i):9200/_cluster/health?pretty'
-   }
- fi
-}
-```
 * Master your Kubectl configs and contexts
 
 You might have multiple kubernetes clusters that you are managing. Each one has a context. Setting namespace in your context will save you from supplying -n flags.
 
 ```
-$ k config get-clusters
+$ kubectl config get-clusters
 NAME
-gke_whole-cloth-182215_us-west1-a_yofti-gcp-k8-cluster
-kube-aws-k8s-yoftilabs-com-cluster
-gke_sysdig-disney_us-central1-a_sysdig-disney-dev
-gke_sysdig-disney_us-west1-a_sysdig-disney
-$ k config get-contexts
+gke_whole-cloth-182215_us-west1-a_mykube-gcp-k8-cluster
+kube-aws-k8s-mykubelabs-com-cluster
+gke_sysdig-acme_us-central1-a_sysdig-acme-dev
+gke_sysdig-acme_us-west1-a_sysdig-acme
+
+$ kubectl config get-contexts
 CURRENT   NAME                                                     CLUSTER                                                  AUTHINFO                                                 NAMESPACE
-          gke_whole-cloth-182215_us-west1-a_yofti-gcp-k8-cluster   gke_whole-cloth-182215_us-west1-a_yofti-gcp-k8-cluster   gke_whole-cloth-182215_us-west1-a_yofti-gcp-k8-cluster   sysdigcloud
-*         kube-aws-k8s-yoftilabs-com-context                       kube-aws-k8s-yoftilabs-com-cluster                       kube-aws-k8s-yoftilabs-com-admin                         sysdigcloud
-          gke_sysdig-disney_us-central1-a_sysdig-disney-dev        gke_sysdig-disney_us-central1-a_sysdig-disney-dev        gke_sysdig-disney_us-central1-a_sysdig-disney-dev        sysdigcloud
-          gke_sysdig-disney_us-west1-a_sysdig-disney               gke_sysdig-disney_us-west1-a_sysdig-disney               gke_sysdig-disney_us-west1-a_sysdig-disney               sysdigcloud
-$ k config current-context
-kube-aws-k8s-yoftilabs-com-context
-$ k config set current-context gke_sysdig-disney_us-west1-a_sysdig-disney -n sysdigcloud
+          gke_whole-cloth-182215_us-west1-a_mykube-gcp-k8-cluster   gke_whole-cloth-182215_us-west1-a_mykube-gcp-k8-cluster   gke_whole-cloth-182215_us-west1-a_mykube-gcp-k8-cluster   sysdigcloud
+*         kube-aws-k8s-mykubelabs-com-context                       kube-aws-k8s-mykubelabs-com-cluster                       kube-aws-k8s-mykubelabs-com-admin                         sysdigcloud
+          gke_sysdig-acme_us-central1-a_sysdig-acme-dev        gke_sysdig-acme_us-central1-a_sysdig-acme-dev        gke_sysdig-acme_us-central1-a_sysdig-acme-dev        sysdigcloud
+          gke_sysdig-acme_us-west1-a_sysdig-acme               gke_sysdig-acme_us-west1-a_sysdig-acme               gke_sysdig-acme_us-west1-a_sysdig-acme               sysdigcloud
+
+$ kubectl config current-context
+kube-aws-k8s-mykubelabs-com-context
+
+$ kubectl config set current-context gke_sysdig-acme_us-west1-a_sysdig-acme -n sysdigcloud
 Property "current-context" set.
-$ k config current-context
-gke_sysdig-disney_us-west1-a_sysdig-disney
-$ k config get-contexts
+
+$ kubectl config current-context
+gke_sysdig-acme_us-west1-a_sysdig-acme
+
+$ kubectl config get-contexts
 CURRENT   NAME                                                     CLUSTER                                                  AUTHINFO                                                 NAMESPACE
-          kube-aws-k8s-yoftilabs-com-context                       kube-aws-k8s-yoftilabs-com-cluster                       kube-aws-k8s-yoftilabs-com-admin                         sysdigcloud
-          gke_sysdig-disney_us-central1-a_sysdig-disney-dev        gke_sysdig-disney_us-central1-a_sysdig-disney-dev        gke_sysdig-disney_us-central1-a_sysdig-disney-dev        sysdigcloud
-*         gke_sysdig-disney_us-west1-a_sysdig-disney               gke_sysdig-disney_us-west1-a_sysdig-disney               gke_sysdig-disney_us-west1-a_sysdig-disney               sysdigcloud
-          gke_whole-cloth-182215_us-west1-a_yofti-gcp-k8-cluster   gke_whole-cloth-182215_us-west1-a_yofti-gcp-k8-cluster   gke_whole-cloth-182215_us-west1-a_yofti-gcp-k8-cluster   sysdigcloud
+          kube-aws-k8s-mykubelabs-com-context                       kube-aws-k8s-mykubelabs-com-cluster                       kube-aws-k8s-mykubelabs-com-admin                         sysdigcloud
+          gke_sysdig-acme_us-central1-a_sysdig-acme-dev        gke_sysdig-acme_us-central1-a_sysdig-acme-dev        gke_sysdig-acme_us-central1-a_sysdig-acme-dev        sysdigcloud
+*         gke_sysdig-acme_us-west1-a_sysdig-acme               gke_sysdig-acme_us-west1-a_sysdig-acme               gke_sysdig-acme_us-west1-a_sysdig-acme               sysdigcloud
+          gke_whole-cloth-182215_us-west1-a_mykube-gcp-k8-cluster   gke_whole-cloth-182215_us-west1-a_mykube-gcp-k8-cluster   gke_whole-cloth-182215_us-west1-a_mykube-gcp-k8-cluster   sysdigcloud
 
 ```
 
