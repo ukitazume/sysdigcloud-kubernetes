@@ -9,9 +9,9 @@ global:
   #Images
   backendImage: quay.io/sysdig/sysdigcloud-backend:858
   frontendImage: sysdig/agent
-  cassandraImage: yofti/cassandra:2.2.11
-  elasticsearchImage: yofti/elasticsearch:5.5.3
-  redisImage: yofti/redis:4.0.2
+  cassandraImage: quay.io/sysdig/cassandra:2.1.15.0
+  elasticsearchImage: quay.io/sysdig/elasticsearch:5.1.1.0
+  redisImage: quay.io/sysdig/redis:2.8.23
   mysqlImage: mysql:5.7
   xtrabackupImage: gcr.io/google-samples/xtrabackup:1.0
 
