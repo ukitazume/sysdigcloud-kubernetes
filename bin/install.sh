@@ -108,7 +108,7 @@ create_ssl_certs()
 {
     mkdir -p ${SDC_HOME}/etc/certs
     openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 -subj \
-    "/C=US/ST=CA/L=SanFrancisco/O=ICT/CN=sysdig.yoftilabs.com" \
+    "/C=US/ST=CA/L=SanFrancisco/O=ICT/CN=acme.com" \
     -keyout ${SDC_HOME}/etc/certs/server.key -out ${SDC_HOME}/etc/certs/server.crt >> $LOG_FILE 2>&1
 
     if [ $? -ne 0 ]; then
