@@ -1,5 +1,5 @@
 FROM cassandra:2.2.11
-MAINTAINER yofti <yofti@sysdig.com>
+MAINTAINER dev-ops@sysdig.com <dev-ops@sysdig.com>
 
 RUN echo 'deb http://ftp.debian.org/debian jessie-backports main' >> /etc/apt/sources.list
 RUN apt-get update && \
