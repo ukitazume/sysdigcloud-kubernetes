@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: Secret
 metadata:
@@ -209,4 +210,3 @@ data:
     protected-mode no
     slave-serve-stale-data yes
     slaveof sdc-redis-0.sdc-redis 6379
-
