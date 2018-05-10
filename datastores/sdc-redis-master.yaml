@@ -41,7 +41,7 @@ spec:
     spec:
       containers:
       - name: redis-cluster
-        image: yofti/redis:4.0.2
+        image: quay.io/sysdig/redis:2.8.23
         env:
           - name: REDIS_PASSWORD
             valueFrom:
