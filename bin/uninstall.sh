@@ -3,6 +3,9 @@
 # Global Variables
 NOW=$(date "+%Y.%m.%d-%H.%M.%S")
 SDC_HOME=".."
+
+mkdir -p $SDC_HOME/logs/uninstall
+
 LOG_FILE=$SDC_HOME/logs/uninstall/uninstall-$NOW.log
 SETTINGS_FILE="$SDC_HOME/etc/config/sdc-settings.yaml"
 NAMESPACE=$(egrep namespace $SETTINGS_FILE | awk '{print $2}')
@@ -13,18 +16,12 @@ K8S_SERVER_VERSION=$(kubectl version | egrep ^Server | awk -F, '{print $3}')
 CURRENT_CONTEXT=$(kubectl config get-contexts | egrep '^\*' | awk '{print $2}')
 CURRENT_CLUSTER=$(kubectl config get-contexts | egrep '^\*' | awk '{print $3}')
 
-error_exit()
-{
-    echo "$1" 1>&2
-    exit 1
-}
-
 print_env_variables()
 {
     printf "LOG_FILE: %s\n" $LOG_FILE
     printf "SDC_HOME: %s\n" $SDC_HOME
     printf "SETTINGS_FILE: %s\n" $SETTINGS_FILE
-    printf "NAMESPACE: %s\n" $NAMESPACE
+    printf "NAMESPACE: %s\n" ${NAMESPACE}
     printf "BACKEND_VERSION: %s\n" $BACKEND_VERSION
     printf "FRONTEND_VERSION: %s\n" $FRONTEND_VERSION
     printf "K8S_CLIENT_VERSION: %s\n" $K8S_CLIENT_VERSION
@@ -59,8 +56,8 @@ print_banner()
     printf "Current Context: %s\n" $CURRENT_CONTEXT
     printf "Current Cluster: %s\n" $CURRENT_CLUSTER
     printf '\n%.0s' {1..2}
-    printf "%s\n" "Uinstaller is configured for namespace $NAMESPACE."
-    printf "%s\n" "Namespace $NAMESPACE will be removed if you answer \"yes\" to the prompt."
+    printf "%s\n" "Uinstaller is configured for namespace ${NAMESPACE}."
+    printf "%s\n" "Namespace ${NAMESPACE} will be removed if you answer \"yes\" to the prompt."
     printf '+%.0s' {1..100}
     printf '\n'
 }
@@ -81,7 +78,7 @@ prompt_uninstall()
 
 delete_storageclasses()
 {
-    kubectl delete -f $SDC_HOME/datastores/storageclasses/ >> $LOG_FILE 2>&1
+    kubectl delete -f $SDC_HOME/datastores/storageclasses/ -n ${NAMESPACE} >> $LOG_FILE 2>&1
     if [ $? -eq 0 ]; then
         echo "... deleted storageclasses." | tee -a $LOG_FILE
     else
@@ -99,7 +96,7 @@ delete_ssl_certs()
 delete_tls_secret()
 {
     #create ssl-secret in kubernetes if it doesn't exist already
-    kubectl delete secret sysdigcloud-ssl-secret --namespace $NAMESPACE >> $LOG_FILE 2>&1
+    kubectl delete secret sysdigcloud-ssl-secret -n ${NAMESPACE} >> $LOG_FILE 2>&1
     echo "... deleted ssl secret sysdigcloud-ssl-secret." | tee -a $LOG_FILE
 }
 
@@ -111,36 +108,36 @@ delete_configmaps()
 
 stop_datastores()
 {
-    kubectl delete -f $SDC_HOME/datastores/sdc-mysql-master.yaml   >> $LOG_FILE 2>&1 &
-    kubectl delete -f $SDC_HOME/datastores/sdc-redis-master.yaml   >> $LOG_FILE 2>&1 &
-    kubectl delete -f $SDC_HOME/datastores/sdc-redis-slaves.yaml   >> $LOG_FILE 2>&1 &
-    kubectl delete -f $SDC_HOME/datastores/sdc-cassandra.yaml      >> $LOG_FILE 2>&1 &
-    kubectl delete -f $SDC_HOME/datastores/sdc-elasticsearch.yaml  >> $LOG_FILE 2>&1 &
-    kubectl delete -f $SDC_HOME/datastores/sdc-mysql-slaves.yaml   >> $LOG_FILE 2>&1 &
+    kubectl delete -f $SDC_HOME/datastores/sdc-mysql-master.yaml >> $LOG_FILE 2>&1
+    kubectl delete -f $SDC_HOME/datastores/sdc-redis-master.yaml >> $LOG_FILE 2>&1
+    kubectl delete -f $SDC_HOME/datastores/sdc-redis-slaves.yaml >> $LOG_FILE 2>&1
+    kubectl delete -f $SDC_HOME/datastores/sdc-cassandra.yaml >> $LOG_FILE 2>&1
+    kubectl delete -f $SDC_HOME/datastores/sdc-elasticsearch.yaml >> $LOG_FILE 2>&1
+    kubectl delete -f $SDC_HOME/datastores/sdc-mysql-slaves.yaml >> $LOG_FILE 2>&1
 }
 
 stop_backend()
 {
-    kubectl delete  -f $SDC_HOME/backend/sdc-api.yaml       >> $LOG_FILE 2>&1 &
-    kubectl delete  -f $SDC_HOME/backend/sdc-worker.yaml    >> $LOG_FILE 2>&1 &
-    kubectl delete  -f $SDC_HOME/backend/sdc-collector.yaml >> $LOG_FILE 2>&1 &
+    kubectl delete -f $SDC_HOME/backend/sdc-api.yaml >> $LOG_FILE 2>&1
+    kubectl delete -f $SDC_HOME/backend/sdc-worker.yaml >> $LOG_FILE 2>&1
+    kubectl delete -f $SDC_HOME/backend/sdc-collector.yaml >> $LOG_FILE 2>&1
 }
 
 print_post_uninstall_banner()
 {
     echo
-    echo "... app deletion order submitted to kubernetes ..."                          | tee -a $LOG_FILE
-    echo "... monitor application by using \`watch kubectl get pods -n $NAMESPACE \`"  | tee -a $LOG_FILE
+    echo "... app deletion order submitted to kubernetes ..." | tee -a $LOG_FILE
+    echo "... monitor application by using \`watch kubectl get pods -n ${NAMESPACE} \`" | tee -a $LOG_FILE
     echo
     echo
     echo
-    kubectl get pods -n $NAMESPACE| tee -a $LOG_FILE
+    kubectl get pods -n ${NAMESPACE}| tee -a $LOG_FILE
 }
 
 delete_namespace()
 {
     clear
-    echo "Do you wish to delete the namespace $NAMESPACE?"
+    echo "Do you wish to delete the namespace ${NAMESPACE}?"
     echo "NB: Removing the namespace will remove all Persistent Volume Claims (PVCs) and their associated Persistent Volumes (PVs)."
     select yn in "Yes" "No"; do
         case $yn in
@@ -149,27 +146,31 @@ delete_namespace()
         esac
     done
 
-    kubectl get namespace $NAMESPACE >> $LOG_FILE 2>&1
+    kubectl get namespace ${NAMESPACE} >> $LOG_FILE 2>&1
     if [ $? -eq 0 ]    ; then
-        kubectl delete namespace $NAMESPACE >> $LOG_FILE 2>&1
+        kubectl delete namespace ${NAMESPACE} >> $LOG_FILE 2>&1
         if [ $? -eq 0 ] ; then
-            echo "... namespace $NAMESPACE deleted." | tee -a $LOG_FILE
+            echo "... namespace ${NAMESPACE} deleted." | tee -a $LOG_FILE
         else
-            echo "... failed to delete namespace $NAMESPACE." | tee -a $LOG_FILE
+            echo "... failed to delete namespace ${NAMESPACE}." | tee -a $LOG_FILE
             exit 1
         fi
     else
-        echo "... namespace $NAMESPACE doesn't exist." | tee -a $LOG_FILE
+        echo "... namespace ${NAMESPACE} doesn't exist." | tee -a $LOG_FILE
     fi
 }
 
+if [[ "${DEBUG:-}" == "true" ]]; then
+    print_env_variables
+fi
+
 print_banner
 prompt_uninstall
+stop_datastores
+stop_backend
 delete_storageclasses
 delete_configmaps
 delete_ssl_certs
 delete_tls_secret
-stop_datastores
-stop_backend
 sleep 5
 delete_namespace

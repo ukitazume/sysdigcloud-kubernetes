@@ -309,9 +309,9 @@ $kubectl -n sysdigcloud replace configmap -f etc/sdc-config.yaml
 After updating the ConfigMap, the Sysdig Cloud components need to be restarted in order for the changed parameters to take effect. This can be done by simply forcing a rolling update of the deployments. A possible way to do so is:
 
 ```
-kubectl patch deployment sdc-api -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}" --namespace sysdigcloud
-kubectl patch deployment sdc-collector -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}" --namespace sysdigcloud
-kubectl patch deployment sdc-worker -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}" --namespace sysdigcloud
+kubectl patch deployment sdc-api -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}" -n sysdigcloud
+kubectl patch deployment sdc-collector -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}" -n sysdigcloud
+kubectl patch deployment sdc-worker -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}" -n sysdigcloud
 ```
 
 This will ensure that the application restarts with no downtime (assuming the deployments have more than one replica each).
@@ -335,9 +335,9 @@ and restart the app.
 
 2. You can do a rolling update if downtimes are sensitive.
 ```
-kubectl set image deployment/sdc-api api=quay.io/sysdig/sysdigcloud-backend:702 --namespace sysdigcloud
-kubectl set image deployment/sdc-collector collector=quay.io/sysdig/sysdigcloud-backend:702 --namespace sysdigcloud
-kubectl set image deployment/sdc-worker worker=quay.io/sysdig/sysdigcloud-backend:702 --namespace sysdigcloud
+kubectl set image deployment/sdc-api api=quay.io/sysdig/sysdigcloud-backend:702 -n sysdigcloud
+kubectl set image deployment/sdc-collector collector=quay.io/sysdig/sysdigcloud-backend:702 -n sysdigcloud
+kubectl set image deployment/sdc-worker worker=quay.io/sysdig/sysdigcloud-backend:702 -n sysdigcloud
 ```
 
 #### Uninstall <a id="Uninstall"></a>
@@ -458,7 +458,7 @@ esch() {
 ```
 * Master your Kubectl configs and contexts
 
-You might have multiple kubernetes clusters that you are managing. Each one has a context. Setting namespace in your context will save you from supplying --namespace flags.
+You might have multiple kubernetes clusters that you are managing. Each one has a context. Setting namespace in your context will save you from supplying -n flags.
 
 ```
 $ k config get-clusters
@@ -475,7 +475,7 @@ CURRENT   NAME                                                     CLUSTER      
           gke_sysdig-disney_us-west1-a_sysdig-disney               gke_sysdig-disney_us-west1-a_sysdig-disney               gke_sysdig-disney_us-west1-a_sysdig-disney               sysdigcloud
 $ k config current-context
 kube-aws-k8s-yoftilabs-com-context
-$ k config set current-context gke_sysdig-disney_us-west1-a_sysdig-disney --namespace sysdigcloud
+$ k config set current-context gke_sysdig-disney_us-west1-a_sysdig-disney -n sysdigcloud
 Property "current-context" set.
 $ k config current-context
 gke_sysdig-disney_us-west1-a_sysdig-disney
