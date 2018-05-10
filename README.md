@@ -299,7 +299,7 @@ This will ensure the smooth upgrade process and will not cause any downtime.
 
 This deployment creates a bunch of configMaps:
 ```
-yofti-macbook2:aws yoftimakonnen$ kubectl -n sysdigcloud get configmap
+kubectl -n sysdigcloud get configmap
 NAME                             DATA      AGE
 sysdigcloud-config               48        2d
 sysdigcloud-mysql-config         7         2d
