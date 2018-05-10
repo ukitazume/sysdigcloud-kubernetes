@@ -56,7 +56,7 @@ spec:
         #- name: COLLECTOR_PORT                             #OPTIONAL - on-prem install only
         #  value: "6443"
         - name: TAGS                                       #OPTIONAL
-          value: os:ubuntu-16.04,orechestrator:k8s,cloud_provider:gke,cluster:sysdig-disney,backend_version:858,owner:yofti
+          value: os:ubuntu-16.04,orechestrator:k8s,cloud_provider:gke,cluster:acme,backend_version:858,owner:acme
         #- name: COLLECTOR                                  #OPTIONAL - on-prem install only
         #  value: collector.sysdigcloud.com 
         #- name: SECURE                                     #OPTIONAL - on-prem install only       
