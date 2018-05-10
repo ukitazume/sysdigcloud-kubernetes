@@ -47,7 +47,7 @@ spec:
     spec:
       containers:
       - name: cassandra
-        image: yofti/cassandra:2.2.11
+        image: quay.io/sysdig/cassandra:2.1.15.0
         imagePullPolicy: Always
         ports:
           - containerPort: 9042
