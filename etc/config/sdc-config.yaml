@@ -37,9 +37,9 @@ data:
   #jvm options
   cassandra.jvm.options: "-Xms4g -Xmx4g"
   elasticsearch.jvm.options: "-Xms2g -Xmx2g"
-  sysdigcloud.jvm.api.options: "-Xms2g -Xmx5g"
-  sysdigcloud.jvm.worker.options: "-Xms2g -Xmx5g"
-  sysdigcloud.jvm.collector.options: "-Xms4g -Xmx8g"
+  sysdigcloud.jvm.api.options: "-Xms2g -Xmx5g -Xmn1g"
+  sysdigcloud.jvm.worker.options: "-Xms2g -Xmx5g -Xmn1g"
+  sysdigcloud.jvm.collector.options: "-Xms4g -Xmx8g -Xmn1g"
   #elasticsearch
   elasticsearch.service: "sdc-elasticsearch"
   elasticsearch.cluster.name: "sysdigcloud"

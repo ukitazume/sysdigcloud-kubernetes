@@ -37,7 +37,9 @@ data:
   #jvm options
   cassandra.jvm.options: "{{ .cassandraJvmOptions }}"
   elasticsearch.jvm.options: "{{ .elasticsearchJvmOptions }}"
-  sysdigcloud.jvm.options: "{{ .jvmOptions }}"
+  sysdigcloud.jvm.api.options: "{{ .jvmApiOptions }}"
+  sysdigcloud.jvm.worker.options: "{{ .jvmWorkerOptions }}"
+  sysdigcloud.jvm.collector.options: "{{ .jvmCollectorOptions }}"
   #elasticsearch
   elasticsearch.service: "{{ .elasticsearchService }}"
   elasticsearch.cluster.name: "{{ .elasticsearchClusterName }}"
