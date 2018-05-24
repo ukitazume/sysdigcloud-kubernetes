@@ -168,7 +168,7 @@ Describe the sdc-collector service to see the full collector endpoint URL. It wi
       33m        33m        1    service-controller            Normal        CreatedLoadBalancer     Created load balancer
 
 
-In the above example, go to `http://ad0d03112c70611e79d6006e5a830746-1802392156.us-west-1.elb.amazonaws.com` to 
+In the above example, go to `https://ad0d03112c70611e79d6006e5a830746-1802392156.us-west-1.elb.amazonaws.com:<port#>` to 
 access the main Monitor GUI.
 Point your collectors to `ad0e5cf87c70611e79d6006e5a830746-257288196.us-west-1.elb.amazonaws.com`.
 
@@ -345,46 +345,3 @@ uninstall.sh
 ```
 This will shutdown all components and by destorying the namespace, it will destroy the PVC's.
   
-
-
-## Tips and Tricks <a id="Tips-and-Tricks"></a>
-
-* Master your kubectl configs and contexts
-
-You might have multiple kubernetes clusters that you are managing. Each one has a context. Setting namespace in your 
-context will save you from supplying -n flags.
-
-```
-$ kubectl config get-clusters
-NAME
-gke_whole-cloth-182215_us-west1-a_mykube-gcp-k8-cluster
-kube-aws-k8s-mykubelabs-com-cluster
-gke_sysdig-acme_us-central1-a_sysdig-acme-dev
-gke_sysdig-acme_us-west1-a_sysdig-acme
-
-$ kubectl config get-contexts
-CURRENT   NAME                                                     CLUSTER                                                  AUTHINFO                                                 NAMESPACE
-          gke_whole-cloth-182215_us-west1-a_mykube-gcp-k8-cluster   gke_whole-cloth-182215_us-west1-a_mykube-gcp-k8-cluster   gke_whole-cloth-182215_us-west1-a_mykube-gcp-k8-cluster   sysdigcloud
-*         kube-aws-k8s-mykubelabs-com-context                       kube-aws-k8s-mykubelabs-com-cluster                       kube-aws-k8s-mykubelabs-com-admin                         sysdigcloud
-          gke_sysdig-acme_us-central1-a_sysdig-acme-dev        gke_sysdig-acme_us-central1-a_sysdig-acme-dev        gke_sysdig-acme_us-central1-a_sysdig-acme-dev        sysdigcloud
-          gke_sysdig-acme_us-west1-a_sysdig-acme               gke_sysdig-acme_us-west1-a_sysdig-acme               gke_sysdig-acme_us-west1-a_sysdig-acme               sysdigcloud
-
-$ kubectl config current-context
-kube-aws-k8s-mykubelabs-com-context
-
-$ kubectl config set current-context gke_sysdig-acme_us-west1-a_sysdig-acme -n sysdigcloud
-Property "current-context" set.
-
-$ kubectl config current-context
-gke_sysdig-acme_us-west1-a_sysdig-acme
-
-$ kubectl config get-contexts
-CURRENT   NAME                                                     CLUSTER                                                  AUTHINFO                                                 NAMESPACE
-          kube-aws-k8s-mykubelabs-com-context                       kube-aws-k8s-mykubelabs-com-cluster                       kube-aws-k8s-mykubelabs-com-admin                         sysdigcloud
-          gke_sysdig-acme_us-central1-a_sysdig-acme-dev        gke_sysdig-acme_us-central1-a_sysdig-acme-dev        gke_sysdig-acme_us-central1-a_sysdig-acme-dev        sysdigcloud
-*         gke_sysdig-acme_us-west1-a_sysdig-acme               gke_sysdig-acme_us-west1-a_sysdig-acme               gke_sysdig-acme_us-west1-a_sysdig-acme               sysdigcloud
-          gke_whole-cloth-182215_us-west1-a_mykube-gcp-k8-cluster   gke_whole-cloth-182215_us-west1-a_mykube-gcp-k8-cluster   gke_whole-cloth-182215_us-west1-a_mykube-gcp-k8-cluster   sysdigcloud
-
-```
-
-
