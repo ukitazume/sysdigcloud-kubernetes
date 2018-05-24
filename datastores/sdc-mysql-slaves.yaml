@@ -234,7 +234,7 @@ spec:
   - metadata:
       name: data
     spec:
-      storageClassName: gce-pd
+      storageClassName: local-storage
       accessModes: ["ReadWriteOnce"]
       resources:
         requests:
