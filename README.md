@@ -19,39 +19,40 @@
 
 ## What is this? <a id="What-is-this?"></a>
 
-sdc-kubernetes is an on-prem version of [Sysdig Monitor](https://sysdig.com/product/monitor/), a SAAS offering by Sysdig Inc for monitoring containerized envrionments. The official on-prem Kubernetes guide can be found [here](https://github.com/draios/sysdigcloud-kubernetes). This repo is the result of a personal, on-going proof-of-concept project on improving certain aspects of Kubernetes deployment.
+SDC-Kubernetes is an on-prem version of [Sysdig Monitor](https://sysdig.com/product/monitor/), a SAAS offering by Sysdig 
+Inc for monitoring containerized and non-containerized environments. 
+The official on-prem Kubernetes guide can be found [here](https://github.com/draios/sysdigcloud-kubernetes). 
 
-Here is a list of the improvements:
+Here are the most recent updates:
 
 - **Introduction of Statefulsets**
     
-    **NOTE**: Kubernetes statefulsets are stable (GA) in version 1.9. Using on earlier version may have adverse affects.
-    Replication Sets and their improved kin, Deployment Sets are good for stateless loads. But if you have states, like we do in our database (datastore) layer, you do need Stateful Sets.
+    **NOTE**: Kubernetes statefulsets are stable (GA) in version 1.9. Using an earlier version may have adverse affects.
+
 - **Introduction of persistence to datastores**
-    The key that makes Stateful Sets magical is the use of Persistent Volume Claims. PODs can now ask for block disks from the cloud provider dynamically. The disks can be encrypted, adjusted for IOPS specific performance and they can also be Snapshoted for backups.
-- **Elimination of SPOF's (single points of failure)**
-    All datastore components are now highly-available running in Stateful sets with replicas >= 3. Cassandra and Elasticsearch are full active/active cluster rings. Mysql and Redis are currently setup with master/slave replications. 
-- **Performance improvements due to addition of "read-only" services**
-    With the addition of Mysql and Redis slaves, we now have new endpoints in Kubernetes for read-only access. Backend components can point their read operations to the slaves and thereby minimize the load on the master instances.
-- **Templatized deployment**
-  $SDC_HOME/etc/config/sdc-settings.yaml holds every configurable parameter in the deployment.
-  Templates in $SDC_HOME/etc/config/templates will be populated by variables from the sdc-settings file. Manifests are created in $SDC_HOME/{datastores,backend,frontend,etc}
-- **Addition of rudimentary install.sh and uninstall.sh scripts.**
-- **Support for Multi Availability Zone (multi AZ) deployments**
-    As long as the underlying Kubernetes is deployed in Multi-AZ mode, we can run on it. 
-- **Improved images for better peformance.**
-  Check out the $SDC_HOME/docker-images folder for images used in this deployment
 
+    Persistent volumes can utilize block disks from the various cloud provider dynamically. The disks can be encrypted, 
+    adjusted for IOPS specific performance and can utilize snapshots for backups.
+    
+- **Elimination of single points of failure**
 
+    All datastore components are now highly-available running in statefulsets with replicas >= 3. Cassandra and 
+    Elasticsearch comprise of active/active cluster rings. MySQL and Redis are configured master/slave replications.
 
+- **Templatize Deployment**
+
+  SDC-settings.yaml contains configurable parameters.
+  Templates in $SDC_HOME/etc/config/templates will be populated by variables contained in the sdc-settings file and 
+  manifests are created
+  
 ## Infrastructure Overview <a id="Infrastructure-Overview"></a>
 
 ![sdc-kubernetes](https://user-images.githubusercontent.com/12384605/32736470-653dabb8-c84c-11e7-89bb-71c201ec980f.png?raw=true)
 
-###### Backend components
-* api-servers: provide a web and API interface to the main application
-* collectors: agents (frontend) connect to this backend via collectors
-* workers: process data aggregations and alerts
+###### Backend Components
+* api-servers: Provides a web and API interface to the sysdig application
+* collectors: Agents connect to the backend via sysdig collectors
+* workers: Process data aggregations and alerts
 
 ###### Cache Layer
 * redis: intra-service cache
@@ -59,10 +60,11 @@ Here is a list of the improvements:
 ###### DataStores
 * mysql: stores user data and environmental data
 * elasticsearch: stores event and metadata
-* cassandra: stores metrics
+* cassandra: stores sysdig metrics
 
-Backend components (worker, api and collector) are all stateless and are thus deployed in Deployment sets.
-Datastores (redis, mysql, elasticsearch and cassandra) are stateful. They are configured in statefulsets that use Persistent Volume Claims (PVC) from the cloud provider.
+Backend components (worker, api and collector) are stateless deployed in deploymentsets.
+Datastores (redis, mysql, elasticsearch and cassandra) are stateful. They are configured in statefulsets that use 
+Persistent Volume Claims (PVC) from the cloud provider.
 
 ## Requirements <a id="Requirements"></a>
 
@@ -70,14 +72,17 @@ Datastores (redis, mysql, elasticsearch and cassandra) are stateful. They are co
 - Sysdig Cloud quay.io pull secret
 - Sysdig Cloud license
 - kubectl installed on your machine and communicating with the Kubernetes cluster
-- [kontemplate] (https://github.com/tazjin/kontemplate) is required for templatized deployment.
+- [kontemplate] (https://github.com/tazjin/kontemplate) is required for templatize deployment.
 
 ## Installation Guide <a id="Installation-Guide"></a>
 
 1. Clone this repository to your machine
     `git clone https://github.com/draios/sysdigcloud-kubernetes.git`
-2. Edit the file `$SDC_HOME/etc/config/sdc-settings.yaml`. This file is the master settings file for the whole deployment. Every editable parameter in the deployment from number of replicas to resource limits are defined in this file. Pay special attention to the following variables: `sysdigPullSecret`, `sysdigcloudLicense`, `sysdigNamespace` and `sysdigcloudProvider`.
-3. Run `$SDC_HOME/bin/create-manfiests.sh`. This will create usable Kubernetes manifests in yaml format and puts them under the appropriate directories under $SDC_HOME. 
+2. Edit the file `$SDC_HOME/etc/config/sdc-settings.yaml`. This file is the master settings file for the whole 
+deployment. Every editable parameter in the deployment from number of replicas to resource limits are defined in this 
+file. Pay special attention to the following variables: `sysdigPullSecret`, `sysdigcloudLicense`, `sysdigNamespace` and `sysdigcloudProvider`.
+3. Run `$SDC_HOME/bin/create-manfiests.sh`. This will create usable Kubernetes manifests in yaml format and puts them 
+under the appropriate directories under $SDC_HOME. 
 4. Run `$SDC_HOME/bin/install.sh` to install and run the application.  
 
 
@@ -116,7 +121,8 @@ Check the services that were created.
     sdc-redis-slave     None         <none>             6379/TCP,16379/TCP                    34m
 
 Describe the sdc-api service to get the full API endpoint URL.
-It will be `ad0d03112c70611e79d6006e5a830746-1802392156.us-west-1.elb.amazonaws.com` in this case. Use this URL to access the SDC Monitor interface. This URL can be given a sensible URL via Route53 or similar.
+It will be `ad0d03112c70611e79d6006e5a830746-1802392156.us-west-1.elb.amazonaws.com` in this case. Use this URL to 
+access the SDC Monitor interface. This URL can be given a sensible URL via Route53 or similar.
 
     $ kubectl -n sysdigcloud describe service sdc-api
     Name:            sdc-api
@@ -162,7 +168,8 @@ Describe the sdc-collector service to see the full collector endpoint URL. It wi
       33m        33m        1    service-controller            Normal        CreatedLoadBalancer     Created load balancer
 
 
-In the above example, you'd go to `http://ad0d03112c70611e79d6006e5a830746-1802392156.us-west-1.elb.amazonaws.com` to access the main Monitor GUI.
+In the above example, go to `http://ad0d03112c70611e79d6006e5a830746-1802392156.us-west-1.elb.amazonaws.com` to 
+access the main Monitor GUI.
 Point your collectors to `ad0e5cf87c70611e79d6006e5a830746-257288196.us-west-1.elb.amazonaws.com`.
 
 
@@ -173,7 +180,8 @@ Point your collectors to `ad0e5cf87c70611e79d6006e5a830746-257288196.us-west-1.e
 
     `kubectl create namespace sysdigcloud`
 
-2. It creates Kubernetes secrets and configMaps populated with infromation about usernames, passwords, ssl certs, quay.io pull secret and various application specific parameters.
+2. It creates Kubernetes secrets and configMaps populated with information about usernames, passwords, ssl certs, 
+quay.io pull secret and various application specific parameters.
 
     `kubectl create -f etc/sdc-config.yaml`
 
@@ -181,7 +189,8 @@ Point your collectors to `ad0e5cf87c70611e79d6006e5a830746-257288196.us-west-1.e
 
     `kubectl create -R -f datastores/storageclasses/`
 
-4. Creates the datastore Statefulsets (redis, mysql, elasticsearch and cassandra). Elasticsearch and Cassandra are automatically setup with --replica=3 generating full clusters. Redis and mysql are configured with master/slave replication. 
+4. Creates the datastore statefulsets (redis, mysql, elasticsearch and cassandra). Elasticsearch and Cassandra are 
+automatically setup with --replica=3 generating full clusters. Redis and mysql are configured with master/slave replication. 
 
     `kubectl create -R -f datastores/`
 
@@ -193,11 +202,12 @@ Point your collectors to `ad0e5cf87c70611e79d6006e5a830746-257288196.us-west-1.e
 
 #### Stop and Start <a id="Stop-and-Start"></a>
 
-You can stop the whole application by running `uninstall.sh`. It will save the namespace, storageclasses and PVC's. You can then start the application with `install.sh`. Script will complain about pre-existing elements, but the application will still be started. PVC's are preserved which means all data on redis, mysql, elasticsearch and cassandra are persisted. If you want to start with application with clean PVC's, either uninstall the application as described in the "Uninstall section" or delete PVC's manually after shutting down applications. 
+You can stop the whole application by running `uninstall.sh`. It will save the namespace, storageclasses and PVC's. 
+You can then start the application with `install.sh`. Script will complain about pre-existing elements, but the application will still be started. PVC's are preserved which means all data on redis, mysql, elasticsearch and cassandra are persisted. If you want to start with application with clean PVC's, either uninstall the application as described in the "Uninstall section" or delete PVC's manually after shutting down applications. 
 
 You can also stop and start individual components:
 
-###### Shutdown all backend components using their definition yaml files
+###### Shutdown all backend components using the definition yaml files
 ```
 $ pwd
 ~/sdc-kubernetes/aws
@@ -210,14 +220,14 @@ deployment "sdc-collector" deleted
 deployment "sdc-worker" deleted
 ```
 
-###### Shutdown Cassandra using it's yaml file
+###### Shutdown Cassandra using the yaml file
 ```
 $ kubectl -n sysdigcloud delete -f datastore/sdc-cassandra.yaml
 service "sdc-cassandra" deleted
 statefulset "sdc-cassandra" deleted
 ```
 
-###### Shutdown Elasticsearch and it's associated service
+###### Shutdown Elasticsearch and associated service
 ```
 $ kubectl -n sysdigcloud get statefulsets 
 NAME                DESIRED   CURRENT   AGE
@@ -242,7 +252,7 @@ $ kubectl -n sysdigcloud delete service sdc-elasticsearch
 service "sdc-elasticsearch" deleted
 ```
 
-###### Start Components one by one
+###### Start Components individually
 ```
 $ pwd
 ~/sdc-kubernetes/aws
@@ -282,12 +292,6 @@ $kubectl -n sysdigcloud scale --replicas=4 statefulset sdc-mysql-slave
 $kubectl -n sysdigcloud scale --replicas=4 statefulset sdc-redis-slave
 ```
 
-
-
-
-
-
-
 You can edit a particular configMap:
 `kubectl -n sysdigcloud edit configmap sysdigcloud-config`
 
@@ -297,7 +301,8 @@ vi etc/sdc-config.yaml
 kubectl -n sysdigcloud replace configmap -f etc/sdc-config.yaml
 ```
 
-After updating the ConfigMap, the Sysdig Cloud components need to be restarted in order for the changed parameters to take effect. This can be done by simply forcing a rolling update of the deployments. A possible way to do so is:
+After updating the ConfigMap, the Sysdig Cloud components need to be restarted in order for the changed parameters to 
+take effect. This can be done by simply forcing a rolling update of the deployments. A possible way to do so is:
 
 ```
 kubectl patch deployment sdc-api -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}" -n sysdigcloud
@@ -310,15 +315,16 @@ This will ensure that the application restarts with no downtime (assuming the de
 
 #### Version updates <a id="Version-updates"></a>
 
-Sysdig Cloud releases are listed [here](https://github.com/draios/sysdigcloud-kubernetes/releases). Each release has a version number (e.g. 702) and specific upgrade notes. If you look in the 3 backend files `backend/sdc-api.yaml`, `backend/sdc-collector.yaml` and `backend/sdc-worker.yaml`, you will see the following identical line in all of them under their container/image defintions:
+Sysdig Cloud releases are listed [here](https://github.com/draios/sysdigcloud-kubernetes/releases). Each release has a 
+version number (e.g. 893) and specific upgrade notes. If you look in the 3 backend files `backend/sdc-api.yaml`, `backend/sdc-collector.yaml` and `backend/sdc-worker.yaml`, you will see the following identical line in all of them under their container/image defintions:
 ```
 image: quay.io/sysdig/sysdigcloud-backend:658
 ```
 In this case, we are running version 658 of the backend. 
 
-To upgrade to version 893 (the latest), we have two options:
+To upgrade to version 893 (the latest), there are two options:
 
-1. Edit the backend files' yaml defintions. Add the right tag for the image `sysdigcloud-backend` like:
+1. Edit the backend files' yaml definitions. Add the right tag for the image `sysdigcloud-backend` like:
 ```
 image: quay.io/sysdig/sysdigcloud-backend:658
 ```
@@ -338,15 +344,15 @@ To completely remove the sdc-kubernetes application, run the following commands
 uninstall.sh
 ```
 This will shutdown all components and by destorying the namespace, it will destroy the PVC's.
-
-NB: This step destroys data. Irretrievably.  
+  
 
 
 ## Tips and Tricks <a id="Tips-and-Tricks"></a>
 
-* Master your Kubectl configs and contexts
+* Master your kubectl configs and contexts
 
-You might have multiple kubernetes clusters that you are managing. Each one has a context. Setting namespace in your context will save you from supplying -n flags.
+You might have multiple kubernetes clusters that you are managing. Each one has a context. Setting namespace in your 
+context will save you from supplying -n flags.
 
 ```
 $ kubectl config get-clusters
