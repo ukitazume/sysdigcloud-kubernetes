@@ -154,9 +154,11 @@ include:
       mysqlRootUser: root
       mysqlRootPassword: password
       #options
-      cassandraJvmOptions: -Xms2g -Xmx4g
+      cassandraJvmOptions: -Xms4g -Xmx4g
       elasticsearchJvmOptions: -Xms2g -Xmx2g
-      jvmOptions: -Xms2g -Xmx4g -Xmn1g
+      jvmApiOptions: -Xms2g -Xmx4g -Xmn1g
+      jvmWorkerOptions: -Xms2g -Xmx4g -Xmn1g
+      jvmCollectorOptions: -Xms2g -Xmx4g -Xmn1g
       #elasticsearch
       elasticsearchService: sdc-elasticsearch
       elasticsearchClusterName: sysdigcloud
