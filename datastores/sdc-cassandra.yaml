@@ -150,4 +150,4 @@ spec:
       resources:
         requests:
           storage: 50Gi
-      storageClassName: gce-pd
+      storageClassName: local-storage
