@@ -76,19 +76,16 @@ Persistent Volume Claims (PVC) from the cloud provider.
 
 ## Installation Guide <a id="Installation-Guide"></a>
 
-1. Clone this repository to your machine
+1. Clone the repository
     `git clone https://github.com/draios/sysdigcloud-kubernetes.git`
-2. Edit the file `$SDC_HOME/etc/config/sdc-settings.yaml`. This file is the master settings file for the whole 
-deployment. Every editable parameter in the deployment from number of replicas to resource limits are defined in this 
-file. Pay special attention to the following variables: `sysdigPullSecret`, `sysdigcloudLicense`, `sysdigNamespace` and `sysdigcloudProvider`.
-3. Run `$SDC_HOME/bin/create-manfiests.sh`. This will create usable Kubernetes manifests in yaml format and puts them 
-under the appropriate directories under $SDC_HOME. 
-4. Run `$SDC_HOME/bin/install.sh` to install and run the application.  
+2. Edit the file `etc/config/sdc-settings.yaml`. This file contains the editable parameter.
+3. Next is to run `/bin/create-manfiests.sh`. This wiull build the Kubernetes manifests.
+4. Finally, run `/bin/install.sh` to install and run the application.  
 
 
 ## Confirm Installation  <a id="Confirm-Installation"></a>
 
-After installation, the list of pods in the sysdigcloud namespace should like this:
+Once the installation has been completed, your output should look similar (please note that the below output is an example):
     
     $ kubectl get pods -n sysdigcloud    
     sdc-api-2039094698-11rtd         1/1       Running   0          13m
@@ -107,8 +104,6 @@ After installation, the list of pods in the sysdigcloud namespace should like th
     sdc-redis-slave-1                1/1       Running   0          14m
     sdc-worker-1937471472-hfp25      1/1       Running   0          13m
 
-Check the services that were created.
-
     $ kubectl -n sysdigcloud get services
     NAME                CLUSTER-IP   EXTERNAL-IP        PORT(S)                               AGE
     sdc-api             10.3.0.36    ad0d03112c706...   443:32253/TCP                         32m
@@ -123,6 +118,7 @@ Check the services that were created.
 Describe the sdc-api service to get the full API endpoint URL.
 It will be `ad0d03112c70611e79d6006e5a830746-1802392156.us-west-1.elb.amazonaws.com` in this case. Use this URL to 
 access the SDC Monitor interface. This URL can be given a sensible URL via Route53 or similar.
+(please note that the below output is an example)
 
     $ kubectl -n sysdigcloud describe service sdc-api
     Name:            sdc-api
@@ -145,7 +141,8 @@ access the SDC Monitor interface. This URL can be given a sensible URL via Route
       33m        33m        1    service-controller            Normal        CreatedLoadBalancer     Created load balancer
 
 
-Describe the sdc-collector service to see the full collector endpoint URL. It will be `ad0e5cf87c70611e79d6006e5a830746-257288196.us-west-1.elb.amazonaws.com` in this case. This will be the URL that agents (frontend) use to connect to this backend.
+Describe the sdc-collector service to see the full collector endpoint URL. It will be `ad0e5cf87c70611e79d6006e5a830746-257288196.us-west-1.elb.amazonaws.com`
+(please note that the below output is an example)
 
     $ kubectl -n sysdigcloud describe service sdc-collector
     Name:            sdc-collector
