@@ -150,4 +150,4 @@ spec:
       resources:
         requests:
           storage: 50Gi
-      storageClassName: local-storage
+      storageClassName: standard

@@ -234,7 +234,7 @@ spec:
   - metadata:
       name: data
     spec:
-      storageClassName: local-storage
+      storageClassName: standard
       accessModes: ["ReadWriteOnce"]
       resources:
         requests:
