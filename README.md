@@ -38,6 +38,19 @@ Here are the most recent updates:
 
     All datastore components are now highly-available running in statefulsets with replicas >= 3. Cassandra and 
     Elasticsearch comprise of active/active cluster rings. MySQL and Redis are configured master/slave replications.
+    In general, when a new Pod joins the set as a slave, it must assume the MySQL master might already have data on it. 
+    It also must assume that the replication logs might not go all the way back to the beginning of time. These 
+    conservative assumptions are the key to allow a running StatefulSet to scale up and down over time, rather than 
+    being fixed at its initial size.
+    The second Init Container, named clone-mysql, performs a clone operation on a slave Pod the first time it starts 
+    up on an empty PersistentVolume. That means it copies all existing data from another running Pod, so its local state 
+    is consistent enough to begin replicating from the master.
+    MySQL itself does not provide a mechanism to do this, so the example uses a popular open-source tool called Percona 
+    XtraBackup. During the clone, the source MySQL server might suffer reduced performance. To minimize impact on the 
+    MySQL master, the script instructs each Pod to clone from the Pod whose ordinal index is one lower. This works 
+    because the StatefulSet controller always ensures Pod N is Ready before starting Pod N+1. Please note that it is 
+    advised to allow 2X the disk size for MySQL.
+
 
 - **Templatize Deployment**
 
@@ -200,7 +213,9 @@ automatically setup with --replica=3 generating full clusters. Redis and mysql a
 #### Stop and Start <a id="Stop-and-Start"></a>
 
 You can stop the whole application by running `uninstall.sh`. It will save the namespace, storageclasses and PVC's. 
-You can then start the application with `install.sh`. Script will complain about pre-existing elements, but the application will still be started. PVC's are preserved which means all data on redis, mysql, elasticsearch and cassandra are persisted. If you want to start with application with clean PVC's, either uninstall the application as described in the "Uninstall section" or delete PVC's manually after shutting down applications. 
+You can then start the application with `install.sh`. Script will complain about pre-existing elements, but the application 
+will still be started. PVC's are preserved which means all data on redis, mysql, elasticsearch and cassandra are persisted. 
+If you want to start with application with clean PVC's, either uninstall the application as described in the "Uninstall section" or delete PVC's manually after shutting down applications. 
 
 You can also stop and start individual components:
 
