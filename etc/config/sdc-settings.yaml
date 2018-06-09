@@ -6,13 +6,12 @@ global:
   pullSecret: ""
   license:  ""
 
-
   #Images
   backendImage: quay.io/sysdig/sysdigcloud-backend:858
   frontendImage: sysdig/agent
-  cassandraImage: yofti/cassandra:2.2.11
-  elasticsearchImage: yofti/elasticsearch:5.5.3
-  redisImage: yofti/redis:4.0.2
+  cassandraImage: quay.io/sysdig/cassandra:2.1.15.0
+  elasticsearchImage: quay.io/sysdig/elasticsearch:5.1.1.0
+  redisImage: quay.io/sysdig/redis:2.8.23
   mysqlImage: mysql:5.7
   xtrabackupImage: gcr.io/google-samples/xtrabackup:1.0
 
@@ -26,8 +25,6 @@ global:
   redisSlavesReplicaCount: 2
   cassandraReplicaCount: 3
   elasticsearchReplicaCount: 3
-
-
 
   #StorageClass defintions for GKE/GCE type pd-ssd
   storageclassName: gce-pd
@@ -120,7 +117,7 @@ global:
   #frontend configuration
   collectorUrl: collector.sysdigcloud.com
   accessKey: f65322d7-da0c-44ea-b365-2506bb0db382
-  agentTags: os:ubuntu-16.04,orechestrator:k8s,cloud_provider:gke,cluster:sysdig-disney,backend_version:858,owner:yofti
+  agentTags: os:ubuntu-16.04,orechestrator:k8s,cloud_provider:gke,cluster:acme,backend_version:858,owner:acme
 
 include:
   - name: templates/backend/api
@@ -157,9 +154,11 @@ include:
       mysqlRootUser: root
       mysqlRootPassword: password
       #options
-      cassandraJvmOptions: -Xms2g -Xmx4g
+      cassandraJvmOptions: -Xms4g -Xmx4g
       elasticsearchJvmOptions: -Xms2g -Xmx2g
-      jvmOptions: -Xms2g -Xmx4g -Xmn1g
+      jvmApiOptions: -Xms2g -Xmx4g -Xmn1g
+      jvmWorkerOptions: -Xms2g -Xmx4g -Xmn1g
+      jvmCollectorOptions: -Xms2g -Xmx4g -Xmn1g
       #elasticsearch
       elasticsearchService: sdc-elasticsearch
       elasticsearchClusterName: sysdigcloud

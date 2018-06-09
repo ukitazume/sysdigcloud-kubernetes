@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: Secret
 metadata:
@@ -36,7 +37,9 @@ data:
   #jvm options
   cassandra.jvm.options: "{{ .cassandraJvmOptions }}"
   elasticsearch.jvm.options: "{{ .elasticsearchJvmOptions }}"
-  sysdigcloud.jvm.options: "{{ .jvmOptions }}"
+  sysdigcloud.jvm.api.options: "{{ .jvmApiOptions }}"
+  sysdigcloud.jvm.worker.options: "{{ .jvmWorkerOptions }}"
+  sysdigcloud.jvm.collector.options: "{{ .jvmCollectorOptions }}"
   #elasticsearch
   elasticsearch.service: "{{ .elasticsearchService }}"
   elasticsearch.cluster.name: "{{ .elasticsearchClusterName }}"
@@ -116,7 +119,6 @@ data:
     log-error  = /var/log/mysql/error.log
     # Recommended in standard MySQL setup
     sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
-    # Added by Yofti - Jan 8, 2018
     open_files_limit = 16384
     max_connections = 100000
     # Disabling symbolic-links is recommended to prevent assorted security risks
@@ -160,7 +162,6 @@ data:
     log-error  = /var/log/mysql/error.log
     # Recommended in standard MySQL setup
     sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
-    # Added by Yofti - Jan 8, 2018
     open_files_limit = 16384
     max_connections = 100000
     # Disabling symbolic-links is recommended to prevent assorted security risks
@@ -209,4 +210,3 @@ data:
     protected-mode no
     slave-serve-stale-data yes
     slaveof sdc-redis-0.sdc-redis 6379
-

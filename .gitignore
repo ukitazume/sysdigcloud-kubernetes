@@ -1,13 +1,8 @@
-<<<<<<< Updated upstream
 .DS_Store
 .DS_Store?
+
 *.log
 *.uri
+
 server.crt
 server.key
-sysdig-disney*.json
-=======
-# Created by .ignore support plugin (hsz.mobi)
-.DS_Store
->>>>>>> Stashed changes
-.idea/

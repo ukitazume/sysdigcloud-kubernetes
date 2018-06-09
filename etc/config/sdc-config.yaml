@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: Secret
 metadata:
@@ -24,8 +25,8 @@ data:
   collector.port: "6443"
   api.url: "https://sdc-api:443"
   #passwords
-  sysdigcloud.default.user: "test@sysdig.com"
-  sysdigcloud.default.user.password: "test"
+  sysdigcloud.default.user: "test@example.com"
+  sysdigcloud.default.user.password: "changeme"
   cassandra.user: ""
   cassandra.password: ""
   redis.password: ""
@@ -34,9 +35,11 @@ data:
   mysql.root.user: "root"
   mysql.root.password: "password"
   #jvm options
-  cassandra.jvm.options: "-Xms2g -Xmx4g"
+  cassandra.jvm.options: "-Xms4g -Xmx4g"
   elasticsearch.jvm.options: "-Xms2g -Xmx2g"
-  sysdigcloud.jvm.options: "-Xms2g -Xmx4g -Xmn1g"
+  sysdigcloud.jvm.api.options: "-Xms2g -Xmx5g -Xmn1g"
+  sysdigcloud.jvm.worker.options: "-Xms2g -Xmx5g -Xmn1g"
+  sysdigcloud.jvm.collector.options: "-Xms4g -Xmx8g -Xmn1g"
   #elasticsearch
   elasticsearch.service: "sdc-elasticsearch"
   elasticsearch.cluster.name: "sysdigcloud"
@@ -116,7 +119,6 @@ data:
     log-error  = /var/log/mysql/error.log
     # Recommended in standard MySQL setup
     sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
-    # Added by Yofti - Jan 8, 2018
     open_files_limit = 16384
     max_connections = 100000
     # Disabling symbolic-links is recommended to prevent assorted security risks
@@ -160,7 +162,6 @@ data:
     log-error  = /var/log/mysql/error.log
     # Recommended in standard MySQL setup
     sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
-    # Added by Yofti - Jan 8, 2018
     open_files_limit = 16384
     max_connections = 100000
     # Disabling symbolic-links is recommended to prevent assorted security risks
@@ -209,5 +210,3 @@ data:
     protected-mode no
     slave-serve-stale-data yes
     slaveof sdc-redis-0.sdc-redis 6379
-
-

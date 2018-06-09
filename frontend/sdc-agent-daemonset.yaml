@@ -1,7 +1,7 @@
+---
 #Use this sysdig.yaml when Daemon Sets are enabled on Kubernetes (minimum version 1.1.1). Otherwise use the RC method.
-
 apiVersion: extensions/v1beta1
-kind: DaemonSet                     
+kind: DaemonSet
 metadata:
   name: sysdig-agent
   namespace: sysdigcloud
@@ -56,7 +56,7 @@ spec:
         #- name: COLLECTOR_PORT                             #OPTIONAL - on-prem install only
         #  value: "6443"
         - name: TAGS                                       #OPTIONAL
-          value: os:ubuntu-16.04,orechestrator:k8s,cloud_provider:gke,cluster:sysdig-disney,backend_version:858,owner:yofti
+          value: os:ubuntu-16.04,orechestrator:k8s,cloud_provider:gke,cluster:acme,backend_version:858,owner:acme
         #- name: COLLECTOR                                  #OPTIONAL - on-prem install only
         #  value: collector.sysdigcloud.com 
         #- name: SECURE                                     #OPTIONAL - on-prem install only       
