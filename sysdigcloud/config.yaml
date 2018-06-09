@@ -35,7 +35,7 @@ data:
   # the provided manifests. For heavy load environments you'll need to tweak the memory or garbage
   # collection settings
   cassandra.jvm.options: ""
-  # Required: Redis endpoint DNS/IP. If Redis is deployed as a Kubernetes service, 
+  # Required: Redis endpoint DNS/IP. If Redis is deployed as a Kubernetes service,
   # this will be the service name. If using an external database, put the proper address
   redis.endpoint: sysdigcloud-redis
   # Optional: Redis password
@@ -85,7 +85,9 @@ data:
   sysdigcloud.logging.stdout: "false"
   # Optional: Sysdig Cloud application JVM options. For heavy load environments you'll need to tweak 
   # the memory or garbage collection settings
-  sysdigcloud.jvm.options: ""
+  sysdigcloud.jvm.api.options: ""
+  sysdigcloud.jvm.worker.options: ""
+  sysdigcloud.jvm.collector.options: ""
   # Required: Sysdig Cloud license
   sysdigcloud.license: ""
   # Optional: OAuth allowed domains (comma separated list of domains)
