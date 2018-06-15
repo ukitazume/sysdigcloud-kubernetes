@@ -171,11 +171,13 @@ In this case, we are running version 658 of the backend.
 
 To upgrade to version 925 (the latest), there are two options:
 
-1. Edit the backend files' yaml definitions. Add the right tag for the image `sysdigcloud-backend` like:
+1. Edit the sdc-api, sdc-collector and sdc-worker yaml definitions and add the new image tag `sysdigcloud-backend`
 ```
-image: quay.io/sysdig/sysdigcloud-backend:658
+image: quay.io/sysdig/sysdigcloud-backend:925
 ```
-and restart the app.
+Finally, you will need to delete the sdc-api, sdc-collector and sdc-worker pods with the command  
+
+`kubectl -n sysdigcloud delete pod <pod name>`
 
 2. You can do a rolling update if downtimes are sensitive.
 ```
