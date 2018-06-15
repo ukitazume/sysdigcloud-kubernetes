@@ -130,12 +130,45 @@ automatically setup with --replica=3 generating full clusters.
 3. Deploy the backend Deployment sets (worker, collector and api)
  
     ```
-    kubectl -n sysdigcloud create -f sysdigcloud/api-nodeport-service.yaml
-    kubectl -n sysdigcloud create -f sysdigcloud/collector-nodeport-service.yaml
     kubectl -n sysdigcloud create -f sysdigcloud/sdc-api.yaml
     kubectl -n sysdigcloud create -f sysdigcloud/sdc-collector.yaml
     kubectl -n sysdigcloud create -f sysdigcloud/sdc-worker.yaml
     ```
+
+### Step 5: Expose Sysdig Cloud services
+
+To expose the Sysdig Cloud api and collector deployments you can create a Kubernetes NodePort or 
+LoadBalacer service, depending on the specific needs.
+
+#### NodePort
+
+Using a NodePort service the Kubernetes master will allocate a port on each node and will proxy that 
+port (the same port number on every Node) towards the service.
+After this step, it should be possible to correctly fill all the parameters in the ConfigMap, 
+such as `collector.endpoint`, `collector.port` and `api.url`.
+
+It is possible to create a NodePort service for Sysdig Cloud api and collector using kubectl and the 
+templates in the sysdigcloud directory:
+
+```
+kubectl -n sysdigcloud create -f sysdigcloud/api-nodeport-service.yaml
+kubectl -n sysdigcloud create -f sysdigcloud/collector-nodeport-service.yaml
+```
+
+#### LoadBalancer
+
+On cloud providers which support external load balancers, using a LoadBalancer service will provision a 
+load balancer for the service. The actual creation of the load balancer happens asynchronously. Traffic 
+from the external load balancer will be directed at the backend pods, though exactly how that works depends 
+on the cloud provider.
+
+It is possible to create a LoadBalancer Service for Sysdig Cloud api and collector using kubectl and the 
+templates in the sysdigcloud folder:
+
+```
+kubectl -n sysdigcloud create -f sysdigcloud/api-loadbalancer-service.yaml
+kubectl -n sysdigcloud create -f sysdigcloud/collector-loadbalancer-service.yaml
+```
 
 ## Confirm Installation  <a id="Confirm-Installation"></a>
 
