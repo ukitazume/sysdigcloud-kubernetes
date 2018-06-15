@@ -49,18 +49,50 @@ Datastores (redis, mysql, elasticsearch and cassandra) are stateful.
 - Sysdig Cloud license
 - kubectl installed on your machine and communicating with the Kubernetes cluster
  
-## What does the installer do? <a id="What-does-the-installer-do?"></a>
+## Installation Guide <a id="installation-guide"></a>
 
-1. It creates a namespace called *sysdigcloud* where all components are deployed.
+
+### Step 1: Namespace creation
+
+1. Create a namespace called *sysdigcloud* where all components are deployed.
 
     `kubectl create namespace sysdigcloud`
 
-2. It creates Kubernetes secrets and configMaps populated with information about usernames, passwords, ssl certs, 
+### Step 2: Create Config
+
+2. Create Kubernetes secrets and configMaps populated with information about usernames, passwords, ssl certs, 
 quay.io pull secret and various application specific parameters.
 
     `kubectl -n sysdigcloud create -f sysdigcloud/config.yaml`
 
-3. Creates the datastore statefulsets (elasticsearch and cassandra). Elasticsearch and Cassandra are 
+### Step 3: SSL certificates
+
+Sysdig Cloud api and collector services use SSL to secure the communication between the customer browser and sysdigcloud agents.
+
+If you want to use a custom SSL secrets, make sure to obtain the respective `server.crt` and `server.key` files, otherwise you can also create a self-signed certificate with:
+
+```
+openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 -subj "/C=US/ST=CA/L=SanFrancisco/O=ICT/CN=onprem.sysdigcloud.com" -keyout server.key -out server.crt
+```
+
+Once done, create a Kubernetes secret:
+
+```
+kubectl create secret tls sysdigcloud-ssl-secret --cert=server.crt --key=server.key --namespace=sysdigcloud
+```
+
+##### Optional: Custom SSL certificates
+
+If you want to use services that implement SSL self-signed certificates you can import those certificates and their chains, storing them in PEM format and injecting them as a generic kubernets secret.
+For each certificate you want to import create a file, for example: certs1.crt, cert2.crt, ... and then the kubernetes secret using the following command line:
+
+```
+kubectl create secret generic sysdigcloud-java-certs --from-file=certs1.crt --from-file=certs2.crt --namespace=sysdigcloud
+```
+
+### Step 4: Install Components
+
+1. Create the datastore statefulsets (elasticsearch and cassandra). Elasticsearch and Cassandra are 
 automatically setup with --replica=3 generating full clusters.  
 
     ```
@@ -70,7 +102,7 @@ automatically setup with --replica=3 generating full clusters.
     kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/elasticsearch/elasticsearch-statefulset.yaml
     ```
 
-4. Deploys the backend Deployment sets (worker, collector and api)
+4. Deploy the backend Deployment sets (worker, collector and api)
  
     ```
     kubectl -n sysdigcloud create -f sysdigcloud/api-nodeport-service.yaml
@@ -79,6 +111,7 @@ automatically setup with --replica=3 generating full clusters.
     kubectl -n sysdigcloud create -f sysdigcloud/sdc-collector.yaml
     kubectl -n sysdigcloud create -f sysdigcloud/sdc-worker.yaml
     ```
+
 ## Confirm Installation  <a id="Confirm-Installation"></a>
 
 Once the installation has been completed, your output should look similar (please note that the below output is an example):
