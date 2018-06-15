@@ -4,7 +4,7 @@
 
 ### Requirements
 
-- Running Kubernetes cluster, Kubernetes version >= 1.3.X (this guide has been tested with Kubernetes 1.3.6)
+- Running Kubernetes cluster, Kubernetes version >= 1.9.X (this guide has been tested with Kubernetes 1.10)
 - Sysdig Cloud quay.io pull secret
 - Sysdig Cloud license
 
@@ -192,4 +192,3 @@ Getting support logs for sysdigcloud-redis-1701952711-ezg8q
 Getting support logs for sysdigcloud-worker-1086626503-4cio9
 Getting support logs for sysdigcloud-worker-1086626503-sdtrc
 Support bundle generated: 1473897425_sysdig_cloud_support_bundle.tgz
-```
