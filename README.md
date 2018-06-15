@@ -49,18 +49,68 @@ Datastores (redis, mysql, elasticsearch and cassandra) are stateful.
 - Sysdig Cloud license
 - kubectl installed on your machine and communicating with the Kubernetes cluster
  
-## What does the installer do? <a id="What-does-the-installer-do?"></a>
+## Installation Guide <a id="installation-guide"></a>
 
-1. It creates a namespace called *sysdigcloud* where all components are deployed.
 
-    `kubectl create namespace sysdigcloud`
+### Step 1: Namespace Creation
 
-2. It creates Kubernetes secrets and configMaps populated with information about usernames, passwords, ssl certs, 
+1. Create a namespace called *sysdigcloud* where all components are deployed.
+
+    ```
+    kubectl create namespace sysdigcloud
+    ```
+
+### Step 2: Create Config
+
+2. Create Kubernetes secrets and configMaps populated with information about usernames, passwords, ssl certs, 
 quay.io pull secret and various application specific parameters.
 
-    `kubectl -n sysdigcloud create -f sysdigcloud/config.yaml`
+    ```
+    kubectl -n sysdigcloud create -f sysdigcloud/config.yaml
+    ```
 
-3. Creates the datastore statefulsets (elasticsearch and cassandra). Elasticsearch and Cassandra are 
+### Step 3: Quay Pull Secret
+
+To download Sysdig Cloud Docker images it is mandatory to create a Kubernetes pull secret. 
+Edit the file `sysdigcloud/pull-secret.yaml` and change the place holder `<PULL_SECRET>` with the provided pull secret.
+Create the pull secret object using kubectl:
+
+```
+kubectl -n sysdigcloud create -f sysdigcloud/pull-secret.yaml
+```
+
+### Step 4: SSL Certificates
+
+Sysdig Cloud api and collector services use SSL to secure the communication between the customer browser 
+and sysdigcloud agents.
+
+If you want to use a custom SSL secrets, make sure to obtain the respective `server.crt` 
+and `server.key` files, otherwise you can also create a self-signed certificate with:
+
+```
+openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 -subj "/C=US/ST=CA/L=SanFrancisco/O=ICT/CN=onprem.sysdigcloud.com" -keyout server.key -out server.crt
+```
+
+Once done, create a Kubernetes secret:
+
+```
+kubectl -n sysdigcloud create secret tls sysdigcloud-ssl-secret --cert=server.crt --key=server.key
+```
+
+##### Optional: Custom SSL Certificates
+
+If you want to use services that implement SSL self-signed certificates you can import those certificates 
+and their chains, storing them in PEM format and injecting them as a generic kubernets secret.
+For each certificate you want to import create a file, for example: certs1.crt, cert2.crt, ... and then 
+the kubernetes secret using the following command line:
+
+```
+kubectl -n sysdigcloud create secret generic sysdigcloud-java-certs --from-file=certs1.crt --from-file=certs2.crt
+```
+
+### Step 4: Install Components
+
+1. Create the datastore statefulsets (elasticsearch and cassandra). Elasticsearch and Cassandra are 
 automatically setup with --replica=3 generating full clusters.  
 
     ```
@@ -70,7 +120,14 @@ automatically setup with --replica=3 generating full clusters.
     kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/elasticsearch/elasticsearch-statefulset.yaml
     ```
 
-4. Deploys the backend Deployment sets (worker, collector and api)
+2. Create the datastore deployments (mysql and redis)
+
+    ```
+    kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/mysql.yaml
+    kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis.yaml
+    ```
+
+3. Deploy the backend Deployment sets (worker, collector and api)
  
     ```
     kubectl -n sysdigcloud create -f sysdigcloud/api-nodeport-service.yaml
@@ -79,6 +136,7 @@ automatically setup with --replica=3 generating full clusters.
     kubectl -n sysdigcloud create -f sysdigcloud/sdc-collector.yaml
     kubectl -n sysdigcloud create -f sysdigcloud/sdc-worker.yaml
     ```
+
 ## Confirm Installation  <a id="Confirm-Installation"></a>
 
 Once the installation has been completed, your output should look similar (please note that the below output is an example):
@@ -176,8 +234,9 @@ To upgrade to version 925 (the latest), there are two options:
 image: quay.io/sysdig/sysdigcloud-backend:925
 ```
 Finally, you will need to delete the sdc-api, sdc-collector and sdc-worker pods with the command  
-
-`kubectl -n sysdigcloud delete pod <pod name>`
+```
+kubectl -n sysdigcloud delete pod <pod name>
+```
 
 2. You can do a rolling update if downtimes are sensitive.
 ```
