@@ -65,11 +65,23 @@ quay.io pull secret and various application specific parameters.
 
     `kubectl -n sysdigcloud create -f sysdigcloud/config.yaml`
 
-### Step 3: SSL certificates
+### Step 3: Quay pull secret
 
-Sysdig Cloud api and collector services use SSL to secure the communication between the customer browser and sysdigcloud agents.
+To download Sysdig Cloud Docker images it is mandatory to create a Kubernetes pull secret. 
+Edit the file `sysdigcloud/pull-secret.yaml` and change the place holder `<PULL_SECRET>` with the provided pull secret.
+Create the pull secret object using kubectl:
 
-If you want to use a custom SSL secrets, make sure to obtain the respective `server.crt` and `server.key` files, otherwise you can also create a self-signed certificate with:
+```
+kubectl -n sysdigcloud create -f sysdigcloud/pull-secret.yaml
+```
+
+### Step 4: SSL certificates
+
+Sysdig Cloud api and collector services use SSL to secure the communication between the customer browser 
+and sysdigcloud agents.
+
+If you want to use a custom SSL secrets, make sure to obtain the respective `server.crt` 
+and `server.key` files, otherwise you can also create a self-signed certificate with:
 
 ```
 openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 -subj "/C=US/ST=CA/L=SanFrancisco/O=ICT/CN=onprem.sysdigcloud.com" -keyout server.key -out server.crt
@@ -78,16 +90,18 @@ openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 -subj "/C=US/ST=CA/L=S
 Once done, create a Kubernetes secret:
 
 ```
-kubectl create secret tls sysdigcloud-ssl-secret --cert=server.crt --key=server.key --namespace=sysdigcloud
+kubectl -n sysdigcloud create secret tls sysdigcloud-ssl-secret --cert=server.crt --key=server.key
 ```
 
 ##### Optional: Custom SSL certificates
 
-If you want to use services that implement SSL self-signed certificates you can import those certificates and their chains, storing them in PEM format and injecting them as a generic kubernets secret.
-For each certificate you want to import create a file, for example: certs1.crt, cert2.crt, ... and then the kubernetes secret using the following command line:
+If you want to use services that implement SSL self-signed certificates you can import those certificates 
+and their chains, storing them in PEM format and injecting them as a generic kubernets secret.
+For each certificate you want to import create a file, for example: certs1.crt, cert2.crt, ... and then 
+the kubernetes secret using the following command line:
 
 ```
-kubectl create secret generic sysdigcloud-java-certs --from-file=certs1.crt --from-file=certs2.crt --namespace=sysdigcloud
+kubectl -n sysdigcloud create secret generic sysdigcloud-java-certs --from-file=certs1.crt --from-file=certs2.crt
 ```
 
 ### Step 4: Install Components
