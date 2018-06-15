@@ -52,20 +52,24 @@ Datastores (redis, mysql, elasticsearch and cassandra) are stateful.
 ## Installation Guide <a id="installation-guide"></a>
 
 
-### Step 1: Namespace creation
+### Step 1: Namespace Creation
 
 1. Create a namespace called *sysdigcloud* where all components are deployed.
 
-    `kubectl create namespace sysdigcloud`
+    ```
+    kubectl create namespace sysdigcloud
+    ```
 
 ### Step 2: Create Config
 
 2. Create Kubernetes secrets and configMaps populated with information about usernames, passwords, ssl certs, 
 quay.io pull secret and various application specific parameters.
 
-    `kubectl -n sysdigcloud create -f sysdigcloud/config.yaml`
+    ```
+    kubectl -n sysdigcloud create -f sysdigcloud/config.yaml
+    ```
 
-### Step 3: Quay pull secret
+### Step 3: Quay Pull Secret
 
 To download Sysdig Cloud Docker images it is mandatory to create a Kubernetes pull secret. 
 Edit the file `sysdigcloud/pull-secret.yaml` and change the place holder `<PULL_SECRET>` with the provided pull secret.
@@ -75,7 +79,7 @@ Create the pull secret object using kubectl:
 kubectl -n sysdigcloud create -f sysdigcloud/pull-secret.yaml
 ```
 
-### Step 4: SSL certificates
+### Step 4: SSL Certificates
 
 Sysdig Cloud api and collector services use SSL to secure the communication between the customer browser 
 and sysdigcloud agents.
@@ -93,7 +97,7 @@ Once done, create a Kubernetes secret:
 kubectl -n sysdigcloud create secret tls sysdigcloud-ssl-secret --cert=server.crt --key=server.key
 ```
 
-##### Optional: Custom SSL certificates
+##### Optional: Custom SSL Certificates
 
 If you want to use services that implement SSL self-signed certificates you can import those certificates 
 and their chains, storing them in PEM format and injecting them as a generic kubernets secret.
@@ -230,8 +234,9 @@ To upgrade to version 925 (the latest), there are two options:
 image: quay.io/sysdig/sysdigcloud-backend:925
 ```
 Finally, you will need to delete the sdc-api, sdc-collector and sdc-worker pods with the command  
-
-`kubectl -n sysdigcloud delete pod <pod name>`
+```
+kubectl -n sysdigcloud delete pod <pod name>
+```
 
 2. You can do a rolling update if downtimes are sensitive.
 ```
