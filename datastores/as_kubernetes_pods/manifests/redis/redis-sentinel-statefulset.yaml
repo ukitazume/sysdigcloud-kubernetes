@@ -22,3 +22,23 @@ spec:
         ports:
         - containerPort: 26379
           name: redis-sentinel
+        resources:
+          limits:
+            cpu: "500m"
+            memory: 1Gi
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - "redis-cli -h $(hostname) ping"
+          initialDelaySeconds: 30
+          timeoutSeconds: 15
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - "redis-cli -h $(hostname) ping"
+          initialDelaySeconds: 45
+          periodSeconds: 15
