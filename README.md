@@ -118,12 +118,12 @@ automatically setup with --replica=3 generating full clusters.
     kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/cassandra/cassandra-statefulset.yaml
     kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/elasticsearch/elasticsearch-service.yaml
     kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/elasticsearch/elasticsearch-statefulset.yaml
-    kubectl -n sysdigcloud create -f manifests/redis/redis-primary-statefulset.yaml
-    kubectl -n sysdigcloud create -f manifests/redis/redis-primary-svc.yaml
-    kubectl -n sysdigcloud create -f manifests/redis/redis-secondary-statefulset.yaml
-    kubectl -n sysdigcloud create -f manifests/redis/redis-secondary-svc.yaml
-    kubectl -n sysdigcloud create -f manifests/redis/redis-sentinel-statefulset.yaml
-    kubectl -n sysdigcloud create -f manifests/redis/redis-sentinel-svc.yaml
+    kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-primary-statefulset.yaml
+    kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-primary-svc.yaml
+    kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-secondary-statefulset.yaml
+    kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-secondary-svc.yaml
+    kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-sentinel-statefulset.yaml
+    kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-sentinel-svc.yaml
     ```
 
 2. Create the datastore deployments (mysql)
