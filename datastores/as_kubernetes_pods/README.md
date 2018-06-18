@@ -20,22 +20,22 @@ If testing at high scale, note the increased `max_connections` setting in `manif
 
 ### Statefulset
 
-To create a redis statefulset, the provided manifest under `datastores/as_kubernetes_pods/manifests/redis/` 
+To create a redis statefulset, the provided manifest under `manifests/redis/` 
 can be used. 
 
 ```
-kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-primary-statefulset.yaml
-kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-primary-svc.yaml
-kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-secondary-statefulset.yaml
-kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-secondary-svc.yaml
-kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-sentinel-statefulset.yaml
-kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-sentinel-svc.yaml
+kubectl -n sysdigcloud create -f manifests/redis/redis-primary-statefulset.yaml
+kubectl -n sysdigcloud create -f manifests/redis/redis-primary-svc.yaml
+kubectl -n sysdigcloud create -f manifests/redis/redis-secondary-statefulset.yaml
+kubectl -n sysdigcloud create -f manifests/redis/redis-secondary-svc.yaml
+kubectl -n sysdigcloud create -f manifests/redis/redis-sentinel-statefulset.yaml
+kubectl -n sysdigcloud create -f manifests/redis/redis-sentinel-svc.yaml
 ```
 
 ### Deployment (deprecated)
 
 ```
-kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-deployment.yaml
+kubectl -n sysdigcloud create -f manifests/redis/redis-deployment.yaml
 ```
 
 ## Cassandra Deployment OR Statefulset
@@ -46,8 +46,8 @@ To create a Cassandra statefulset, the provided manifest under `manifests/cassan
 can be used. By default, it will use a local non-persistent volume (standard dir).
 
 ```
-kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/cassandra/cassandra-service.yaml
-kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/cassandra/cassandra-statefulset.yaml
+kubectl -n sysdigcloud create -f manifests/cassandra/cassandra-service.yaml
+kubectl -n sysdigcloud create -f manifests/cassandra/cassandra-statefulset.yaml
 ```
 
 This creates a Cassandra cluster of size 3. To expand the Cassandra cluster, change the `replicas` to the 
@@ -59,7 +59,7 @@ Before deploying the deployment object, the proper Cassandra headless service mu
 service will be used for service discovery when deploying a multi-node Cassandra cluster):
 
 ```
-kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/cassandra/cassandra-service.yaml
+kubectl -n sysdigcloud create -f manifests/cassandra/cassandra-service.yaml
 ```
 
 To create a Cassandra deployment, the provided manifest under `manifests/cassandra/cassandra-deployment.yaml` 
@@ -68,7 +68,7 @@ contains commented snippets that can be uncommented when using persistent volume
 GCE Disks (just replace the volume id from the cloud provider in the snippet):
 
 ```
-kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/cassandra/cassandra-deployment.yaml --namespace sysdigcloud
+kubectl -n sysdigcloud create -f manifests/cassandra/cassandra-deployment.yaml --namespace sysdigcloud
 ```
 
 This creates a Cassandra cluster of size 1. To expand the Cassandra cluster, a new deployment must 
@@ -78,7 +78,7 @@ that sense Cassandra pods are "pets" with unique identities and not "cattle".
 
 In order for the new Cassandra deployment to automatically join the cluster, some conventions must 
 be followed. In particular, the Cassandra node number (1, 2, 3, ...) must be properly put in the 
-manifest `datastores/as_kubernetes_pods/manifests/cassandra/cassandra-deployment.yaml` under the entries marked as `# Cassandra node number`.
+manifest `manifests/cassandra/cassandra-deployment.yaml` under the entries marked as `# Cassandra node number`.
 
 For example, to scale a Cassandra cluster from 2 to 3 nodes, the manifest can be edited as such:
 
@@ -95,7 +95,7 @@ metadata:
 And then the deployment can be created as usual:
 
 ```
-kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/cassandra/cassandra-deployment.yaml
+kubectl -n sysdigcloud create -f manifests/cassandra/cassandra-deployment.yaml
 ```
 
 After each scaling activity, the status of the cluster can be checked by executing 
@@ -142,12 +142,12 @@ procedures, best described in the official documentation.
 ### Statefulset
 
 To create a Elasticsearch statefulset, the provided manifest under 
-`datastores/as_kubernetes_pods/manifests/elasticsearch/elasticsearch-statefulset.yaml` 
+`manifests/elasticsearch/elasticsearch-statefulset.yaml` 
 can be used. By default, it will use a local non-persistent volume (standard dir).
 
 ```
-kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/elasticsearch/elasticsearch-service.yaml
-kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/elasticsearch/elasticsearch-statefulset.yaml
+kubectl -n sysdigcloud create -f manifests/elasticsearch/elasticsearch-service.yaml
+kubectl -n sysdigcloud create -f manifests/elasticsearch/elasticsearch-statefulset.yaml
 ```
 
 This creates a Elasticsearch cluster of size 3. To expand the Elasticsearch cluster, change the `replicas` to the 
@@ -159,7 +159,7 @@ Before deploying the deployment object, the proper Elasticsearch headless servic
 (the headless service will be used for service discovery when deploying a multi-node Elasticsearch cluster):
 
 ```
-kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/elasticsearch/elasticsearch-service.yaml
+kubectl -n sysdigcloud create -f manifests/elasticsearch/elasticsearch-service.yaml
 ```
 To create an Elasticsearch deployment, the provided manifest under `manifests/elasticsearch-deployment.yaml` 
 can be used. By default, it will use a local non-persistent volume (emptyDir), but the manifest contains 
@@ -167,7 +167,7 @@ commented snippets that can be uncommented when using persistent volumes such as
 (just replace the volume id from the cloud provider in the snippet):
 
 ```
-kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/elasticsearch/elasticsearch-deployment.yaml
+kubectl -n sysdigcloud create -f manifests/elasticsearch/elasticsearch-deployment.yaml
 ```
 This creates an Elasticsearch cluster of size 1. To expand the Elasticsearch cluster, a new deployment 
 must be created for each additional Elasticsearch node in the cluster. You can't just scale the replicas 
@@ -176,7 +176,7 @@ that sense Elasticsearch pods are "pets" with unique identities and not "cattle"
 
 In order for the new Elasticsearch deployment to automatically join the cluster, some conventions must 
 be followed. In particular, the Elasticsearch node number (1, 2, 3, ...) must be properly put in the 
-manifest `datastores/as_kubernetes_pods/manifests/elasticsearch/elasticsearch-deployment.yaml` under the entries marked as `# Elasticsearch node number`.
+manifest `manifests/elasticsearch/elasticsearch-deployment.yaml` under the entries marked as `# Elasticsearch node number`.
 
 For example, to scale the Elasticsearch cluster from 2 to 3 nodes, the manifest can be edited as such:
 
@@ -193,7 +193,7 @@ metadata:
 And then the deployment can be created as usual:
 
 ```
-kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/elasticsearch-deployment.yaml
+kubectl -n sysdigcloud create -f manifests/elasticsearch-deployment.yaml
 ```
 After each scaling activity, the status of the cluster can be checked by executing 
 `curl -sS http://127.0.0.1:9200/_cluster/health?pretty=true` in one of the Elasticsearch pods.
