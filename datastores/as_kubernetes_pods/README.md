@@ -16,12 +16,26 @@ kubectl -n sysdigcloud create -f manifests/mysql.yaml
 
 If testing at high scale, note the increased `max_connections` setting in `manifests/mysql.yaml`.
 
-## Redis
+## Redis Deployment OR Statefulset
 
-Redis does not require persistent storage, so it can be simply deployed as:
+### Statefulset
+
+To create a redis statefulset, the provided manifest under `manifests/redis/` 
+can be used. 
 
 ```
-kubectl -n sysdigcloud create -f manifests/redis.yaml
+kubectl -n sysdigcloud create -f manifests/redis/redis-primary-statefulset.yaml
+kubectl -n sysdigcloud create -f manifests/redis/redis-primary-svc.yaml
+kubectl -n sysdigcloud create -f manifests/redis/redis-secondary-statefulset.yaml
+kubectl -n sysdigcloud create -f manifests/redis/redis-secondary-svc.yaml
+kubectl -n sysdigcloud create -f manifests/redis/redis-sentinel-statefulset.yaml
+kubectl -n sysdigcloud create -f manifests/redis/redis-sentinel-svc.yaml
+```
+
+### Deployment (deprecated)
+
+```
+kubectl -n sysdigcloud create -f manifests/redis/redis.yaml
 ```
 
 ## Cassandra Deployment OR Statefulset
