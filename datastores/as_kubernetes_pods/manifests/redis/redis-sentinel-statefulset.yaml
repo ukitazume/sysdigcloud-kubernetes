@@ -23,7 +23,7 @@ spec:
         - containerPort: 26379
           name: redis-sentinel
         resources:
-          limits:
+          requests:
             cpu: "500m"
             memory: 1Gi
         readinessProbe:
