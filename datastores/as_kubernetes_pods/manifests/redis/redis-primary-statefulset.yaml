@@ -19,9 +19,6 @@ spec:
         ports:
         - containerPort: 6379
           name: redis-pri-sts
-        volumeMounts:
-        - name: data
-          mountPath: /data
         resources:
           requests:
             cpu: "500m"

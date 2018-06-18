@@ -22,9 +22,6 @@ spec:
         ports:
         - containerPort: 6379
           name: redis-secondary
-        volumeMounts:
-        - name: redis-secondary-volume
-          mountPath: /data
         resources:
           requests:
             cpu: "500m"

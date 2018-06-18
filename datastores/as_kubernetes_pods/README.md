@@ -35,7 +35,7 @@ kubectl -n sysdigcloud create -f manifests/redis/redis-sentinel-svc.yaml
 ### Deployment (deprecated)
 
 ```
-kubectl -n sysdigcloud create -f manifests/redis/redis.yaml
+kubectl -n sysdigcloud create -f manifests/redis/redis-deployment.yaml
 ```
 
 ## Cassandra Deployment OR Statefulset
