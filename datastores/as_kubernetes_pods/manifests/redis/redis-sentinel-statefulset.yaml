@@ -12,6 +12,8 @@ spec:
         app: redis-sentinel
     spec:
       terminationGracePeriodSeconds: 10
+      imagePullSecrets:
+        - name: sysdigcloud-pull-secret
       containers:
       - name: redis-sentinel
         image: quay.io/sysdig/redis:3.2-v2

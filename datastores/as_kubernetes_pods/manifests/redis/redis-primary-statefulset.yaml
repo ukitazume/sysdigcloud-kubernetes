@@ -12,6 +12,8 @@ spec:
         app: redis-pri
     spec:
       terminationGracePeriodSeconds: 10
+      imagePullSecrets:
+        - name: sysdigcloud-pull-secret
       containers:
       - name: redis-pri-sts
         image: quay.io/sysdig/redis:3.2-v2

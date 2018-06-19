@@ -12,6 +12,8 @@ spec:
         app: redis-secondary-statefulset
     spec:
       terminationGracePeriodSeconds: 10
+      imagePullSecrets:
+        - name: sysdigcloud-pull-secret
       containers:
       - name: redis-secondary-statefulset
         image: quay.io/sysdig/redis:3.2-v2
