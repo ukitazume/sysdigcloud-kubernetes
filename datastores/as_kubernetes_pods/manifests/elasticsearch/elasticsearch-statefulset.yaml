@@ -3,7 +3,6 @@ apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
   name: sysdigcloud-elasticsearch
-  namespace: sysdigcloud
   labels:
     app: sysdigcloud
     component: elasticsearch
