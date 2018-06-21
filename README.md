@@ -24,7 +24,7 @@ Here are the most recent updates:
   
 ## Infrastructure Overview <a id="Infrastructure-Overview"></a>
 
-![sdc-kubernetes](https://user-images.githubusercontent.com/12384605/32736470-653dabb8-c84c-11e7-89bb-71c201ec980f.png?raw=true)
+![sdc-kubernetes](https://github.com/draios/sysdigcloud-kubernetes/raw/master/images/sysdig_cloud_infrastructure.png?raw=true)
 
 ###### Backend Components
 * api-servers: Provides a web and API interface to the sysdig application
