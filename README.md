@@ -110,7 +110,38 @@ kubectl -n sysdigcloud create secret generic sysdigcloud-java-certs --from-file=
 
 ### Step 4: Install Components
 
-1. Create the datastore statefulsets (elasticsearch and cassandra). Elasticsearch and Cassandra are 
+1. Verify that there is a storage class created already.
+
+    ```
+    kubectl get storageclass
+    ```
+    
+    If there is a storage class that is suitable for this install note the name and fill in the `storageClassName` in the following yamls
+    
+    ```
+    datastores/as_kubernetes_pods/manifests/cassandra/cassandra-statefulset.yaml
+    datastores/as_kubernetes_pods/manifests/elasticsearch/elasticsearch-statefulset.yaml
+    ```
+    
+    If there is no storage class defined, create one. Here is an example of creating one
+    at AWS
+
+    ```
+    apiVersion: storage.k8s.io/v1
+    kind: StorageClass
+    metadata:
+      name: gp2
+      annotations:
+        storageclass.beta.kubernetes.io/is-default-class: "true"
+      labels:
+        kubernetes.io/cluster-service: "true"
+        addonmanager.kubernetes.io/mode: EnsureExists
+    provisioner: kubernetes.io/aws-ebs
+    parameters:
+      type: gp2
+    ```
+
+2. Create the datastore statefulsets (elasticsearch and cassandra). Elasticsearch and Cassandra are 
 automatically setup with --replica=3 generating full clusters.  
 
     ```
@@ -118,21 +149,16 @@ automatically setup with --replica=3 generating full clusters.
     kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/cassandra/cassandra-statefulset.yaml
     kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/elasticsearch/elasticsearch-service.yaml
     kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/elasticsearch/elasticsearch-statefulset.yaml
-    kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-primary-statefulset.yaml
-    kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-primary-svc.yaml
-    kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-secondary-statefulset.yaml
-    kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-secondary-svc.yaml
-    kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-sentinel-statefulset.yaml
-    kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-sentinel-svc.yaml
     ```
 
-2. Create the datastore deployments (mysql)
+3. Create the datastore deployments (mysql)
 
     ```
     kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/mysql.yaml
+    kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-deployment.yaml
     ```
 
-3. Deploy the backend Deployment sets (worker, collector and api)
+4. Deploy the backend Deployment sets (worker, collector and api)
  
     ```
     kubectl -n sysdigcloud create -f sysdigcloud/sdc-api.yaml
