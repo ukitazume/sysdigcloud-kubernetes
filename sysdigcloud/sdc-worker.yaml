@@ -1,3 +1,4 @@
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -45,7 +46,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: sysdigcloud-config
-                  key: sysdigcloud.jvm.options
+                  key: sysdigcloud.jvm.worker.options
           # If you're running multiple replicas, it is advisable to configure the limits below. Limiting resources 
           # can help stabilize rolling updates later down the road.
           # resources:
