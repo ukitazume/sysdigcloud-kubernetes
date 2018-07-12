@@ -39,7 +39,7 @@ It can be deployed with:
 
 ```
 kubectl -n sysdigcloud create -f manifests/mysql/mysql-cluster-statefulset.yaml
-kubectl -n sysdigcloud create -f manifests/mysql/mysql-router.yaml
+kubectl -n sysdigcloud create -f manifests/mysql/mysql-router-statefulset.yaml
 ```
 
 This creates a MySQL InnoDB Cluster of 3 members in single-primary mode,

@@ -140,7 +140,7 @@ kubectl -n sysdigcloud create secret generic sysdigcloud-java-certs --from-file=
       type: gp2
     ```
 
-2. Create the datastore statefulsets (elasticsearch and cassandra). Elasticsearch and Cassandra are
+2. Create the datastore statefulsets (Elasticsearch, Cassandra, MySql). Elasticsearch and Cassandra are
 automatically setup with --replica=3 generating full clusters.
 
     ```
@@ -149,12 +149,14 @@ automatically setup with --replica=3 generating full clusters.
 
     kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/elasticsearch/elasticsearch-service.yaml
     kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/elasticsearch/elasticsearch-statefulset.yaml
+
+    kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/mysql/mysql-router-statefulset.yaml
+    kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/mysql/mysql-cluster-statefulset.yaml
     ```
 
-3. Create the datastore deployments (MySQL and Redis)
+3. Create the datastore deployments (Redis)
 
     ```
-    kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/mysql/mysql-deployment.yaml
     kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-deployment.yaml
     ```
 
@@ -304,9 +306,9 @@ kubectl -n sysdigcloud delete pod <pod name>
 
 2. You can do a rolling update if downtimes are sensitive.
 ```
-kubectl -n sysdigcloud set image deployment/sdc-api api=quay.io/sysdig/sysdigcloud-backend:893
-kubectl -n sysdigcloud set image deployment/sdc-collector collector=quay.io/sysdig/sysdigcloud-backend:893
-kubectl -n sysdigcloud set image deployment/sdc-worker worker=quay.io/sysdig/sysdigcloud-backend:893
+kubectl -n sysdigcloud set image deployment/sdc-api api=quay.io/sysdig/sysdigcloud-backend:925
+kubectl -n sysdigcloud set image deployment/sdc-collector collector=quay.io/sysdig/sysdigcloud-backend:925
+kubectl -n sysdigcloud set image deployment/sdc-worker worker=quay.io/sysdig/sysdigcloud-backend:925
 ```
 
 #### Troubleshooting
