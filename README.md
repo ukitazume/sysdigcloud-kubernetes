@@ -307,3 +307,24 @@ kubectl -n sysdigcloud set image deployment/sdc-api api=quay.io/sysdig/sysdigclo
 kubectl -n sysdigcloud set image deployment/sdc-collector collector=quay.io/sysdig/sysdigcloud-backend:893 
 kubectl -n sysdigcloud set image deployment/sdc-worker worker=quay.io/sysdig/sysdigcloud-backend:893 
 ```
+
+#### Troubleshooting
+
+When experiencing issues, you can collect troubleshooting data that can help the support team.
+The data can be collected by hand, or we provide a very simple get_support_bundle.sh script
+that takes as an argument the namespace where Sysdig Cloud is deployed and will generate a
+tarball containing some information (mostly log files):
+
+```
+$ ./scripts/get_support_bundle.sh sysdigcloud
+Getting support logs for sysdigcloud-api-1477528018-4od59
+Getting support logs for sysdigcloud-api-1477528018-ach89
+Getting support logs for sysdigcloud-cassandra-2987866586-fgcm8
+Getting support logs for sysdigcloud-collector-2526360198-e58uy
+Getting support logs for sysdigcloud-collector-2526360198-v1egg
+Getting support logs for sysdigcloud-mysql-2388886613-a8a12
+Getting support logs for sysdigcloud-redis-1701952711-ezg8q
+Getting support logs for sysdigcloud-worker-1086626503-4cio9
+Getting support logs for sysdigcloud-worker-1086626503-sdtrc
+Support bundle generated: 1473897425_sysdig_cloud_support_bundle.tgz
+```
