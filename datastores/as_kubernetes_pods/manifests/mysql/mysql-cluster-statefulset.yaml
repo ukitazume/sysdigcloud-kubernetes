@@ -40,7 +40,7 @@ spec:
     spec:
       containers:
         - name: mysql
-          image: mysql/mysql-server:8.0.11
+          image: quay.io/sysdig/mysql-server:8.0.11.1
           command:
             - /bin/bash
             - -ecx
@@ -49,22 +49,22 @@ spec:
               index=$(cat /etc/hostname | grep -o '[^-]*$')
 
               /entrypoint.sh --server_id=$(expr $base + $index) \
-                             --datadir=/var/lib/mysql \
-                             --user=mysql \
-                             --gtid_mode=ON \
-                             --log-bin=sysdigcloud-mysql-cluster-${index}-bin \
-                             --binlog_checksum=NONE \
-                             --enforce_gtid_consistency=ON \
-                             --log-slave-updates=ON \
-                             --binlog-format=ROW \
-                             --master-info-repository=TABLE \
-                             --relay-log-info-repository=TABLE \
-                             --transaction-write-set-extraction=XXHASH64 \
-                             --relay-log=sysdigcloud-mysql-cluster-${index}-relay-bin \
-                             --report-host="sysdigcloud-mysql-cluster-${index}.sysdigcloud-mysql-cluster" \
-                             --log-error-verbosity=3 \
-                             --max_connections=1024 \
-                             --explicit_defaults_for_timestamp=ON
+              --datadir=/var/lib/mysql \
+              --user=mysql \
+              --gtid_mode=ON \
+              --log-bin=sysdigcloud-mysql-cluster-${index}-bin \
+              --binlog_checksum=NONE \
+              --enforce_gtid_consistency=ON \
+              --log-slave-updates=ON \
+              --binlog-format=ROW \
+              --master-info-repository=TABLE \
+              --relay-log-info-repository=TABLE \
+              --transaction-write-set-extraction=XXHASH64 \
+              --relay-log=sysdigcloud-mysql-cluster-${index}-relay-bin \
+              --report-host="sysdigcloud-mysql-cluster-${index}.sysdigcloud-mysql-cluster" \
+              --log-error-verbosity=3 \
+              --max_connections=1024 \
+              --explicit_defaults_for_timestamp=ON
           env:
             - name: MYSQL_DATABASE
               value: draios
@@ -92,7 +92,7 @@ spec:
               name: data
               subPath: "mysql"
         - name: mysql-agent
-          image: quay.io/sysdig/mysql-agent:0.1.0
+          image: quay.io/sysdig/mysql-agent:0.1.1
           args:
             - --v=4
             - --no-kube-client

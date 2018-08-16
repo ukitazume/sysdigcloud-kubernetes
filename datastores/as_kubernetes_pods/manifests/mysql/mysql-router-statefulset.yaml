@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: mysql-router
-          image: mysql/mysql-router:8.0.11
+          image: quay.io/sysdig/mysql-router:8.0.11
           env:
             - name: MYSQL_USER
               value: root
@@ -43,3 +43,5 @@ spec:
               value: sysdigcloud-mysql-cluster
             - name: MYSQL_INNODB_NUM_MEMBERS
               value: "3"
+      imagePullSecrets:
+        - name: sysdigcloud-pull-secret
