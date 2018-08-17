@@ -50,3 +50,4 @@ rm -rf ${LOG_DIR}
 echo "Support bundle generated:" ${BUNDLE_NAME}
 
 exit 0
+

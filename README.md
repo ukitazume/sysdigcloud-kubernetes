@@ -294,7 +294,7 @@ Point your collectors to `fdsa-fdsa-fdsa-fdsa.us-west-1.elb.amazonaws.com`.
 #### Version updates <a id="Version-updates"></a>
 
 Sysdig Cloud releases are listed [here](https://github.com/draios/sysdigcloud-kubernetes/releases). Each release has a 
-version number (e.g. 925) and specific release notes. 
+version number (e.g. 123) and specific release notes. 
 
 ```
 image: quay.io/sysdig/sysdigcloud-backend:123
