@@ -27,11 +27,11 @@ If testing at high scale, note the increased `max_connections` setting in
 `manifests/mysql.yaml`.
 
 This solution creates a single replica instance of MySQL. The
-implementation is very robust and based on a greatly stable MySQL release
+implementation is very robust and based on a stable MySQL release
 (5.6), but it doesn't have HA capabilities, meaning that if the instance
 running MySQL fails, the application will face downtime until Kubernetes
 reschedules the pod on another healthy node and re-attaches to it the
-persistent storage. This downtime can tipically last from a few seconds to
+persistent storage. This downtime can typically last from a few seconds to
 a few minutes. If more HA is needed, a solution based on StatefulSets can
 be used.
 
@@ -110,7 +110,7 @@ No default schema selected; type \use <schema> to set one.
 }
 ```
 
-Other useful information can usually be gathered by looking at the
+Other useful information can usually be gathered by viewing at the
 mysql-agent log:
 
 ```

@@ -162,8 +162,8 @@ automatically setup with --replica=3 generating full clusters that can be expand
     kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/mysql/mysql-deployment.yaml
     ```
 
-3. Wait until the above pods are in a ready state. Then deploy the backend Deployment
- sets (worker, collector and api). Pause for 60 seconds after creating the api deployment.
+3. Wait until the above pods are in a ready state. Then deploy the backend deployments
+ (worker, collector and api). Pause for 60 seconds after creating the api deployment.
     ```
     kubectl -n sysdigcloud create -f sysdigcloud/sdc-api.yaml
     sleep 60
@@ -322,7 +322,7 @@ kubectl -n sysdigcloud set image deployment/sdc-worker worker=quay.io/sysdig/sys
 
 #### Upgrading/Migrating/HA Datastores 
 
-Supported migrations are in a set of dirs, one for each datastore.
+Supported migrations are in a set of directories, one for each datastore.
  They can be found [here](https://github.com/draios/sysdigcloud-kubernetes/tree/master/migrations)
 
 #### Troubleshooting
