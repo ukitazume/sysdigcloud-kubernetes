@@ -41,8 +41,8 @@ The old mysql database is left running behind a different service name in the cl
 HA database is stable, the old database and service can be deleted.
 
 ```bash
-kubectl --context <context> -n sysdigcloud delete service <TODO: FILL THIS IN>
-kubectl --context <context> -n sysdigcloud delete deployment <TODO: FILL THIS IN>
+kubectl --context <context> -n sysdigcloud delete service sysdigcloud-mysql-old
+kubectl --context <context> -n sysdigcloud delete deployment sysdigcloud-mysql
 ```
 
 ## Rollback
