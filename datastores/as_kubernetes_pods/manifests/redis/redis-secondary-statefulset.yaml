@@ -32,12 +32,6 @@ spec:
           mountPath: /data
       imagePullSecrets:
         - name: sysdigcloud-pull-secret
-  volumeClaimTemplates:
-  - metadata:
-      name: redis-secondary-volume
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 1Gi
-      storageClassName: <INSERT_YOUR_STORAGE_CLASS_NAME>
+      volumes:
+        - name: redis-secondary-volume
+          emptyDir: {}
