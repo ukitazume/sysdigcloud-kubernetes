@@ -41,8 +41,12 @@ These commands assume that you are at the root of this repo
     ```
 3. Start the new HA Redis
     ```bash
-    kubectl --context <context> -n <namespace> create -f datastores/as_kubernetes_pods/manifests/redis/redis-primary-statefulset.yaml
-    kubectl --context <context> -n <namespace> create -f datastores/as_kubernetes_pods/manifests/redis/redis-secondary-statefulset.yaml
+    kubectl --context <context> -n <namespace> create -f <project_root>/datastores/as_kubernetes_pods/manifests/redis/redis-primary-statefulset.yaml
+    kubectl --context <context> -n <namespace> create -f <project_root>/datastores/as_kubernetes_pods/manifests/redis/redis-primary-svc-statefulset.yaml
+    kubectl --context <context> -n <namespace> create -f <project_root>/datastores/as_kubernetes_pods/manifests/redis/redis-secondary-statefulset.yaml
+    kubectl --context <context> -n <namespace> create -f <project_root>/datastores/as_kubernetes_pods/manifests/redis/redis-secondary-svc-statefulset.yaml
+    kubectl --context <context> -n <namespace> create -f <project_root>/datastores/as_kubernetes_pods/manifests/redis/redis-sentinel-statefulset.yaml
+    kubectl --context <context> -n <namespace> create -f <project_root>/datastores/as_kubernetes_pods/manifests/redis/redis-sentinel-svc-statefulset.yaml
     ```
 4. delete old redis pods
     ```bash
