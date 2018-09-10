@@ -34,6 +34,12 @@ spec:
             configMapKeyRef:
               name: sysdigcloud-config
               key: elasticsearch.jvm.options
+        readinessProbe:
+          httpGet:
+            path: /_cluster/health
+            port: 9200
+          initialDelaySeconds: 20
+          timeoutSeconds: 5
         volumeMounts:
         - mountPath: /usr/share/elasticsearch/data
           name: data

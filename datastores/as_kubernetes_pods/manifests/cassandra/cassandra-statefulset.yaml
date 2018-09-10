@@ -47,6 +47,19 @@ spec:
                 configMapKeyRef:
                   name: sysdigcloud-config
                   key: cassandra.ssl.enabled
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - 'if [[ $(nodetool status | grep ${POD_IP}) == *"UN"* ]]; then exit 0; else exit 1; fi'
+            initialDelaySeconds: 15
+            failureThreshold: 10
+            timeoutSeconds: 5
           volumeMounts:
             - mountPath: /var/lib/cassandra
               name: data
