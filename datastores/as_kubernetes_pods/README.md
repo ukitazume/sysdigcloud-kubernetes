@@ -40,6 +40,9 @@ be used.
 This solution is based on StatefulSets and a more recent version of MySQL
 (8.0.11) with significant capabilities in terms of HA.
 
+Please Note that the volume claim template for the mysql cluster storage has been factored to account for 1.5GB per 
+day of binlog, 30days * 1.5g + 15g = 60GB
+
 It can be deployed with:
 
 ```
