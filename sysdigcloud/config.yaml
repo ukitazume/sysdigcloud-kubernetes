@@ -48,7 +48,7 @@ data:
   # Required: Redis endpoint DNS/IP. If Redis is deployed as a Kubernetes service,
   # this will be the service name. If using an external database, put the proper address
   # The assumption is that the redis port will always be 6339
-  # This is the default value for HA Redis and non-HA Redis
+  # This is the value for HA Redis and non-HA Redis
   redis.endpoint: redis-primary
   # Optional: Redis password
   redis.password: ""

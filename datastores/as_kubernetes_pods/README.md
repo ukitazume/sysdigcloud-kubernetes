@@ -160,15 +160,16 @@ kubectl -n sysdigcloud create -f manifests/redis/redis-deployment.yaml
 ### Statefulset (Advanced)
 
 To create a Redis statefulset, the provided manifest under `manifests/redis` 
-can be used. By default, it will use a local non-persistent volume (standard dir).
+can be used. By default, it will use a local non-persistent volume (standard dir). 
+Apply all of the following at once. None of this will work standalone.
 
 ```
-kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-primary-statefulset.yaml
-kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-primary-svc-statefulset.yaml
-kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-secondary-statefulset.yaml
-kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-secondary—svc-statefulset.yaml
-kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-sentinel-statefulset.yaml
-kubectl -n sysdigcloud create -f datastores/as_kubernetes_pods/manifests/redis/redis-sentinel—svc-statefulset.yaml
+kubectl -n sysdigcloud create -f manifests/redis/redis-primary-statefulset.yaml
+kubectl -n sysdigcloud create -f manifests/redis/redis-primary-svc-statefulset.yaml
+kubectl -n sysdigcloud create -f manifests/redis/redis-secondary-statefulset.yaml
+kubectl -n sysdigcloud create -f manifests/redis/redis-secondary-svc-statefulset.yaml
+kubectl -n sysdigcloud create -f manifests/redis/redis-sentinel-statefulset.yaml
+kubectl -n sysdigcloud create -f manifests/redis/redis-sentinel-svc-statefulset.yaml
 ```
 
 This creates a Redis cluster consisting of 1 primary pod, 2 secondary pods and 3 sentinel pods.

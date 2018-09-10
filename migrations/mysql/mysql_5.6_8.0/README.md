@@ -23,10 +23,10 @@ After all of the above are met, then upgrading mysql to 8.0/HA is possible.
 pip install -r requirements.txt
 
 python ./mysql_upgrade_5.6_to_8.0.py \
-  --deployment-yaml ../../datastores/as_kubernetes_pods/manifests/mysql/mysql-deployment.yaml \
-  --router-yaml ../../datastores/as_kubernetes_pods/manifests/mysql/mysql-router-statefulset.yaml \
-  --cluster-yaml ../../datastores/as_kubernetes_pods/manifests/mysql/mysql-cluster-statefulset.yaml \
-  --upgrade-yaml ./mysql_upgrade.yaml \
+  --deployment-yaml <project_root>/datastores/as_kubernetes_pods/manifests/mysql/mysql-deployment.yaml \
+  --router-yaml <project_root>/datastores/as_kubernetes_pods/manifests/mysql/mysql-router-statefulset.yaml \
+  --cluster-yaml <project_root>/datastores/as_kubernetes_pods/manifests/mysql/mysql-cluster-statefulset.yaml \
+  --upgrade-yaml <project_root>/migrations/mysql_5.6_8.0/mysql_upgrade.yaml \
   --namespace <namespace of the existing install> \
   --kube-context <kubernetes context value> \
   --storageclass-name <your storage class name> \
