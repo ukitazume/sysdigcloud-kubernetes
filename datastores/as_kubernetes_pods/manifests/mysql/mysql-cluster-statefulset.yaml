@@ -65,6 +65,10 @@ spec:
               --log-error-verbosity=3 \
               --max_connections=1024 \
               --explicit_defaults_for_timestamp=ON
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
           env:
             - name: MYSQL_DATABASE
               value: draios

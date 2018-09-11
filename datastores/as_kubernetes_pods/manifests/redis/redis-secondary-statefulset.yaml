@@ -16,6 +16,10 @@ spec:
       - name: redis-secondary
         image: quay.io/sysdig/redis:3.2-v12.3
         imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 100m
+            memory: 1Gi
         env:
           - name: REDIS_PASSWORD
             valueFrom:
