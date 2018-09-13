@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: quay.io/sysdig/sysdigcloud-backend:1091
+          image: quay.io/sysdig/sysdigcloud-backend:1149
           volumeMounts:
             - name: logs
               mountPath: /var/log/sysdigcloud
