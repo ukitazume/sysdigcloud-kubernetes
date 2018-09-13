@@ -36,7 +36,7 @@ spec:
               name: sysdigcloud-config
               key: elasticsearch.url
         - name: ES_PORT
-          value: "9200" # Change thi param if different
+          value: "9200" # Change the param if different
         - name: BATCH_SIZE
           value: "500"
         - name: ALERT_EVENTS
