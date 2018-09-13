@@ -69,10 +69,6 @@ spec:
             #       name: sysdigcloud-config
             #       key: cassandra.snitch.hostname.file
             ##########################################
-            - name: POD_IP
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.podIP
           readinessProbe:
             exec:
               command:
