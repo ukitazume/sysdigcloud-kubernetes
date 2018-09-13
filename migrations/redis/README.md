@@ -1,4 +1,4 @@
-# Redis Migration
+# Redis HA Migration (BETA)
 
 Upgrading Redis to the HA/Statefulset requires a small amount of planned
  downtime and will incur a small amount of metric data loss during the outage. 

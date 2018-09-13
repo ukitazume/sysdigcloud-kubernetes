@@ -1,4 +1,4 @@
-# Mysql upgrade to 8.0 HA/Statefulset
+# Mysql upgrade to 8.0 HA/Statefulset (BETA)
 
 This script upgrades a live cluster with no metric data loss, but has a potential of the following data loss:
 1. Users or teams created or modified during the upgrade will be missing in the new database
