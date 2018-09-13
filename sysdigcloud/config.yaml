@@ -42,6 +42,28 @@ data:
   cassandra.jvm.options: ""
   # Optional: Store Sysdig captures using Cassandra instead of S3. This increases cassandra storage if set to true
   sysdigcloud.captures.cassandra.storage: "true"
+  # Start Custom Snitch Group ########################################
+  # Optional but required as a group
+  # If cassandra.endpoint.snitch contains "customHostBasedGossipingPropertyFileSnitch", then
+  # the 3 following entries:
+  # - cassandra.endpoint.snitch
+  # - cassandra.snitch.hostname.file
+  # - cassandra.snitch.extract_cmd
+  # form a group.
+  # A value of "customHostBasedGossipingPropertyFileSnitch" in cassandra.endpoint.snitch
+  # translates to the GossipingPropertyFileSnitch, with the rack value being extracted from
+  # the host name.
+  # The hostname is found in the file whose name is contained in
+  # cassandra.snitch.hostname.file - the content of the file is piped through the command contained
+  # in cassandra.snitch.extract_cmd to extract the zone.
+  # The file could be the host /etc/hostname mounted in the container under /host/etc/hostname
+  # This configuration was deviced for IBM IKS to get the real hostname of the worker node
+  cassandra.endpoint.snitch: ""
+  # Optional but required as a group: file containing the worker node name
+  cassandra.snitch.hostname.file: ""
+  # Optional but required as a group: command to extract the zone from the hostname
+  cassandra.snitch.extract_cmd: ""
+  # End Snitch Group ###########################################
   ####################################
   ######### REDIS #########
   ####################################
