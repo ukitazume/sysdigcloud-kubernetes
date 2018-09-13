@@ -65,6 +65,8 @@ data:
   # cassandra.snitch.extract_cmd: "cut -d- -f2"
   # assuming that hostname is: "kube-dal10-cr0d89aa68f55d4c4c8bc6d677805284c7-w1.cloud.ibm"
   # rack will end up containing "dal10"
+  # ATTENTION: these new values, should be used in conjuction with extra entries in the Cassandra statefulset
+  # and with a specific version of Sysdig Cassandra image (TBD)
   cassandra.endpoint.snitch: ""
   # Optional but required as a group: file containing the worker node name
   cassandra.snitch.hostname.file: ""
