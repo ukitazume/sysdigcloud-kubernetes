@@ -51,6 +51,28 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
+            ### Start of the custom Cassandra snitch group
+            # The following entries are required for the custom Cassandra snitch (see configMap)
+            # - name: CASSANDRA_ENDPOINT_SNITCH
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: sysdigcloud-config
+            #       key: cassandra.endpoint.snitch
+            # - name: CASSANDRA_SNITCH_EXTRACT_CMD
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: sysdigcloud-config
+            #       key: cassandra.snitch.extract_cmd
+            # - name: CASSANDRA_SNITCH_HOSTNAME_FILE
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: sysdigcloud-config
+            #       key: cassandra.snitch.hostname.file
+            ##########################################
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
           readinessProbe:
             exec:
               command:
@@ -66,8 +88,21 @@ spec:
             # Uncomment this when using multiple mount points for data
             # - mountPath: /var/lib/cassandra/data2
             #   name: data2
+            ### Start of the custom Cassandra snitch group
+            # The following entries are required for the custom Cassandra snitch (see configMap)
+            # - mountPath: /host/etc/hostname
+            #   readOnly: true
+            #   name: host-etc-hostname
+            ##########################################
       imagePullSecrets:
         - name: sysdigcloud-pull-secret
+      ### Start of the custom Cassandra snitch group
+      # The following entries are required for the custom Cassandra snitch (see configMap)
+      # volumes:
+      # - name: host-etc-hostname
+      #   hostPath:
+      #     path: /etc/hostname
+      ##########################################
   volumeClaimTemplates:
   - metadata:
       name: data
