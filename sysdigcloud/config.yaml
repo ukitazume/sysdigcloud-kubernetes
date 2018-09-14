@@ -43,14 +43,14 @@ data:
   # Optional: Store Sysdig captures using Cassandra instead of S3. This increases cassandra storage if set to true
   sysdigcloud.captures.cassandra.storage: "true"
   # Start Custom Snitch Group ########################################
-  # Optional but required as a group
-  # If cassandra.endpoint.snitch contains "customHostBasedGossipingPropertyFileSnitch", then
+  # Optional but if used, all values are required
+  # If "cassandra.endpoint.snitch" contains "customHostBasedGossipingPropertyFileSnitch", then
   # the 3 following entries:
   # - cassandra.endpoint.snitch
   # - cassandra.snitch.hostname.file
   # - cassandra.snitch.extract_cmd
   # form a group.
-  # A value of "customHostBasedGossipingPropertyFileSnitch" in cassandra.endpoint.snitch
+  # A value of "customHostBasedGossipingPropertyFileSnitch" in "cassandra.endpoint.snitch"
   # translates to the GossipingPropertyFileSnitch, with the rack value being extracted from
   # the host name.
   # The hostname is found in the file whose name is contained in
@@ -62,10 +62,10 @@ data:
   # cassandra.endpoint.snitch: "customHostBasedGossipingPropertyFileSnitch"
   # (the entrypoint script of Sysdig Cassandra image will translate this to "GossipingPropertyFileSnitch")
   # cassandra.snitch.hostname.file: "/host/etc/hostname"
+  # (the host /etc/hostname should be mounted under /host/etc/hostname inside the container)
   # cassandra.snitch.extract_cmd: "cut -d- -f2"
-  # assuming that hostname is: "kube-dal10-cr0d89aa68f55d4c4c8bc6d677805284c7-w1.cloud.ibm"
-  # rack will end up containing "dal10"
-  # ATTENTION: these new values, should be used in conjuction with extra entries in the Cassandra statefulset
+  # (assuming that hostname is: "hostname-zone01-kubernetes-w1.domain.com", rack will contain: "zone01")
+  # ATTENTION: these new values should be used in conjuction with extra entries in the Cassandra statefulset
   # and with a specific version of Sysdig Cassandra image (TBD)
   cassandra.endpoint.snitch: ""
   # Optional but required as a group: file containing the worker node name
