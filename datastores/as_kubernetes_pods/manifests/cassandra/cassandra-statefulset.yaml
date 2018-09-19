@@ -68,6 +68,11 @@ spec:
             #     configMapKeyRef:
             #       name: sysdigcloud-config
             #       key: cassandra.snitch.hostname.file
+            # - name: CASSANDRA_DC
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: sysdigcloud-config
+            #       key: cassandra.datacenter.name
             ##########################################
           readinessProbe:
             exec:
