@@ -67,7 +67,6 @@ data:
   # (the host /etc/hostname should be mounted under /host/etc/hostname inside the container)
   # cassandra.snitch.extract_cmd: "cut -d- -f2"
   # (assuming that hostname is: "hostname-zone01-kubernetes-w1.domain.com", rack will contain: "zone01")
-  `
   # ATTENTION: these new values should be used in conjuction with extra entries in the Cassandra statefulset
   # and with a specific version of Sysdig Cassandra image (TBD)
   cassandra.endpoint.snitch: ""
