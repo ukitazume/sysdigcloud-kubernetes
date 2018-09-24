@@ -54,7 +54,7 @@ contains commented snippets that can be uncommented when using persistent volume
 GCE Disks (just replace the volume id from the cloud provider in the snippet):
 
 ```
-kubectl -n sysdigcloud create -f manifests/cassandra/cassandra-deployment.yaml --namespace sysdigcloud
+kubectl -n sysdigcloud create -f manifests/cassandra/cassandra-deployment.yaml
 ```
 
 This creates a Cassandra cluster of size 1. To expand the Cassandra cluster, a new deployment must 
