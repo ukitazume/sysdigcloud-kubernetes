@@ -16,6 +16,20 @@ spec:
         app: sysdigcloud
         role: cassandra
     spec:
+      #affinity:
+        #podAntiAffinity:
+          #requiredDuringSchedulingIgnoredDuringExecution:
+          #- labelSelector:
+              #matchExpressions:
+              #- key: app
+                #operator: In
+                #values:
+                #- sysdigcloud
+              #- key: role
+                #operator: In
+                #values:
+                #- cassandra
+            #topologyKey: "kubernetes.io/hostname"
       containers:
         - image: quay.io/sysdig/cassandra:2.1.20.3
           name: cassandra

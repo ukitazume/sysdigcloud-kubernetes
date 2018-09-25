@@ -17,6 +17,20 @@ spec:
         component: elasticsearch
         role: elasticsearch
     spec:
+      #affinity:
+        #podAntiAffinity:
+          #requiredDuringSchedulingIgnoredDuringExecution:
+          #- labelSelector:
+              #matchExpressions:
+              #- key: app
+                #operator: In
+                #values:
+                #- sysdigcloud
+              #- key: role
+                #operator: In
+                #values:
+                #- elasticsearch
+            #topologyKey: "kubernetes.io/hostname"
       containers:
       - name: elasticsearch
         image: quay.io/sysdig/elasticsearch:5.6.4.1

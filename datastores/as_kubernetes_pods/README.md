@@ -8,6 +8,17 @@ local volume (emptyDir) that is only persisted for the lifetime of the pod, or a
 All statefulset yamls need a proper storage class name pasted in the file.
 Replace `<INSERT_YOUR_STORAGE_CLASS_NAME>` with your storage class name.
 
+## Pod Affinity
+Kubernetes has a way of setting affinity called podAffinity. These are fields in under Pod metadata and 
+take automatic or user-defined metadata to dictate where to schedule pods. 
+Some benefits of affinity or anti-affinity are:
+
+* Schedule a pod based on which other pods are or are not running on a node
+* Request without requiring that a pod be run on a node
+* Specify a set of allowable values instead of a single value requirement
+
+To enable pod anti-affinity, uncomment the given section in the applicable yaml files.
+
 ## MySQL Deployment or StatefulSet
 
 ### Deployment (without HA)
