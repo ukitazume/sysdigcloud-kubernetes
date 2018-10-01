@@ -78,7 +78,8 @@ spec:
               --report-host="sysdigcloud-mysql-cluster-${index}.sysdigcloud-mysql-cluster" \
               --log-error-verbosity=3 \
               --max_connections=1024 \
-              --explicit_defaults_for_timestamp=ON
+              --explicit_defaults_for_timestamp=ON \
+              --loose-group-replication-communication-debug-options="GCS_DEBUG_BASIC,XCOM_DEBUG_BASIC"
           resources:
             requests:
               cpu: 500m
