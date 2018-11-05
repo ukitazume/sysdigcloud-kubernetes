@@ -8,6 +8,7 @@ metadata:
     role: api
 spec:
   type: NodePort
+  sessionAffinity: ClientIP
   ports:
     - port: 443
       name: secure-api
