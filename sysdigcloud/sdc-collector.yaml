@@ -47,6 +47,11 @@ spec:
                 configMapKeyRef:
                   name: sysdigcloud-config
                   key: sysdigcloud.jvm.collector.options
+            - name: JAVA_GC_PARAMETERS
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: sysdigcloud.jvmgc.collector.options
           # If you're running multiple replicas, it is advisable to configure the limits below. Limiting resources 
           # can help stabilize rolling updates later down the road.
           # resources:
