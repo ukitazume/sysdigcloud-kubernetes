@@ -111,6 +111,8 @@ data:
   sysdigcloud.jvm.api.options: ""
   sysdigcloud.jvm.worker.options: ""
   sysdigcloud.jvm.collector.options: ""
+  # JVM GC options for the collectors
+  sysdigcloud.jvmgc.collector.options: "-XX:+PrintFlagsFinal -Xverify:none -XX:+UseG1GC -XX:MaxGCPauseMillis=300 -XX:+UseTLAB -XX:+PrintGCDetails -XX:+PrintGCDateStamps"
   # Required: Sysdig Cloud license
   sysdigcloud.license: ""
   # Optional: OAuth allowed domains (comma separated list of domains)
