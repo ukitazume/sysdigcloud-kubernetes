@@ -59,6 +59,9 @@ spec:
             - /bin/bash
             - -ecx
             - |
+              # Use native auth plugin for compatibility with MariaDB driver
+              sed -i -e '/^\s*default-authentication-plugin=/d;$a\\n# Use native auth plugin for compatibility with MariaDB driver\ndefault-authentication-plugin=mysql_native_password'  /etc/my.cnf
+
               base=1000
               index=$(cat /etc/hostname | grep -o '[^-]*$')
 
