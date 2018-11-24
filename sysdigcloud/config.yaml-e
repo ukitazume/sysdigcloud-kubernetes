@@ -37,7 +37,7 @@ data:
   # Optional: Cassandra replication factor to use. This parameter will be applied during the
   # initial keyspace creation. This will not change an already running install.
   # Change to 1 only for POC or if running a single node deployment
-  cassandra.replication.factor: "1"
+  cassandra.replication.factor: "3"
   # Optional: Cassandra JVM JVM options. For heavy load environments this will override the defaults
   cassandra.jvm.options: ""
   # Optional: Store Sysdig captures using Cassandra instead of S3. This increases cassandra storage if set to true
