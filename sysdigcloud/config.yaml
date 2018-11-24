@@ -37,7 +37,7 @@ data:
   # Optional: Cassandra replication factor to use. This parameter will be applied during the
   # initial keyspace creation. This will not change an already running install.
   # Change to 1 only for POC or if running a single node deployment
-  cassandra.replication.factor: "1"
+  cassandra.replication.factor: "3"
   # Optional: Cassandra JVM JVM options. For heavy load environments this will override the defaults
   cassandra.jvm.options: ""
   # Optional: Store Sysdig captures using Cassandra instead of S3. This increases cassandra storage if set to true
@@ -96,10 +96,10 @@ data:
   # Otherwise, it can be left to the default value and the api will just be routable within the Kubernetes cluster.
   api.url: https://sysdigcloud-api:443
   # Required: Sysdig Cloud super admin user. This will be used for the initial login in the web interface
-  sysdigcloud.default.user: "test@example.com"
+  sysdigcloud.default.user: test@sysdig.com
   # Required: Sysdig Cloud super admin user password
   # NOTE: Change upon first login
-  sysdigcloud.default.user.password: "changeme"
+  sysdigcloud.default.user.password: test
   # Required: Restrict password login to super admin user
   # Force all non-default users to login using the configured IdP
   sysdigcloud.restrict.password.login: "false"
@@ -114,7 +114,7 @@ data:
   # JVM GC options for the collectors
   sysdigcloud.jvmgc.collector.options: "-XX:+PrintFlagsFinal -Xverify:none -XX:+UseG1GC -XX:MaxGCPauseMillis=300 -XX:+UseTLAB -XX:+PrintGCDetails -XX:+PrintGCDateStamps"
   # Required: Sysdig Cloud license
-  sysdigcloud.license: e507dd104ce914781d587831466fb71a4fe846741366ec5fb58205e2c63aab135599142a7cb37f6e188cdd22963c84572197b927dc3f7e39ea80f04c55ffc741acc39c20271d5099f04ae1ebf0f5c28a33485485284b7a0a7950a413228eadb4c6d653e57edab432ccfc5156eebd5b3ab62fd5003e6c8e0eaaa660b40389e4de0a50c14d8f980cc78dd0dadef95d7e419dffe79d1facc7eb4e4d8e10d212bb99
+  sysdigcloud.license: ""
   # Optional: OAuth allowed domains (comma separated list of domains)
   sysdigcloud.oauth.allowed.domains.list: ""
   # Optional: Sysdig Cloud Google OAuth Client ID

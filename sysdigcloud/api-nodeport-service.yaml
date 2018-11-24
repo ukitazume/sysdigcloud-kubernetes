@@ -10,7 +10,7 @@ spec:
   type: NodePort
   ports:
     - port: 443
-      name: secure-apin      nodePort: 30443
+      name: secure-api
   selector:
     app: sysdigcloud
     role: api
