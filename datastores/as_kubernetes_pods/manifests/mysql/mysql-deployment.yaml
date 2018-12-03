@@ -117,9 +117,7 @@ spec:
         - name: mysql-config
           configMap:
             name: sysdigcloud-mysql-config
-        # Uncomment this for emptyDir volumes
         - name: data
           persistentVolumeClaim:
             claimName: sysdig-mysql-disk
-        # emptyDir: {}
         
