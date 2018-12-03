@@ -119,5 +119,4 @@ spec:
             name: sysdigcloud-mysql-config
         - name: data
           persistentVolumeClaim:
-            claimName: sysdig-mysql-disk
-        
+            claimName: sysdig-mysql-disk        
