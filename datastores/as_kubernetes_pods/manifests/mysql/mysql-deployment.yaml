@@ -122,14 +122,4 @@ spec:
           persistentVolumeClaim:
             claimName: sysdig-mysql-disk
         # emptyDir: {}
-        # Uncomment this for GCE Disk
-        # - name: data
-        #   gcePersistentDisk:
-        #     pdName: <volume-name>
-        #     fsType: ext4
-        # Uncomment this for AWS EBS
-        # - name: data
-        #   awsElasticBlockStore:
-        #     volumeID: <volume-id>
-        #     fsType: ext4
         
