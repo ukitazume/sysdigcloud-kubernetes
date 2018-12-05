@@ -122,6 +122,33 @@ data:
   # Optional: Sysdig Cloud Google OAuth Client Secret
   sysdigcloud.google.oauth.client.secret: ""
   ####################################
+  # SCANNING and ANCHORE #
+  ####################################
+  scanning.service.token: "4787979e-d8c5-45bd-8b43-93f9a0988358"
+  # Scanning uses a different database than the other backend components, but
+  # can use the same mysql RDBMS endpoint.
+  scanning.mysql.endpoint: sysdigcloud-mysql
+  scanning.mysql.user: scanninguser
+  scanning.mysql.dbname: sysdig_scanning
+  # password in sysdigcloud-scanning secret
+  scanning.backend.url: "http://sysdigcloud-api:8080"
+  scanning.backend.tlsCheck: "false"
+  scanning.redis.enabled: "true"
+  anchore.url: "http://sysdigcloud-anchore-core:8228"
+  anchore.db.endpoint: sysdigcloud-postgresql
+  anchore.db.dbname: anchore
+  anchore.db.user: postgres
+  # db password in anchore-secrets
+  #
+  # anchore proxy support: If a proxy is required for the anchore-core to reach
+  # the vulnerability feed, uncomment & specify anchore.https.proxy here, and
+  # uncomment the environment setting in the anchore-core deployment.
+  # NOTE: if the password contains non-url safe characters, it should
+  # be urlencoded in the value below. For example:
+  # F@oBar! would be F%40oBar%21
+  # anchore.https.proxy: https://user:password@proxy.corp.example.com:8128
+
+  ####################################
   # ======= BEGIN DEPRECATED LDAP OPTIONS =======
   ####################################
   # NOTE: The following series of LDAP settings are deprecated starting
