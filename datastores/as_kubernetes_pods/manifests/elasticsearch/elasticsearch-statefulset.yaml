@@ -9,6 +9,7 @@ metadata:
     role: elasticsearch
 spec:
   serviceName: elasticsearch-data
+  podManagementPolicy: "Parallel"
   replicas: 3
   template:
     metadata:
@@ -33,7 +34,7 @@ spec:
             #topologyKey: "kubernetes.io/hostname"
       containers:
       - name: elasticsearch
-        image: quay.io/sysdig/elasticsearch:5.6.13.2
+        image: quay.io/sysdig/elasticsearch:5.6.13.3
         securityContext:
           privileged: true
         resources:
@@ -45,7 +46,7 @@ spec:
         - name: ELASTICSEARCH_SERVICE
           value: sysdigcloud-elasticsearch
         - name: ELASTICSEARCH_GOSSIP_NODES_NUM
-          value: "2"
+          value: "3"
         - name: ELASTICSEARCH_CLUSTER_NAME
           value: sysdigcloud
         - name: ES_JAVA_OPTS
