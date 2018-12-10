@@ -10,6 +10,8 @@ metadata:
 spec:
   serviceName: elasticsearch-data
   podManagementPolicy: "Parallel"
+  # The number of replicas needs to be passed to the pods by ensuring that the value of ELASTICSEARCH_GOSSIP_NODES_NUM
+  # matches the number set here.
   replicas: 3
   template:
     metadata:
@@ -45,6 +47,9 @@ spec:
         env:
         - name: ELASTICSEARCH_SERVICE
           value: sysdigcloud-elasticsearch
+          # This value needs to match the number of replicas specified for the statefulset. It will be used to calculate
+          # The value of the -Ediscovery.zen.minimum_master_nodes parameter. To override this calculation and set this
+          # parameter manually use the DISCOVERY_ZEN_MINIMUM_MASTER_NODES variable.
         - name: ELASTICSEARCH_GOSSIP_NODES_NUM
           value: "3"
         - name: ELASTICSEARCH_CLUSTER_NAME
