@@ -135,6 +135,7 @@ data:
   scanning.backend.tlsCheck: "false"
   scanning.redis.enabled: "true"
   anchore.url: "http://sysdigcloud-anchore-core:8228"
+  anchore.admin.user: admin
   anchore.db.endpoint: sysdigcloud-postgresql
   anchore.db.dbname: anchore
   anchore.db.user: postgres
