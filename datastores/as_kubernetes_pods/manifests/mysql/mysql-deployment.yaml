@@ -9,7 +9,7 @@ spec:
   storageClassName: <INSERT YOUR STORAGE CLASS HERE>
   resources:
     requests:
-      storage: 60Gi
+      storage: 15Gi
 ---
 apiVersion: v1
 kind: ConfigMap
