@@ -124,7 +124,9 @@ data:
   ####################################
   # SCANNING and ANCHORE #
   ####################################
-  scanning.service.token: "4787979e-d8c5-45bd-8b43-93f9a0988358"
+  # This token is used to authenticate service-to-service calls from the scanning service
+  # to the backend-api service. It should be changed to a small unique string, like a UUID.
+  scanning.service.token: change_me
   # Scanning uses a different database than the other backend components, but
   # can use the same mysql RDBMS endpoint.
   scanning.mysql.endpoint: sysdigcloud-mysql
