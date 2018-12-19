@@ -54,7 +54,7 @@ spec:
             #topologyKey: "kubernetes.io/hostname"
       containers:
         - name: mysql
-          image: quay.io/sysdig/mysql-server:8.0.13.1
+          image: quay.io/sysdig/mysql-server:8.0.13.2
           command:
             - /bin/bash
             - -ecx
