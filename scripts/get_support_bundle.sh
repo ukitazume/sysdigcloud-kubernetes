@@ -21,7 +21,7 @@ LOG_DIR=$(mktemp -d sysdigcloud-support-bundle-XXXX)
 
 SYSDIGCLOUD_PODS=$(kubectl ${KUBE_OPTS} get pods | awk '{ print $1 }' | grep -v NAME)
 
-command='tar czf /var/log/sysdigcloud/ /var/log/cassandra/ /tmp/redis.log /var/log/redis-server/redis.log /var/log/mysql/error.log /opt/prod.conf 2>/dev/null || true'
+command='tar czf - /var/log/sysdigcloud/ /var/log/cassandra/ /tmp/redis.log /var/log/redis-server/redis.log /var/log/mysql/error.log /opt/prod.conf 2>/dev/null || true'
 for pod in ${SYSDIGCLOUD_PODS}; do
     echo "Getting support logs for ${pod}"
     mkdir -p ${LOG_DIR}/${pod}
