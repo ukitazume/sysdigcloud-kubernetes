@@ -27,7 +27,8 @@ data:
       users:
         admin:
           password: ${ANCHORE_ADMIN_PASSWORD}
-          email: admin@anchore.com
+          # This email address is not used, but shouldn't be blank.
+          email: test@sysdig.com
           external_service_auths:
           auto_policy_sync: false
       database:
@@ -57,7 +58,7 @@ data:
         listen: '0.0.0.0'
         port: 8082
         use_db: True
-        cycle_timer_seconds: '1'
+        cycle_timer_seconds: 1
         cycle_timers:
           analyzer_queue: 1
           feed_sync: 14400
