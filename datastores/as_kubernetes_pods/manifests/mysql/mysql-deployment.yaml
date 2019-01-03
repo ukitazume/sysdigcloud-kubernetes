@@ -6,7 +6,7 @@ metadata:
 spec:
   accessModes:
   - ReadWriteOnce
-  storageClassName: <INSERT YOUR STORAGE CLASS HERE>
+  storageClassName: <INSERT_YOUR_STORAGE_CLASS_NAME>
   resources:
     requests:
       storage: 15Gi
