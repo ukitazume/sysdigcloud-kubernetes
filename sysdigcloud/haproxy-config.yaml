@@ -52,10 +52,12 @@ data:
 
     backend scanning-api
       mode http
+      cookie SERVERID insert indirect nocache
       server scanning-api sysdigcloud-scanning-api:80 check
 
     backend backend-api
       mode http
+      cookie SERVERID insert indirect nocache
       server backend-api sysdigcloud-api:8080 check
 
     listen stats
