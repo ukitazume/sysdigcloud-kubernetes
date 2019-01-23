@@ -13,7 +13,7 @@ else
 fi
 
 #verify that the provided namespace exists
-kubectl get namespace ${NAMESPACE} > /dev/null
+kubectl ${context} get namespace ${NAMESPACE} > /dev/null
 
 KUBE_OPTS="--namespace ${NAMESPACE} ${context}"
 
@@ -21,7 +21,7 @@ LOG_DIR=$(mktemp -d sysdigcloud-support-bundle-XXXX)
 
 SYSDIGCLOUD_PODS=$(kubectl ${KUBE_OPTS} get pods | awk '{ print $1 }' | grep -v NAME)
 
-command='tar czf /var/log/sysdigcloud/ /var/log/cassandra/ /tmp/redis.log /var/log/redis-server/redis.log /var/log/mysql/error.log /opt/prod.conf 2>/dev/null || true'
+command='tar czf - /var/log/sysdigcloud/ /var/log/cassandra/ /tmp/redis.log /var/log/redis-server/redis.log /var/log/mysql/error.log /opt/prod.conf 2>/dev/null || true'
 for pod in ${SYSDIGCLOUD_PODS}; do
     echo "Getting support logs for ${pod}"
     mkdir -p ${LOG_DIR}/${pod}
@@ -29,7 +29,7 @@ for pod in ${SYSDIGCLOUD_PODS}; do
     containers=$(kubectl ${KUBE_OPTS} get pod ${pod} -o json | jq -r '.spec.containers[].name')
     for container in ${containers}; do
         kubectl ${KUBE_OPTS} logs ${pod} -c ${container} > ${LOG_DIR}/${pod}/${container}-kubectl-logs.txt
-        kubectl ${KUBE_OPTS} exec ${pod} -c ${container} -- bash -c "${command}" > ${LOG_DIR}/${pod}/${container}-support-files.tgz
+        kubectl ${KUBE_OPTS} exec ${pod} -c ${container} -- bash -c "${command}" > ${LOG_DIR}/${pod}/${container}-support-files.tgz || true
     done
 done
 
