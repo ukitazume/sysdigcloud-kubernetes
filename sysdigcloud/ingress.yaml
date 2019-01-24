@@ -20,6 +20,9 @@ spec:
       - backend:
           serviceName: sysdigcloud-api
           servicePort: 8080
+      - backend:
+          serviceName: secure-collector
+          servicePort: 6443
   tls:
   - hosts:
     - <EXTERNAL-DNS-NAME>
