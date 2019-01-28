@@ -52,5 +52,3 @@
             - app.sysdigcloud.com
             - app-secure.sysdigcloud.com
           secretName: sysdigcloud-ssl-secret
-    status:
-      loadBalancer: {}
