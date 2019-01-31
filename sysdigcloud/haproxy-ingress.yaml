@@ -209,8 +209,6 @@ spec:
               containerPort: 80
             - name: https
               containerPort: 443
-            - name: stat
-              containerPort: 1936
           livenessProbe:
             httpGet:
               path: /healthz
