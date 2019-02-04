@@ -4,7 +4,7 @@ kind: StatefulSet
 metadata:
   name: sysdigcloud-cassandra
 spec:
-  serviceName: cassandra-service
+  serviceName: sysdigcloud-cassandra
   replicas: 3
   selector:
     matchLabels:
