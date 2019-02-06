@@ -6,7 +6,7 @@ metadata:
 spec:
   accessModes:
   - ReadWriteOnce
-  storageClassName: <INSERT_YOUR_STORAGE_CLASS_NAME>
+  storageClassName: default
   resources:
     requests:
       storage: 15Gi
@@ -82,11 +82,14 @@ spec:
     spec:
       containers:
         - name: mysql
-          image: quay.io/sysdig/mysql:5.6.42.3
+          image: quay.io/sysdig/mysql:5.6.42.5
           resources:
             requests:
-              cpu: 500m
-              memory: 1Gi
+              memory: "8G"
+              cpu: "4"
+            limits:
+              memory: "16G"
+              cpu: "4"
           env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
@@ -137,3 +140,5 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: sysdig-mysql-disk
+      nodeSelector:
+        kops.k8s.io/instancegroup: storage-nodes

@@ -20,30 +20,25 @@ spec:
         component: elasticsearch
         role: elasticsearch
     spec:
-      #affinity:
-        #podAntiAffinity:
-          #requiredDuringSchedulingIgnoredDuringExecution:
-          #- labelSelector:
-              #matchExpressions:
-              #- key: app
-                #operator: In
-                #values:
-                #- sysdigcloud
-              #- key: role
-                #operator: In
-                #values:
-                #- elasticsearch
-            #topologyKey: "kubernetes.io/hostname"
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - sysdigcloud
+              - key: role
+                operator: In
+                values:
+                - elasticsearch
+            topologyKey: "kubernetes.io/hostname"
       containers:
       - name: elasticsearch
-        image: quay.io/sysdig/elasticsearch:5.6.13.5
+        image: quay.io/sysdig/elasticsearch:5.6.14.4-alpine
         securityContext:
           privileged: true
-        resources:
-          limits:
-            cpu: 2000m
-          requests:
-            cpu: 500m
         env:
         - name: ELASTICSEARCH_SERVICE
           value: sysdigcloud-elasticsearch
@@ -59,6 +54,13 @@ spec:
             configMapKeyRef:
               name: sysdigcloud-config
               key: elasticsearch.jvm.options
+        resources:
+          requests:
+            memory: "16G"
+            cpu: "4"
+          limits:
+            memory: "16G"
+            cpu: "8"
         readinessProbe:
           httpGet:
             path: /_cluster/health
@@ -68,14 +70,12 @@ spec:
         volumeMounts:
         - mountPath: /usr/share/elasticsearch/data
           name: data
+      volumes:
+        - hostPath:
+            path: /mnt/nvme/es-data-volume
+            type: ""
+          name: data
       imagePullSecrets:
       - name: sysdigcloud-pull-secret
-  volumeClaimTemplates:
-  - metadata:
-      name: data
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      resources:
-        requests:
-          storage: 50Gi
-      storageClassName: <INSERT_YOUR_STORAGE_CLASS_NAME>
+      nodeSelector:
+        kops.k8s.io/instancegroup: storage-nodes

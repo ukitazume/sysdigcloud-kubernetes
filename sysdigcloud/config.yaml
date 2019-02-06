@@ -39,9 +39,47 @@ data:
   # Change to 1 only for POC or if running a single node deployment
   cassandra.replication.factor: "3"
   # Optional: Cassandra JVM JVM options. For heavy load environments this will override the defaults
-  cassandra.jvm.options: ""
+  cassandra.jvm.options: "-Xms10g -Xmx10g"
   # Optional: Store Sysdig captures using Cassandra instead of S3. This increases cassandra storage if set to true
   sysdigcloud.captures.cassandra.storage: "true"
+  # Optional: Increase cassandra compaction throughput to 350 MB/s
+  # if not specified, cassandra compaction throughput is set to 100 MB/s
+  cassandra.compaction.throughput: "150"
+  # Start Custom Snitch Group ########################################
+  # Optional but if used, all values are required
+  # If "cassandra.endpoint.snitch" contains "customHostBasedGossipingPropertyFileSnitch", then
+  # the 3 following entries:
+  # - cassandra.endpoint.snitch
+  # - cassandra.snitch.hostname.file
+  # - cassandra.snitch.extract_cmd
+  # - cassandra.datacenter.name
+  # form a group.
+  # A value of "customHostBasedGossipingPropertyFileSnitch" in "cassandra.endpoint.snitch"
+  # translates to the GossipingPropertyFileSnitch, with the rack value being extracted from
+  # the host name.
+  # The hostname is found in the file whose name is contained in
+  # cassandra.snitch.hostname.file - the content of the file is piped through the command contained
+  # in cassandra.snitch.extract_cmd to extract the zone.
+  # The file could be the host /etc/hostname mounted in the container under /host/etc/hostname
+  # "cassandra.datacenter.name" is required to setup the network topology - on the assumption of a single DC
+  # This configuration was devised for IBM IKS to get the real hostname of the worker node
+  # Example:
+  # cassandra.endpoint.snitch: "customHostBasedGossipingPropertyFileSnitch"
+  # (the entrypoint script of Sysdig Cassandra image will translate this to "GossipingPropertyFileSnitch")
+  # cassandra.snitch.hostname.file: "/host/etc/hostname"
+  # (the host /etc/hostname should be mounted under /host/etc/hostname inside the container)
+  # cassandra.snitch.extract_cmd: "cut -d- -f2"
+  # (assuming that hostname is: "hostname-zone01-kubernetes-w1.domain.com", rack will contain: "zone01")
+  # ATTENTION: these new values should be used in conjuction with extra entries in the Cassandra statefulset
+  # and with a specific version of Sysdig Cassandra image (TBD)
+  cassandra.endpoint.snitch: ""
+  # Optional but required as a group: file containing the worker node name
+  cassandra.snitch.hostname.file: ""
+  # Optional but required as a group: command to extract the zone from the hostname
+  cassandra.snitch.extract_cmd: ""
+  # Optional but required as a group: datacenter name used for snitch and network topology
+  cassandra.datacenter.name: ""
+  # End Snitch Group ###########################################
   ####################################
   ######### REDIS #########
   ####################################
@@ -61,7 +99,7 @@ data:
   # this will be the service name. If using an external database, put the proper address
   elasticsearch.url: http://sysdigcloud-elasticsearch
   # Optional: Elasticsearch JVM options. For heavy load environments this will override the defaults
-  elasticsearch.jvm.options: ""
+  elasticsearch.jvm.options: "-Xms12g -Xmx12g"
   ####################################
   ######### SMTP #########
   ####################################
@@ -104,13 +142,13 @@ data:
   # Force all non-default users to login using the configured IdP
   sysdigcloud.restrict.password.login: "false"
   # Optional: forward application logs to stdout
-  sysdigcloud.logging.stdout: "false"
+  sysdigcloud.logging.stdout: "true"
   # Optional: Sysdig Cloud application JVM options. For heavy load environments this will override the defaults
   # If using Redis statefulsets (HA) the following needs to be added to the api, worker, and collector jvm options
   # "-Ddraios.redis.useSentinel=true -Ddraios.redis.master=primary -Ddraios.redis.sentinels.0=redis-sentinel:26379"
-  sysdigcloud.jvm.api.options: ""
-  sysdigcloud.jvm.worker.options: ""
-  sysdigcloud.jvm.collector.options: ""
+  sysdigcloud.jvm.api.options: "-Xms4g -Xmx10g"
+  sysdigcloud.jvm.worker.options: "-Xms4g -Xmx10g"
+  sysdigcloud.jvm.collector.options: "-Xms4g -Xmx10g -Ddraios.collector.maxAgents=500"
   # JVM GC options for the collectors
   sysdigcloud.jvmgc.collector.options: "-XX:+PrintFlagsFinal -Xverify:none -XX:+UseG1GC -XX:MaxGCPauseMillis=300 -XX:+UseTLAB -XX:+PrintGCDetails -XX:+PrintGCDateStamps"
   # Required: Sysdig Cloud license
@@ -142,14 +180,25 @@ data:
   anchore.db.dbname: anchore
   anchore.db.user: postgres
   # db password in anchore-secrets
+
+  # Anchore proxy support
+  # Proxy support in the Anchore core/worker components may be needed for reaching
+  # the vulnerability feed or registries.
+  # The worker will contact registries but will never try to reach vulnerability feeds,
+  # while the core deployment will do both.
   #
-  # anchore proxy support: If a proxy is required for the anchore-core to reach
-  # the vulnerability feed, uncomment & specify anchore.https.proxy here, and
-  # uncomment the environment setting in the anchore-core deployment.
+  # If a proxy is required, uncomment & specify the proxy URL here, and uncomment
+  # the environment setting in the related deployment file.
+  # You also need to use anchore.no.proxy to ensure that internal communications
+  # between the Anchore services will not go through the proxy.
+  #
   # NOTE: if the password contains non-url safe characters, it should
-  # be urlencoded in the value below. For example:
-  # F@oBar! would be F%40oBar%21
-  # anchore.https.proxy: https://user:password@proxy.corp.example.com:8128
+  # be urlencoded in the value below. For example: F@oBar! would be F%40oBar%21
+  #
+  # anchore.core.https.proxy: https://user:password@proxy.corp.example.com:8128
+  # anchore.worker.https.proxy: https://user:password@proxy.corp.example2.com:8128
+  #
+  # anchore.no.proxy: 127.0.0.1, localhost, sysdigcloud-anchore-core
 
   ####################################
   # ======= BEGIN DEPRECATED LDAP OPTIONS =======

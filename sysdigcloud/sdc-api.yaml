@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: sysdigcloud-api
 spec:
-  replicas: 1
+  replicas: 3
   template:
     metadata:
       labels:
@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: quay.io/sysdig/sysdigcloud-backend:1630
+          image: quay.io/sysdig/sysdigcloud-backend:1511
           volumeMounts:
             - name: logs
               mountPath: /var/log/sysdigcloud
@@ -47,17 +47,13 @@ spec:
                 configMapKeyRef:
                   name: sysdigcloud-config
                   key: sysdigcloud.jvm.api.options
-          # If you're running multiple replicas, it is advisable to configure the limits below. Limiting resources
-          # can help stabilize rolling updates later down the road.
-          # resources:
-          #   # minimum resources for container
-          #   requests:
-          #     memory: "13G"
-          #     cpu: "4"
-          #   # maximum resources for container
-          #   limits:
-          #     memory: "64G"
-          #     cpu: "32"
+          resources:
+            requests:
+              memory: "10G"
+              cpu: "2"
+            limits:
+              memory: "14G"
+              cpu: "8"
           readinessProbe:
             httpGet:
               path: /api/ping
@@ -82,3 +78,5 @@ spec:
         #- name: secrets
         #  secret:
         #    secretName: <secret_name>
+      nodeSelector:
+        kops.k8s.io/instancegroup: nodes

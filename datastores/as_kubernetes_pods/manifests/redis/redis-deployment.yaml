@@ -26,11 +26,14 @@ spec:
     spec:
       containers:
         - name: redis
-          image: quay.io/sysdig/redis:3.2.12.5-alpine
+          image: quay.io/sysdig/redis:4.0.12.1-alpine
           resources:
             requests:
-              cpu: 100m
-              memory: 1Gi
+              memory: "4G"
+              cpu: "1"
+            limits:
+              memory: "4G"
+              cpu: "1"
           env:
             - name: REDIS_PASSWORD
               valueFrom:
@@ -39,3 +42,5 @@ spec:
                   key: redis.password
       imagePullSecrets:
         - name: sysdigcloud-pull-secret
+      nodeSelector:
+        kops.k8s.io/instancegroup: storage-nodes
