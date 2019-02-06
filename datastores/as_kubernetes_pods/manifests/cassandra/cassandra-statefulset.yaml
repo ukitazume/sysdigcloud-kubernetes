@@ -5,7 +5,7 @@ metadata:
   name: sysdigcloud-cassandra
 spec:
   serviceName: cassandra-service
-  replicas: 3
+  replicas: 5
   selector:
     matchLabels:
       app: sysdigcloud
@@ -16,20 +16,20 @@ spec:
         app: sysdigcloud
         role: cassandra
     spec:
-      #affinity:
-        #podAntiAffinity:
-          #requiredDuringSchedulingIgnoredDuringExecution:
-          #- labelSelector:
-              #matchExpressions:
-              #- key: app
-                #operator: In
-                #values:
-                #- sysdigcloud
-              #- key: role
-                #operator: In
-                #values:
-                #- cassandra
-            #topologyKey: "kubernetes.io/hostname"
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - sysdigcloud
+              - key: role
+                operator: In
+                values:
+                - cassandra
+            topologyKey: "kubernetes.io/hostname"
       containers:
         - image: quay.io/sysdig/cassandra:2.1.20.5
           name: cassandra
@@ -65,6 +65,13 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
+          resources:
+            requests:
+              memory: "16G"
+              cpu: "8"
+            limits:
+              memory: "16G"
+              cpu: "8"
           readinessProbe:
             exec:
               command:
@@ -77,17 +84,12 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/cassandra
               name: data
-            # Uncomment this when using multiple mount points for data
-            # - mountPath: /var/lib/cassandra/data2
-            #   name: data2
+      volumes:
+        - hostPath:
+            path: /mnt/nvme/cassandra-data-volume
+            type: ""
+          name: data
       imagePullSecrets:
         - name: sysdigcloud-pull-secret
-  volumeClaimTemplates:
-  - metadata:
-      name: data
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      resources:
-        requests:
-          storage: 50Gi
-      storageClassName: <INSERT_YOUR_STORAGE_CLASS_NAME>
+      nodeSelector:
+        kops.k8s.io/instancegroup: storage-nodes
