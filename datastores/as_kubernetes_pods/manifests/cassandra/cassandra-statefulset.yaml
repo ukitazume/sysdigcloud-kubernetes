@@ -31,7 +31,7 @@ spec:
                 #- cassandra
             #topologyKey: "kubernetes.io/hostname"
       containers:
-        - image: quay.io/sysdig/cassandra:2.1.20.5
+        - image: quay.io/sysdig/cassandra:2.1.20.10
           name: cassandra
           env:
             - name: CASSANDRA_SERVICE
@@ -46,6 +46,11 @@ spec:
             # If using multiple directories for data, set the path list
             # - name: CASSANDRA_DATA_DIRS
             #   value: "/var/lib/cassandra/data /var/lib/cassandra/data2"
+            - name: CASSANDRA_COMPACTION_THROUGHPUT
+              valueFrom:
+                configMapKeyRef:
+                  key: cassandra.compaction.throughput
+                  name: sysdigcloud-config
             - name: JVM_EXTRA_OPTS
               valueFrom:
                 configMapKeyRef:

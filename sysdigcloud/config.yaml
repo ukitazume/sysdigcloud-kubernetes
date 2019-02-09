@@ -42,6 +42,9 @@ data:
   cassandra.jvm.options: ""
   # Optional: Store Sysdig captures using Cassandra instead of S3. This increases cassandra storage if set to true
   sysdigcloud.captures.cassandra.storage: "true"
+  # Optional: Increase cassandra compaction throughput to 350 MB/s
+  # if not specified, cassandra compaction throughput is set to 100 MB/s
+  cassandra.compaction.throughput: ""
   ####################################
   ######### REDIS #########
   ####################################
