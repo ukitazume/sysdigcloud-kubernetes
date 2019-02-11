@@ -94,13 +94,18 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.podIP
-        # See comments in sysdigcloud/config.yaml on how to specify anchore.https.proxy:
+        # See comments in sysdigcloud/config.yaml on how to specify https_proxy and no_proxy:
         # https://github.com/draios/sysdigcloud-kubernetes/blob/master/sysdigcloud/config.yaml
         # - name: https_proxy
         #   valueFrom:
         #     configMapKeyRef:
         #       name: sysdigcloud-config
-        #       key: anchore.https.proxy
+        #       key: anchore.core.https.proxy
+        # - name: no_proxy
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: sysdigcloud-config
+        #       key: anchore.no_proxy
         volumeMounts:
         - name: config-volume
           mountPath: /config
