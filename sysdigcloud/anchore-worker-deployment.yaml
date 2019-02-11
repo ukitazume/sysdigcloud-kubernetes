@@ -26,9 +26,19 @@ spec:
             name: sysdigcloud-anchore-worker
         - name: analysis-scratch
           emptyDir: {}
+        # If you need to import self-signed SSL certs (e.g. because there's a proxy
+        # to the standard vulnerabilities feed service, or images are hosted on
+        # internal registries), create a secret named 'sysdigcloud-anchore-custom-certs'
+        # as in
+        #    kubectl ... create secret generic sysdigcloud-anchore-custom-certs
+        #    --from-file=/path/to/custom-cert1 --from_file=/path/to/custom-cert2 ...
+        # then uncomment this:
+        # - name: custom-certs-volume
+        #   secret:
+        #     secretName: sysdigcloud-anchore-custom-certs
       containers:
       - name: anchore-worker
-        image: quay.io/sysdig/anchore:v0.2.4
+        image: quay.io/sysdig/anchore:v0.2.4.1
         imagePullPolicy:
         resources:
           {}
@@ -84,6 +94,10 @@ spec:
           mountPath: /config
         - name: analysis-scratch
           mountPath: /analysis_scratch
+        # Only needed if the engine needs import self-signed SSL certs
+        # (see comment above)
+        # - name: custom-certs-volume
+        #   mountPath: /custom-certs
         livenessProbe:
           exec:
             command:
