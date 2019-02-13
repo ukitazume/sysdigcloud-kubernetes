@@ -1,40 +1,49 @@
-- apiVersion: extensions/v1beta1
-    kind: Ingress
-    metadata:
-      annotations:
-      labels:
-        app.kubernetes.io/managed-by: ingress-config
-        app.kubernetes.io/name: ingress-config
-        app.kubernetes.io/part-of: sysdigcloud
-        role: ingress-config
-        tier: infra
-      name: sysdigcloud-scanning-ingress
-    spec:
-      rules:
-        - host: api.sysdigcloud.com
-          http:
-            paths:
-              - backend:
-                  serviceName: sysdigcloud-scanning-api
-                  servicePort: 80
-                path: /api/scanning
-        - host: app.sysdigcloud.com
-          http:
-            paths:
-              - backend:
-                  serviceName: sysdigcloud-scanning-api
-                  servicePort: 80
-                path: /api/scanning
-        - host: app-secure.sysdigcloud.com
-          http:
-            paths:
-              - backend:
-                  serviceName: sysdigcloud-scanning-api
-                  servicePort: 80
-                path: /api/scanning
-      tls:
-        - hosts:
-            - api.sysdigcloud.com
-            - app.sysdigcloud.com
-            - app-secure.sysdigcloud.com
-          secretName: sysdigcloud-ssl-secret
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/affinity: cookie
+    ingress.kubernetes.io/session-cookie-name: INGRESSCOOKIEAPI
+  labels:
+    app.kubernetes.io/managed-by: ingress-config
+    app.kubernetes.io/name: ingress-config
+    app.kubernetes.io/part-of: sysdigcloud
+    role: ingress-config
+    tier: infra
+  name: sysdigcloud-scanning-ingress
+spec:
+  rules:
+    -
+      host: api.sysdigcloud.com
+      http:
+        paths:
+          -
+            backend:
+              serviceName: scanning-service
+              servicePort: 80
+            path: /api/scanning
+    -
+      host: app.sysdigcloud.com
+      http:
+        paths:
+          -
+            backend:
+              serviceName: scanning-service
+              servicePort: 80
+            path: /api/scanning
+    -
+      host: app-secure.sysdigcloud.com
+      http:
+        paths:
+          -
+            backend:
+              serviceName: scanning-service
+              servicePort: 80
+            path: /api/scanning
+  tls:
+    -
+      hosts:
+        - api.sysdigcloud.com
+        - app.sysdigcloud.com
+        - app-secure.sysdigcloud.com
+      secretName: sysdigcloud-ssl-secret

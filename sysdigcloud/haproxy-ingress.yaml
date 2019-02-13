@@ -148,6 +148,8 @@ spec:
       labels:
         run: ingress-default-backend
     spec:
+      imagePullSecrets:
+        - name: sysdigcloud-pull-secret
       containers:
         - name: ingress-default-backend
           image: quay.io/sysdig/ingress-default-backend:0.0.1
