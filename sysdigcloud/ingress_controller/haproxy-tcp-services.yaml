@@ -5,4 +5,3 @@ metadata:
   name: haproxy-tcp-services
 data:
   "6443": sysdigcloud/sysdigcloud-collector:6443:PROXY-V2
-
