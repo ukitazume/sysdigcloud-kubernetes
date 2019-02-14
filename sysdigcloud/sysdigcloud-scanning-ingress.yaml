@@ -14,7 +14,7 @@ metadata:
 spec:
   rules:
     -
-      host: api.sysdigcloud.com
+      host: <EXTERNAL-DNS-NAME>
       http:
         paths:
           -
@@ -23,7 +23,7 @@ spec:
               servicePort: 80
             path: /api/scanning
     -
-      host: app.sysdigcloud.com
+      host: <EXTERNAL-DNS-NAME>
       http:
         paths:
           -
@@ -32,7 +32,7 @@ spec:
               servicePort: 80
             path: /api/scanning
     -
-      host: app-secure.sysdigcloud.com
+      host: <EXTERNAL-DNS-NAME>
       http:
         paths:
           -
@@ -43,7 +43,5 @@ spec:
   tls:
     -
       hosts:
-        - api.sysdigcloud.com
-        - app.sysdigcloud.com
-        - app-secure.sysdigcloud.com
+        - <EXTERNAL-DNS-NAME>
       secretName: sysdigcloud-ssl-secret

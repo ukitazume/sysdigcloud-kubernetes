@@ -8,7 +8,7 @@ metadata:
     ingress.kubernetes.io/ssl-passthrough: "true"
 spec:
   rules:
-    - host: collector.sysdigcloud.com
+    - host: <EXTERNAL-DNS-NAME>
       http:
         paths:
           - backend:

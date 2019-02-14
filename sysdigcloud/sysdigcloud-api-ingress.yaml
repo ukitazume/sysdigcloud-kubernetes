@@ -28,7 +28,7 @@ spec:
               servicePort: 9000
             path: /ui
     -
-      host: app.sysdigcloud.com
+      host: <EXTERNAL-DNS-NAME>
       http:
         paths:
           -
@@ -42,7 +42,7 @@ spec:
               servicePort: 9000
             path: /ui
     -
-      host: app-secure.sysdigcloud.com
+      host: <EXTERNAL-DNS-NAME>
       http:
         paths:
           -
@@ -58,7 +58,5 @@ spec:
   tls:
     -
       hosts:
-        - api.sysdigcloud.com
-        - app.sysdigcloud.com
-        - app-secure.sysdigcloud.com
+        - <EXTERNAL-DNS-NAME>
       secretName: sysdigcloud-ssl-secret
