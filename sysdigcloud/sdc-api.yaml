@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: sysdigcloud-api
 spec:
-  replicas: 3
+  replicas: 2
   template:
     metadata:
       labels:
