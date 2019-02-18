@@ -148,7 +148,7 @@ data:
   # "-Ddraios.redis.useSentinel=true -Ddraios.redis.master=primary -Ddraios.redis.sentinels.0=redis-sentinel:26379"
   sysdigcloud.jvm.api.options: "-Xms4g -Xmx10g"
   sysdigcloud.jvm.worker.options: "-Xms4g -Xmx10g"
-  sysdigcloud.jvm.collector.options: "-Xms4g -Xmx10g -Ddraios.collector.maxAgents=500"
+  sysdigcloud.jvm.collector.options: "-Xms4g -Xmx10g -Ddraios.collector.maxAgents=400 -Ddraios.collector.maxSecureAgents=400"
   # JVM GC options for the collectors
   sysdigcloud.jvmgc.collector.options: "-XX:+PrintFlagsFinal -Xverify:none -XX:+UseG1GC -XX:MaxGCPauseMillis=300 -XX:+UseTLAB -XX:+PrintGCDetails -XX:+PrintGCDateStamps"
   # Required: Sysdig Cloud license
