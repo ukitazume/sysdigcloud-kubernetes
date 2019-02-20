@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: collector
-          image: quay.io/sysdig/sysdigcloud-backend:1586
+          image: quay.io/sysdig/sysdigcloud-backend:1630
           volumeMounts:
             - name: logs
               mountPath: /var/log/sysdigcloud
@@ -68,6 +68,11 @@ spec:
               port: 6000
             initialDelaySeconds: 30
             timeoutSeconds: 2
+          lifecycle:
+            preStop:
+              exec:
+                command: ["curl","-v","http://127.0.0.1:9000/api/admin/drain"]
+      terminationGracePeriodSeconds: 60
       imagePullSecrets:
         - name: sysdigcloud-pull-secret
       volumes:
