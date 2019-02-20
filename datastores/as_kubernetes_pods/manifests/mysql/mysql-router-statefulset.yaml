@@ -26,9 +26,23 @@ spec:
         app: sysdigcloud
         role: mysql-router
     spec:
+      #affinity:
+        #podAntiAffinity:
+          #requiredDuringSchedulingIgnoredDuringExecution:
+          #- labelSelector:
+              #matchExpressions:
+              #- key: app
+                #operator: In
+                #values:
+                #- sysdigcloud
+              #- key: role
+                #operator: In
+                #values:
+                #- mysql-router
+            #topologyKey: "kubernetes.io/hostname"
       containers:
         - name: mysql-router
-          image: quay.io/sysdig/mysql-router:8.0.11
+          image: quay.io/sysdig/mysql-router:8.0.13.1
           env:
             - name: MYSQL_USER
               value: root

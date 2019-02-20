@@ -42,6 +42,9 @@ data:
   cassandra.jvm.options: ""
   # Optional: Store Sysdig captures using Cassandra instead of S3. This increases cassandra storage if set to true
   sysdigcloud.captures.cassandra.storage: "true"
+  # Optional: Increase cassandra compaction throughput to 350 MB/s
+  # if not specified, cassandra compaction throughput is set to 100 MB/s
+  cassandra.compaction.throughput: ""
   # Start Custom Snitch Group ########################################
   # Optional but if used, all values are required
   # If "cassandra.endpoint.snitch" contains "customHostBasedGossipingPropertyFileSnitch", then
@@ -146,6 +149,8 @@ data:
   sysdigcloud.jvm.api.options: ""
   sysdigcloud.jvm.worker.options: ""
   sysdigcloud.jvm.collector.options: ""
+  # JVM GC options for the collectors
+  sysdigcloud.jvmgc.collector.options: "-XX:+PrintFlagsFinal -Xverify:none -XX:+UseG1GC -XX:MaxGCPauseMillis=300 -XX:+UseTLAB -XX:+PrintGCDetails -XX:+PrintGCDateStamps"
   # Required: Sysdig Cloud license
   sysdigcloud.license: ""
   # Optional: OAuth allowed domains (comma separated list of domains)
@@ -154,6 +159,47 @@ data:
   sysdigcloud.google.oauth.client.id: ""
   # Optional: Sysdig Cloud Google OAuth Client Secret
   sysdigcloud.google.oauth.client.secret: ""
+  ####################################
+  # SCANNING and ANCHORE #
+  ####################################
+  # This token is used to authenticate service-to-service calls from the scanning service
+  # to the backend-api service. It should be changed to a small unique string, like a UUID.
+  scanning.service.token: change_me
+  # Scanning uses a different database than the other backend components, but
+  # can use the same mysql RDBMS endpoint.
+  scanning.mysql.endpoint: sysdigcloud-mysql
+  scanning.mysql.user: scanninguser
+  scanning.mysql.dbname: sysdig_scanning
+  # password in sysdigcloud-scanning secret
+  scanning.backend.url: "http://sysdigcloud-api:8080"
+  scanning.backend.tlsCheck: "false"
+  scanning.redis.enabled: "true"
+  anchore.url: "http://sysdigcloud-anchore-core:8228"
+  anchore.admin.user: admin
+  anchore.db.endpoint: sysdigcloud-postgresql
+  anchore.db.dbname: anchore
+  anchore.db.user: postgres
+  # db password in anchore-secrets
+
+  # Anchore proxy support
+  # Proxy support in the Anchore core/worker components may be needed for reaching
+  # the vulnerability feed or registries.
+  # The worker will contact registries but will never try to reach vulnerability feeds,
+  # while the core deployment will do both.
+  #
+  # If a proxy is required, uncomment & specify the proxy URL here, and uncomment
+  # the environment setting in the related deployment file.
+  # You also need to use anchore.no.proxy to ensure that internal communications
+  # between the Anchore services will not go through the proxy.
+  #
+  # NOTE: if the password contains non-url safe characters, it should
+  # be urlencoded in the value below. For example: F@oBar! would be F%40oBar%21
+  #
+  # anchore.core.https.proxy: https://user:password@proxy.corp.example.com:8128
+  # anchore.worker.https.proxy: https://user:password@proxy.corp.example2.com:8128
+  #
+  # anchore.no.proxy: 127.0.0.1, localhost, sysdigcloud-anchore-core
+
   ####################################
   # ======= BEGIN DEPRECATED LDAP OPTIONS =======
   ####################################

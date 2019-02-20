@@ -4,7 +4,7 @@ kind: StatefulSet
 metadata:
   name: sysdigcloud-cassandra
 spec:
-  serviceName: cassandra-service
+  serviceName: sysdigcloud-cassandra
   replicas: 3
   selector:
     matchLabels:
@@ -16,8 +16,22 @@ spec:
         app: sysdigcloud
         role: cassandra
     spec:
+      #affinity:
+        #podAntiAffinity:
+          #requiredDuringSchedulingIgnoredDuringExecution:
+          #- labelSelector:
+              #matchExpressions:
+              #- key: app
+                #operator: In
+                #values:
+                #- sysdigcloud
+              #- key: role
+                #operator: In
+                #values:
+                #- cassandra
+            #topologyKey: "kubernetes.io/hostname"
       containers:
-        - image: quay.io/sysdig/cassandra:2.1.20.3
+        - image: quay.io/sysdig/cassandra:2.1.20.13
           name: cassandra
           env:
             - name: CASSANDRA_SERVICE
@@ -32,6 +46,11 @@ spec:
             # If using multiple directories for data, set the path list
             # - name: CASSANDRA_DATA_DIRS
             #   value: "/var/lib/cassandra/data /var/lib/cassandra/data2"
+            - name: CASSANDRA_COMPACTION_THROUGHPUT
+              valueFrom:
+                configMapKeyRef:
+                  key: cassandra.compaction.throughput
+                  name: sysdigcloud-config
             - name: JVM_EXTRA_OPTS
               valueFrom:
                 configMapKeyRef:

@@ -8,7 +8,10 @@ metadata:
     component: elasticsearch
     role: elasticsearch
 spec:
-  serviceName: elasticsearch-data
+  serviceName: sysdigcloud-elasticsearch
+  podManagementPolicy: "Parallel"
+  # The number of replicas needs to be passed to the pods by ensuring that the value of ELASTICSEARCH_GOSSIP_NODES_NUM
+  # matches the number set here.
   replicas: 3
   template:
     metadata:
@@ -17,9 +20,23 @@ spec:
         component: elasticsearch
         role: elasticsearch
     spec:
+      #affinity:
+        #podAntiAffinity:
+          #requiredDuringSchedulingIgnoredDuringExecution:
+          #- labelSelector:
+              #matchExpressions:
+              #- key: app
+                #operator: In
+                #values:
+                #- sysdigcloud
+              #- key: role
+                #operator: In
+                #values:
+                #- elasticsearch
+            #topologyKey: "kubernetes.io/hostname"
       containers:
       - name: elasticsearch
-        image: quay.io/sysdig/elasticsearch:5.6.4.1
+        image: quay.io/sysdig/elasticsearch:5.6.14.4-alpine 
         securityContext:
           privileged: true
         resources:
@@ -30,8 +47,11 @@ spec:
         env:
         - name: ELASTICSEARCH_SERVICE
           value: sysdigcloud-elasticsearch
+          # This value needs to match the number of replicas specified for the statefulset. It will be used to calculate
+          # The value of the -Ediscovery.zen.minimum_master_nodes parameter. To override this calculation and set this
+          # parameter manually use the DISCOVERY_ZEN_MINIMUM_MASTER_NODES variable.
         - name: ELASTICSEARCH_GOSSIP_NODES_NUM
-          value: "2"
+          value: "3"
         - name: ELASTICSEARCH_CLUSTER_NAME
           value: sysdigcloud
         - name: ES_JAVA_OPTS
