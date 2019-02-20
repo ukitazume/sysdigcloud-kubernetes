@@ -19,11 +19,11 @@ spec:
         paths:
           - backend:
               serviceName: sysdigcloud-api
-              servicePort: 9000
+              servicePort: 443
             path: /api
           - backend:
               serviceName: sysdigcloud-api
-              servicePort: 9000
+              servicePort: 443
             path: /ui
   tls:
     - hosts:
