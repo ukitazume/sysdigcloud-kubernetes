@@ -20,6 +20,10 @@ spec:
           - backend:
               serviceName: sysdigcloud-api
               servicePort: 443
+            path: /
+          - backend:
+              serviceName: sysdigcloud-api
+              servicePort: 443
             path: /api
           - backend:
               serviceName: sysdigcloud-api
