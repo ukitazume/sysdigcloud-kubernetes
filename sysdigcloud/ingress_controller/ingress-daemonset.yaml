@@ -26,7 +26,7 @@ spec:
           image: quay.io/sysdig/haproxy-ingress:0.0.1
           args:
               - --reload-strategy=multibinder
-              - --default-backend-service=$(POD_NAMESPACE)/default-http-backend
+              - --default-backend-service=$(POD_NAMESPACE)/ingress-default-backend
               - --allow-cross-namespace
               - --configmap=$(POD_NAMESPACE)/haproxy-ingress
               - --tcp-services-configmap=$(POD_NAMESPACE)/haproxy-tcp-services
