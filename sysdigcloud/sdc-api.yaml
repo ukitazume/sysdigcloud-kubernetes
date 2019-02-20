@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: sysdigcloud-api
 spec:
-  replicas: 2
+  replicas: 3
   template:
     metadata:
       labels:
@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: quay.io/sysdig/sysdigcloud-backend:1511
+          image: quay.io/sysdig/sysdigcloud-backend:1630
           volumeMounts:
             - name: logs
               mountPath: /var/log/sysdigcloud
