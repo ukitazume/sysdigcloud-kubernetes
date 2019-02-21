@@ -4,4 +4,4 @@ kind: ConfigMap
 metadata:
   name: haproxy-tcp-services
 data:
-  "6443": sysdigcloud/sysdigcloud-collector:6443:PROXY-V2
+  "6443": sysdigcloud/sysdigcloud-collecto:6443:::sysdigcloud/sysdigcloud-ssl-secret
