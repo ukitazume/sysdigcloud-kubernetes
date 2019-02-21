@@ -45,6 +45,41 @@ data:
   # Optional: Increase cassandra compaction throughput to 350 MB/s
   # if not specified, cassandra compaction throughput is set to 100 MB/s
   cassandra.compaction.throughput: ""
+  # Start Custom Snitch Group ########################################
+  # Optional but if used, all values are required
+  # If "cassandra.endpoint.snitch" contains "customHostBasedGossipingPropertyFileSnitch", then
+  # the 3 following entries:
+  # - cassandra.endpoint.snitch
+  # - cassandra.snitch.hostname.file
+  # - cassandra.snitch.extract_cmd
+  # - cassandra.datacenter.name
+  # form a group.
+  # A value of "customHostBasedGossipingPropertyFileSnitch" in "cassandra.endpoint.snitch"
+  # translates to the GossipingPropertyFileSnitch, with the rack value being extracted from
+  # the host name.
+  # The hostname is found in the file whose name is contained in
+  # cassandra.snitch.hostname.file - the content of the file is piped through the command contained
+  # in cassandra.snitch.extract_cmd to extract the zone.
+  # The file could be the host /etc/hostname mounted in the container under /host/etc/hostname
+  # "cassandra.datacenter.name" is required to setup the network topology - on the assumption of a single DC
+  # This configuration was devised for IBM IKS to get the real hostname of the worker node
+  # Example:
+  # cassandra.endpoint.snitch: "customHostBasedGossipingPropertyFileSnitch"
+  # (the entrypoint script of Sysdig Cassandra image will translate this to "GossipingPropertyFileSnitch")
+  # cassandra.snitch.hostname.file: "/host/etc/hostname"
+  # (the host /etc/hostname should be mounted under /host/etc/hostname inside the container)
+  # cassandra.snitch.extract_cmd: "cut -d- -f2"
+  # (assuming that hostname is: "hostname-zone01-kubernetes-w1.domain.com", rack will contain: "zone01")
+  # ATTENTION: these new values should be used in conjuction with extra entries in the Cassandra statefulset
+  # and with a specific version of Sysdig Cassandra image (TBD)
+  cassandra.endpoint.snitch: ""
+  # Optional but required as a group: file containing the worker node name
+  cassandra.snitch.hostname.file: ""
+  # Optional but required as a group: command to extract the zone from the hostname
+  cassandra.snitch.extract_cmd: ""
+  # Optional but required as a group: datacenter name used for snitch and network topology
+  cassandra.datacenter.name: ""
+  # End Snitch Group ###########################################
   ####################################
   ######### REDIS #########
   ####################################
