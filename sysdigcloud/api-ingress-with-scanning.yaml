@@ -21,6 +21,10 @@ spec:
               serviceName: sysdigcloud-api
               servicePort: 8080 
             path: /
+          - backend:
+              serviceName: sysdigcloud-scanning-api
+              servicePort: 80 
+            path: /api/scanning
   tls:
     - hosts:
         - <EXTERNAL-DNS-NAME>

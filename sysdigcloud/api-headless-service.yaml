@@ -12,7 +12,9 @@ spec:
     - port: 443
       name: secure-api
       targetPort: 443
-
+    - port: 8080
+      name: api
+      targetPort: 8080
   selector:
     app: sysdigcloud
     role: api
