@@ -42,6 +42,9 @@ data:
   cassandra.jvm.options: ""
   # Optional: Store Sysdig captures using Cassandra instead of S3. This increases cassandra storage if set to true
   sysdigcloud.captures.cassandra.storage: "true"
+  # Optional: Increase cassandra compaction throughput to 350 MB/s
+  # if not specified, cassandra compaction throughput is set to 100 MB/s
+  cassandra.compaction.throughput: ""
   ####################################
   ######### REDIS #########
   ####################################
@@ -142,14 +145,25 @@ data:
   anchore.db.dbname: anchore
   anchore.db.user: postgres
   # db password in anchore-secrets
+
+  # Anchore proxy support
+  # Proxy support in the Anchore core/worker components may be needed for reaching
+  # the vulnerability feed or registries.
+  # The worker will contact registries but will never try to reach vulnerability feeds,
+  # while the core deployment will do both.
   #
-  # anchore proxy support: If a proxy is required for the anchore-core to reach
-  # the vulnerability feed, uncomment & specify anchore.https.proxy here, and
-  # uncomment the environment setting in the anchore-core deployment.
+  # If a proxy is required, uncomment & specify the proxy URL here, and uncomment
+  # the environment setting in the related deployment file.
+  # You also need to use anchore.no.proxy to ensure that internal communications
+  # between the Anchore services will not go through the proxy.
+  #
   # NOTE: if the password contains non-url safe characters, it should
-  # be urlencoded in the value below. For example:
-  # F@oBar! would be F%40oBar%21
-  # anchore.https.proxy: https://user:password@proxy.corp.example.com:8128
+  # be urlencoded in the value below. For example: F@oBar! would be F%40oBar%21
+  #
+  # anchore.core.https.proxy: https://user:password@proxy.corp.example.com:8128
+  # anchore.worker.https.proxy: https://user:password@proxy.corp.example2.com:8128
+  #
+  # anchore.no.proxy: 127.0.0.1, localhost, sysdigcloud-anchore-core
 
   ####################################
   # ======= BEGIN DEPRECATED LDAP OPTIONS =======
