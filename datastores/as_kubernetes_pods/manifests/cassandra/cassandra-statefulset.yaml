@@ -31,7 +31,7 @@ spec:
                 #- cassandra
             #topologyKey: "kubernetes.io/hostname"
       containers:
-        - image: quay.io/sysdig/cassandra:2.1.20.14
+        - image: quay.io/sysdig/cassandra:2.1.20.17
           name: cassandra
           env:
             - name: CASSANDRA_SERVICE
