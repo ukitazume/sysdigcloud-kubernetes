@@ -31,7 +31,7 @@ spec:
                 #- cassandra
             #topologyKey: "kubernetes.io/hostname"
       containers:
-        - image: quay.io/sysdig/cassandra:2.1.20.13
+        - image: quay.io/sysdig/cassandra:2.1.20.14
           name: cassandra
           env:
             - name: CASSANDRA_SERVICE
@@ -72,11 +72,11 @@ spec:
                   fieldPath: status.podIP
             ### Start of the custom Cassandra snitch group
             # The following entries are required for the custom Cassandra snitch (see configMap)
-            # - name: CASSANDRA_ENDPOINT_SNITCH
-            #   valueFrom:
-            #     configMapKeyRef:
-            #       name: sysdigcloud-config
-            #       key: cassandra.endpoint.snitch
+            - name: CASSANDRA_ENDPOINT_SNITCH
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: cassandra.endpoint.snitch
             # - name: CASSANDRA_SNITCH_EXTRACT_CMD
             #   valueFrom:
             #     configMapKeyRef:
@@ -87,11 +87,11 @@ spec:
             #     configMapKeyRef:
             #       name: sysdigcloud-config
             #       key: cassandra.snitch.hostname.file
-            # - name: CASSANDRA_DC
-            #   valueFrom:
-            #     configMapKeyRef:
-            #       name: sysdigcloud-config
-            #       key: cassandra.datacenter.name
+            - name: CASSANDRA_DC
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: cassandra.datacenter.name
             ##########################################
           readinessProbe:
             exec:
