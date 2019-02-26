@@ -2,7 +2,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: sysdigcloud-elasticsearch-1 # Elasticsearch node number
+  name: sysdigcloud-elasticsearch
 spec:
   replicas: 1
   template:
