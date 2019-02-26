@@ -28,7 +28,7 @@ spec:
             - name: ELASTICSEARCH_SERVICE
               value: sysdigcloud-elasticsearch
             - name: ELASTICSEARCH_GOSSIP_NODES_NUM
-              value: "2"
+              value: "1"
             - name: ELASTICSEARCH_CLUSTER_NAME
               value: sysdigcloud
             - name: ES_JAVA_OPTS
