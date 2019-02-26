@@ -1,21 +1,33 @@
 #!/bin/bash
 
-echo "Sysdig MySQL to MariaDB Connector Migration Tool"
+# Bash Strict Mode
+set -euo pipefail
+IFS=$'\n\t'
+
+################################################################################
+# Static definitions 
+################################################################################
+
+# Pod name
+POD_NAME=sysdig-mysql8-mariadb-conj-auth-migration
+
+# Image name
+IMAGE_NAME=quay.io/sysdig/onprem_migration:mysql8-mariadb-conj-auth-migration-1.0.0
 
 # Default YAML definition
-k8s_yaml_text_default="
+K8S_YAML_TEXT_DEFAULT="
 apiVersion: v1
 kind: Pod
 metadata:
   labels:
     app: sysdigcloud
     role: mysql8-mariadb-conj-auth-migration
-  name: sysdig-mysql8-mariadb-conj-auth-migration
+  name: ${POD_NAME}
 spec:
   restartPolicy: Never
   containers:
     - name: mysql8-mariadb-conj-auth-migration
-      image: quay.io/sysdig/onprem_migration:mysql8-mariadb-conj-auth-migration-1.0.0
+      image: ${IMAGE_NAME}
       env:
         - name: MYSQL_HOST
           valueFrom:
@@ -43,55 +55,20 @@ spec:
               key: mysql.password
 "
 
-# Try to perform the migration with the default YAML
-echo "$k8s_yaml_text_default" > mysql8-mariadb-conj-auth-migration.yaml
-kubectl -n sysdigcloud create -f mysql8-mariadb-conj-auth-migration.yaml >/dev/null
-while true; do
-  status=$(kubectl -n sysdigcloud describe pods sysdig-mysql8-mariadb-conj-auth-migration | grep "Status:[ \t]*")
-  is_running=$(echo $status | grep "Pending\|Running")
-  if [ -z "$is_running" ]; then break; fi;
-done
-
-is_succeeded=$(echo $status | grep Succeeded)
-
-# Default YAML success, exit the script
-if [ -n "$is_succeeded" ]; then
-  # Print the logs
-  kubectl -n sysdigcloud logs sysdig-mysql8-mariadb-conj-auth-migration
-  # Cleanup
-  kubectl -n sysdigcloud delete -f mysql8-mariadb-conj-auth-migration.yaml >/dev/null
-  rm mysql8-mariadb-conj-auth-migration.yaml
-  docker rmi -f quay.io/sysdig/onprem_migration:mysql8-mariadb-conj-auth-migration-1.0.0 >/dev/null
-  exit
-fi
-
-# If default YAML failed, ask for custom parameters
-kubectl -n sysdigcloud delete -f mysql8-mariadb-conj-auth-migration.yaml >/dev/null
-
-echo "Please enter the required values (press Enter for default)"
-read -p "Sysdig Kubernetes namespace (default sysdigcloud): " KUBERNETES_NAMESPACE
-if [ -z "$KUBERNETES_NAMESPACE" ]; then KUBERNETES_NAMESPACE=sysdigcloud; fi
-read -p "MySQL port (default 3306): " MYSQL_PORT
-if [ -z "$MYSQL_PORT" ]; then MYSQL_PORT=3306; fi
-read -p "MySQL root username (default root): " MYSQL_ROOT_USER
-if [ -z "$MYSQL_ROOT_USER" ]; then MYSQL_ROOT_USER=root; fi
-read -sp "MySQL root password:" MYSQL_ROOT_PASSWORD
-echo
-
-# Custom YAML definition
-k8s_yaml_text_custom="
+# Custom YAML definition - single quotes defer variable expansion
+K8S_YAML_TEXT_CUSTOM_TEMPLATE='
 apiVersion: v1
 kind: Pod
 metadata:
   labels:
     app: sysdigcloud
     role: mysql8-mariadb-conj-auth-migration
-  name: sysdig-mysql8-mariadb-conj-auth-migration
+  name: ${POD_NAME}
 spec:
   restartPolicy: Never
   containers:
     - name: mysql8-mariadb-conj-auth-migration
-      image: quay.io/sysdig/onprem_migration:mysql8-mariadb-conj-auth-migration-1.0.0
+      image: ${IMAGE_NAME}
       env:
         - name: MYSQL_HOST
           valueFrom:
@@ -99,11 +76,14 @@ spec:
               name: sysdigcloud-config
               key: mysql.endpoint
         - name: MYSQL_PORT
-          value: \"$MYSQL_PORT\"
+          value: \"${MYSQL_PORT}\"
         - name: MYSQL_ROOT_USER
-          value: \"$MYSQL_ROOT_USER\"
+          value: \"${MYSQL_ROOT_USER}\"
         - name: MYSQL_ROOT_PASSWORD
-          value: \"$MYSQL_ROOT_PASSWORD\"
+          valueFrom:
+            secretKeyRef:
+              name: mysql8-mariadb-conj-auth-migration-secret
+              key: password
         - name: SYSDIG_ADMIN_USER
           valueFrom:
             configMapKeyRef:
@@ -114,28 +94,106 @@ spec:
             configMapKeyRef:
               name: sysdigcloud-config
               key: mysql.password
-"
+'
 
-# Try to perform the migration with the custom YAML
-echo "$k8s_yaml_text_custom" > mysql8-mariadb-conj-auth-migration.yaml
-kubectl -n $KUBERNETES_NAMESPACE create -f mysql8-mariadb-conj-auth-migration.yaml >/dev/null
+K8S_SECRET_PASSWORD_TEMPLATE='
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql8-mariadb-conj-auth-migration-secret
+type: Opaque
+stringData:
+  password: ${MYSQL_ROOT_PASSWORD}
+'
+
+################################################################################
+# Script beginning
+################################################################################
+
+echo "Sysdig MySQL to MariaDB Connector Migration Tool"
+echo "Please enter the required values (press Enter for default)."
+
+# Read context and namespace
+read -p "Sysdig Kubernetes context (default current-context): " KUBERNETES_CONTEXT
+if [ -z ${KUBERNETES_CONTEXT} ]; then
+  KUBERNETES_CONTEXT=$(kubectl config current-context);
+fi
+read -p "Sysdig Kubernetes namespace (default sysdigcloud): " KUBERNETES_NAMESPACE
+if [ -z ${KUBERNETES_NAMESPACE} ]; then
+  KUBERNETES_NAMESPACE=sysdigcloud;
+fi
+echo
+
+# Try to perform the migration with the default YAML
+echo "Running the migration script with default parameters."
+echo "${K8S_YAML_TEXT_DEFAULT}" | kubectl --context=${KUBERNETES_CONTEXT} -n ${KUBERNETES_NAMESPACE} create -f -
 while true; do
-  status=$(kubectl -n $KUBERNETES_NAMESPACE describe pods sysdig-mysql8-mariadb-conj-auth-migration | grep "Status:[ \t]*")
-  is_running=$(echo $status | grep "Pending\|Running")
-  if [ -z "$is_running" ]; then break; fi;
+  status=$(kubectl --context=${KUBERNETES_CONTEXT} -n ${KUBERNETES_NAMESPACE} describe pods ${POD_NAME} | grep "Status:[ \t]*")
+  is_running=$(echo ${status} | grep "Pending\|Running" || true)
+  if [ -z "${is_running}" ]; then
+    break
+  fi
 done
 
-is_succeeded=$(echo $status | grep Succeeded)
+is_succeeded=$(echo ${status} | grep Succeeded || true)
+
+# Default YAML succeeded --> Exit the script
+if [ -n "${is_succeeded}" ]; then
+  echo
+  # Print the logs
+  kubectl --context=${KUBERNETES_CONTEXT} -n ${KUBERNETES_NAMESPACE} logs ${POD_NAME}
+  # Cleanup
+  echo "${K8S_YAML_TEXT_DEFAULT}" | kubectl --context=${KUBERNETES_CONTEXT} -n ${KUBERNETES_NAMESPACE} delete -f -
+  docker rmi -f ${IMAGE_NAME}
+  exit
+fi
+
+# Default YAML failed --> Cleanup and ask for custom parameters
+echo "${K8S_YAML_TEXT_DEFAULT}" | kubectl --context=${KUBERNETES_CONTEXT} -n ${KUBERNETES_NAMESPACE} delete -f -
+echo
+
+echo "Custom parameters required, please enter the values in the following prompts."
+read -p "MySQL port (default 3306): " MYSQL_PORT
+if [ -z "${MYSQL_PORT}" ]; then
+  MYSQL_PORT=3306
+fi
+read -p "MySQL root username (default root): " MYSQL_ROOT_USER
+if [ -z "${MYSQL_ROOT_USER}" ]; then
+  MYSQL_ROOT_USER=root
+fi
+read -sp "MySQL root password:" MYSQL_ROOT_PASSWORD
+echo
+echo
+
+echo "Running the migration script with custom parameters."
+eval "K8S_SECRET_PASSWORD=\"$K8S_SECRET_PASSWORD_TEMPLATE\""
+echo "${K8S_SECRET_PASSWORD}" | kubectl --context=${KUBERNETES_CONTEXT} -n ${KUBERNETES_NAMESPACE} create -f -
+
+# Try to perform the migration with the custom YAML
+eval "K8S_YAML_TEXT_CUSTOM=\"$K8S_YAML_TEXT_CUSTOM_TEMPLATE\""
+echo "${K8S_YAML_TEXT_CUSTOM}" | kubectl --context=${KUBERNETES_CONTEXT} -n ${KUBERNETES_NAMESPACE} create -f -
+while true; do
+  status=$(kubectl --context=${KUBERNETES_CONTEXT} -n ${KUBERNETES_NAMESPACE} describe pods ${POD_NAME} | grep "Status:[ \t]*")
+  is_running=$(echo ${status} | grep "Pending\|Running" || true)
+  if [ -z "${is_running}" ]; then
+    break
+  fi
+done
+echo
 
 # Print the logs
-kubectl -n $KUBERNETES_NAMESPACE logs sysdig-mysql8-mariadb-conj-auth-migration
+kubectl --context=${KUBERNETES_CONTEXT} -n ${KUBERNETES_NAMESPACE} logs ${POD_NAME}
+echo
 # Cleanup
-kubectl -n $KUBERNETES_NAMESPACE delete -f mysql8-mariadb-conj-auth-migration.yaml >/dev/null
-rm mysql8-mariadb-conj-auth-migration.yaml
-docker rmi -f quay.io/sysdig/onprem_migration:mysql8-mariadb-conj-auth-migration-1.0.0 >/dev/null
+echo "${K8S_YAML_TEXT_CUSTOM}" | kubectl --context=${KUBERNETES_CONTEXT} -n ${KUBERNETES_NAMESPACE} delete -f -
+echo "${K8S_SECRET_PASSWORD}" | kubectl --context=${KUBERNETES_CONTEXT} -n ${KUBERNETES_NAMESPACE} delete -f -
+echo
+docker rmi -f ${IMAGE_NAME}
 
+is_succeeded=$(echo ${status} | grep Succeeded || true)
 # If failed, inform the user and set the exit code to 1
-if [ -z "$is_succeeded" ]; then
-  echo Failure: Please run the tool with correct parameters.
+if [ -z "${is_succeeded}" ]; then
+  echo
+  (>&2 echo "Failure: Please run the tool with correct parameters.")
   exit 1
 fi
