@@ -27,6 +27,7 @@ spec:
           env:
             - name: ELASTICSEARCH_SERVICE
               value: sysdigcloud-elasticsearch
+            # ELASTICSEARCH_GOSSIP_NODES_NUM needs to match the number of replicas specified for the deployment.
             - name: ELASTICSEARCH_GOSSIP_NODES_NUM
               value: "1"
             - name: ELASTICSEARCH_CLUSTER_NAME
