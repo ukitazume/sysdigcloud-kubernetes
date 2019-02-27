@@ -103,8 +103,10 @@ metadata:
   name: mysql8-mariadb-conj-auth-migration-secret
 type: Opaque
 stringData:
-  password: ${MYSQL_ROOT_PASSWORD}
+  password: \"${MYSQL_ROOT_PASSWORD}\"
 '
+
+EXIT_CODE=0
 
 ################################################################################
 # Script beginning
@@ -124,11 +126,13 @@ if [ -z ${KUBERNETES_NAMESPACE} ]; then
 fi
 echo
 
+KUBECTL_CMD="kubectl --context=${KUBERNETES_CONTEXT} -n ${KUBERNETES_NAMESPACE}"
+
 # Try to perform the migration with the default YAML
 echo "Running the migration script with default parameters."
-echo "${K8S_YAML_TEXT_DEFAULT}" | kubectl --context=${KUBERNETES_CONTEXT} -n ${KUBERNETES_NAMESPACE} create -f -
+echo "${K8S_YAML_TEXT_DEFAULT}" | eval "${KUBECTL_CMD} create -f -"
 while true; do
-  status=$(kubectl --context=${KUBERNETES_CONTEXT} -n ${KUBERNETES_NAMESPACE} describe pods ${POD_NAME} | grep "Status:[ \t]*")
+  status=$(eval "${KUBECTL_CMD} describe pods ${POD_NAME} | grep \"Status:[ \t]*\"")
   is_running=$(echo ${status} | grep "Pending\|Running" || true)
   if [ -z "${is_running}" ]; then
     break
@@ -141,15 +145,16 @@ is_succeeded=$(echo ${status} | grep Succeeded || true)
 if [ -n "${is_succeeded}" ]; then
   echo
   # Print the logs
-  kubectl --context=${KUBERNETES_CONTEXT} -n ${KUBERNETES_NAMESPACE} logs ${POD_NAME}
+  eval "${KUBECTL_CMD} logs ${POD_NAME}"
+  echo
   # Cleanup
-  echo "${K8S_YAML_TEXT_DEFAULT}" | kubectl --context=${KUBERNETES_CONTEXT} -n ${KUBERNETES_NAMESPACE} delete -f -
+  echo "${K8S_YAML_TEXT_DEFAULT}" | eval "${KUBECTL_CMD} delete -f -"
   docker rmi -f ${IMAGE_NAME}
-  exit
+  exit $EXIT_CODE
 fi
 
 # Default YAML failed --> Cleanup and ask for custom parameters
-echo "${K8S_YAML_TEXT_DEFAULT}" | kubectl --context=${KUBERNETES_CONTEXT} -n ${KUBERNETES_NAMESPACE} delete -f -
+echo "${K8S_YAML_TEXT_DEFAULT}" | eval "${KUBECTL_CMD} delete -f -"
 echo
 
 echo "Custom parameters required, please enter the values in the following prompts."
@@ -167,13 +172,13 @@ echo
 
 echo "Running the migration script with custom parameters."
 eval "K8S_SECRET_PASSWORD=\"$K8S_SECRET_PASSWORD_TEMPLATE\""
-echo "${K8S_SECRET_PASSWORD}" | kubectl --context=${KUBERNETES_CONTEXT} -n ${KUBERNETES_NAMESPACE} create -f -
+echo "${K8S_SECRET_PASSWORD}" | eval "${KUBECTL_CMD} create -f -"
 
 # Try to perform the migration with the custom YAML
 eval "K8S_YAML_TEXT_CUSTOM=\"$K8S_YAML_TEXT_CUSTOM_TEMPLATE\""
-echo "${K8S_YAML_TEXT_CUSTOM}" | kubectl --context=${KUBERNETES_CONTEXT} -n ${KUBERNETES_NAMESPACE} create -f -
+echo "${K8S_YAML_TEXT_CUSTOM}" | eval "${KUBECTL_CMD} create -f -"
 while true; do
-  status=$(kubectl --context=${KUBERNETES_CONTEXT} -n ${KUBERNETES_NAMESPACE} describe pods ${POD_NAME} | grep "Status:[ \t]*")
+  status=$(eval "${KUBECTL_CMD} describe pods ${POD_NAME} | grep \"Status:[ \t]*\"")
   is_running=$(echo ${status} | grep "Pending\|Running" || true)
   if [ -z "${is_running}" ]; then
     break
@@ -182,18 +187,17 @@ done
 echo
 
 # Print the logs
-kubectl --context=${KUBERNETES_CONTEXT} -n ${KUBERNETES_NAMESPACE} logs ${POD_NAME}
-echo
-# Cleanup
-echo "${K8S_YAML_TEXT_CUSTOM}" | kubectl --context=${KUBERNETES_CONTEXT} -n ${KUBERNETES_NAMESPACE} delete -f -
-echo "${K8S_SECRET_PASSWORD}" | kubectl --context=${KUBERNETES_CONTEXT} -n ${KUBERNETES_NAMESPACE} delete -f -
-echo
-docker rmi -f ${IMAGE_NAME}
-
+eval "${KUBECTL_CMD} logs ${POD_NAME}"
 is_succeeded=$(echo ${status} | grep Succeeded || true)
 # If failed, inform the user and set the exit code to 1
 if [ -z "${is_succeeded}" ]; then
-  echo
   (>&2 echo "Failure: Please run the tool with correct parameters.")
-  exit 1
+  EXIT_CODE=1
 fi
+echo
+
+# Cleanup
+echo "${K8S_YAML_TEXT_CUSTOM}" | eval "${KUBECTL_CMD} delete -f -"
+echo "${K8S_SECRET_PASSWORD}" | eval "${KUBECTL_CMD} delete -f -"
+docker rmi -f ${IMAGE_NAME}
+exit $EXIT_CODE
