@@ -2,7 +2,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: sysdigcloud-elasticsearch-1 # Elasticsearch node number
+  name: sysdigcloud-elasticsearch
 spec:
   replicas: 1
   template:
@@ -13,7 +13,7 @@ spec:
         role: elasticsearch
     spec:
       containers:
-        - image: quay.io/sysdig/elasticsearch:5.6.14.4-alpine 
+        - image: quay.io/sysdig/elasticsearch:5.6.14.5
           name: elasticsearch
           # https://www.elastic.co/blog/bootstrap_checks_annoying_instead_of_devastating
           # Elasticsearch team decided to force everybody to run ES5 with the following sysctl option:
@@ -27,8 +27,9 @@ spec:
           env:
             - name: ELASTICSEARCH_SERVICE
               value: sysdigcloud-elasticsearch
+            # ELASTICSEARCH_GOSSIP_NODES_NUM needs to match the number of replicas specified for the deployment.
             - name: ELASTICSEARCH_GOSSIP_NODES_NUM
-              value: "2"
+              value: "1"
             - name: ELASTICSEARCH_CLUSTER_NAME
               value: sysdigcloud
             - name: ES_JAVA_OPTS

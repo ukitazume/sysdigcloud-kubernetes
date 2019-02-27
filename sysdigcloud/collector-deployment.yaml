@@ -47,11 +47,6 @@ spec:
                 configMapKeyRef:
                   name: sysdigcloud-config
                   key: sysdigcloud.jvm.collector.options
-            - name: JAVA_GC_PARAMETERS
-              valueFrom:
-                configMapKeyRef:
-                  name: sysdigcloud-config
-                  key: sysdigcloud.jvmgc.collector.options
             - name: CASSANDRA_ENDPOINT_SNITCH
               valueFrom:
                 configMapKeyRef:

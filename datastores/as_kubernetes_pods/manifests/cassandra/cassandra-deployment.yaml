@@ -2,7 +2,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: sysdigcloud-cassandra-1 # Cassandra node number
+  name: sysdigcloud-cassandra
 spec:
   replicas: 1
   template:
