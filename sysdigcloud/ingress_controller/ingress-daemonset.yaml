@@ -17,8 +17,6 @@ spec:
         run: haproxy-ingress
     spec:
       hostNetwork: true
-      nodeSelector:
-        role: ingress-controller
       serviceAccountName: ingress-controller
       containers:
         - name: haproxy-ingress
