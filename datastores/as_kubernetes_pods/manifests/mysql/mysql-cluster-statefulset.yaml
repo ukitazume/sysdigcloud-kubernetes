@@ -106,21 +106,21 @@ spec:
                   name: sysdigcloud-config
             # These MYSQL_EXTRADB_* enviroment variables will trigger the
             # creation of the scanning database when mysql starts.
-            - name: MYSQL_EXTRADB_SCANNING_DBNAME
-              valueFrom:
-                configMapKeyRef:
-                  name: sysdigcloud-config
-                  key: scanning.mysql.dbname
-            - name: MYSQL_EXTRADB_SCANNING_USER
-              valueFrom:
-                configMapKeyRef:
-                  name: sysdigcloud-config
-                  key: scanning.mysql.user
-            - name: MYSQL_EXTRADB_SCANNING_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: sysdigcloud-scanning
-                  key: scanning.mysql.password
+            # - name: MYSQL_EXTRADB_SCANNING_DBNAME
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: sysdigcloud-config
+            #       key: scanning.mysql.dbname
+            # - name: MYSQL_EXTRADB_SCANNING_USER
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: sysdigcloud-config
+            #       key: scanning.mysql.user
+            # - name: MYSQL_EXTRADB_SCANNING_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: sysdigcloud-scanning
+            #       key: scanning.mysql.password
             - name: MYSQL_ROOT_HOST
               value: '%'
             - name: MYSQL_LOG_CONSOLE
