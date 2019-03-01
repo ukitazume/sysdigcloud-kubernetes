@@ -119,20 +119,14 @@ data:
   ####################################
   ######### SYSDIG ONPREM #########
   ####################################
-  # Required: Collector service endpoint DNS/IP. If the collector needs to be reachable outside the Kubernetes
-  # cluster, this will likely need to be set to the address of the Kubernetes nodes (if using a NodePort service) or the
-  # cloud loadbalancer created by the service (if using a LoadBalancer service). Otherwise, it can be left
-  # to the default value and the collector will just be routable within the Kubernetes cluster.
-  collector.endpoint: sysdigcloud-collector
+  # Required: Collector service endpoint is the FQDN which should match the <EXTERNAL-DNS-NAME>
+  # found in the file api-ingress.yaml
+  collector.endpoint: <EXTERNAL-DNS-NAME>
   # Required: Collector port. If using a LoadBalancer service for the collector, the port can be left as the default.
-  # If using a NodePort service, this will need to be set to the dynamic port allocated by Kubernetes on the nodes
-  # (obtained via kubectl describe service sysdigcloud-collector)
   collector.port: "6443"
-  # Required: Api service https URL. If the api needs to be reachable outside the Kubernetes cluster,
-  # this will likely need to be set to the address of the Kubernetes nodes and the dynamic port allocated by Kubernetes
-  # (if using a NodePort service) or the cloud loadbalancer created by the service (if using a LoadBalancer service).
-  # Otherwise, it can be left to the default value and the api will just be routable within the Kubernetes cluster.
-  api.url: https://sysdigcloud-api:443
+  # Required: Api service https URL is the URL using the FQDN which should match the <EXTERNAL-DNS-NAME>
+  # found in the file api-ingress.yaml
+  api.url: https://<EXTERNAL-DNS-NAME>:443
   # Required: Sysdig Cloud super admin user. This will be used for the initial login in the web interface
   sysdigcloud.default.user: test@sysdig.com
   # Required: Sysdig Cloud super admin user password
@@ -224,8 +218,10 @@ data:
   # (Deprecated - formerly Optional): LDAP user search base
   # If you specify a relative DN (from the root DN), Sysdig Cloud will further narrow down searches to the sub-tree.
   sysdigcloud.ldap.user.search.base: ""
-  # (Deprecated - formerly Optional): LDAP user search filter (eg: (\&(objectClass=organizationalPerson)(sAMAccountName={0})).
-  # This field determines the query to be run to identify the user record. The query is almost always uid={0} as per defined in RFC 2798.
+  # (Deprecated - formerly Optional): LDAP user search filter
+  # (eg: (\&(objectClass=organizationalPerson)(sAMAccountName={0})).
+  # This field determines the query to be run to identify the user record.
+  # The query is almost always uid={0} as per defined in RFC 2798.
   # NB. Escape special characters like &
   sysdigcloud.ldap.user.search.filter: ""
   # (Deprecated - formerly Optional): Group search base (eg: ou=Organization,ou=Users)
@@ -233,11 +229,13 @@ data:
   sysdigcloud.ldap.group.search.base: ""
   # (Deprecated - formerly Optional): Group search filter (eg: cn=sysdigcloud)
   # This field is used to determine if a named group exists. If you know your LDAP server only stores group information
-  # in one specific object class, then you can improve group search performance by restricting the filter to just the required object class.
+  # in one specific object class, then you can improve group search performance by restricting the filter to just the
+  # required object class.
   sysdigcloud.ldap.group.search.filter: ""
   # (Deprecated - formerly Optional): Group membership filter (eg: member={0})
   # The group membership filter field controls the search filter that is used to determine group membership.
-  # You are normally safe leaving this field unchanged, the default value ( | (member={0}) (uniqueMember={0}) (memberUid={1})) will be used.
+  # You are normally safe leaving this field unchanged, the default value ( | (member={0}) (uniqueMember={0})
+  # (memberUid={1})) will be used.
   sysdigcloud.ldap.group.membership.filter: ""
   ####################################
   # ======= END DEPRECATED LDAP OPTIONS =======
