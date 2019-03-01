@@ -119,19 +119,12 @@ data:
   ####################################
   ######### SYSDIG ONPREM #########
   ####################################
-  # Required: Collector service endpoint DNS/IP. If the collector needs to be reachable outside the Kubernetes
-  # cluster, this will likely need to be set to the address of the Kubernetes nodes (if using a NodePort service) or the
-  # cloud loadbalancer created by the service (if using a LoadBalancer service). Otherwise, it can be left
-  # to the default value and the collector will just be routable within the Kubernetes cluster.
+  # Required: Collector service endpoint DNS.
   collector.endpoint: sysdigcloud-collector
   # Required: Collector port. If using a LoadBalancer service for the collector, the port can be left as the default.
-  # If using a NodePort service, this will need to be set to the dynamic port allocated by Kubernetes on the nodes
   # (obtained via kubectl describe service sysdigcloud-collector)
   collector.port: "6443"
   # Required: Api service https URL. If the api needs to be reachable outside the Kubernetes cluster,
-  # this will likely need to be set to the address of the Kubernetes nodes and the dynamic port allocated by Kubernetes
-  # (if using a NodePort service) or the cloud loadbalancer created by the service (if using a LoadBalancer service).
-  # Otherwise, it can be left to the default value and the api will just be routable within the Kubernetes cluster.
   api.url: https://sysdigcloud-api:443
   # Required: Sysdig Cloud super admin user. This will be used for the initial login in the web interface
   sysdigcloud.default.user: test@sysdig.com
