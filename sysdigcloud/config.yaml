@@ -119,7 +119,7 @@ data:
   ####################################
   ######### SYSDIG ONPREM #########
   ####################################
-  # Required: Collector service endpoint as defined in the FQDN <EXTERNAL-DNS-NAME> section.
+  # Required: Collector service endpoint as defined in the FQDN located in the file haproxy-tcp-services-configmap.yaml
   collector.endpoint: sysdigcloud-collector
   # Required: Collector port. If using a LoadBalancer service for the collector, the port can be left as the default.
   collector.port: "6443"
