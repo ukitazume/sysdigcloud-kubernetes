@@ -119,12 +119,11 @@ data:
   ####################################
   ######### SYSDIG ONPREM #########
   ####################################
-  # Required: Collector service endpoint DNS.
+  # Required: Collector service endpoint as defined in the FQDN <EXTERNAL-DNS-NAME> section.
   collector.endpoint: sysdigcloud-collector
   # Required: Collector port. If using a LoadBalancer service for the collector, the port can be left as the default.
-  # (obtained via kubectl describe service sysdigcloud-collector)
   collector.port: "6443"
-  # Required: Api service https URL
+  # Required: Api service https URL as defined in the FQDN <EXTERNAL-DNS-NAME> section found in api-ingress-with-secure.yaml
   api.url: https://sysdigcloud-api:443
   # Required: Sysdig Cloud super admin user. This will be used for the initial login in the web interface
   sysdigcloud.default.user: test@sysdig.com
