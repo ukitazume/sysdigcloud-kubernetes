@@ -4,7 +4,7 @@ kind: StatefulSet
 metadata:
   name: sysdigcloud-cassandra
 spec:
-  serviceName: cassandra-service
+  serviceName: sysdigcloud-cassandra
   replicas: 5
   selector:
     matchLabels:
@@ -119,5 +119,12 @@ spec:
           name: data
       imagePullSecrets:
         - name: sysdigcloud-pull-secret
+      ### Start of the custom Cassandra snitch group
+      # The following entries are required for the custom Cassandra snitch (see configMap)
+      # volumes:
+      # - name: host-etc-hostname
+      #   hostPath:
+      #     path: /etc/hostname
+      ##########################################
       nodeSelector:
         kops.k8s.io/instancegroup: storage-nodes

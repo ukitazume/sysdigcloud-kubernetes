@@ -52,6 +52,16 @@ spec:
                 configMapKeyRef:
                   name: sysdigcloud-config
                   key: sysdigcloud.jvmgc.collector.options
+            - name: CASSANDRA_ENDPOINT_SNITCH
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: cassandra.endpoint.snitch
+            - name: CASSANDRA_DC
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: cassandra.datacenter.name
           resources:
             requests:
               memory: "10G"
@@ -64,6 +74,11 @@ spec:
               port: 6000
             initialDelaySeconds: 30
             timeoutSeconds: 2
+          lifecycle:
+            preStop:
+              exec:
+                command: ["curl","-v","http://127.0.0.1:9000/api/admin/drain"]
+      terminationGracePeriodSeconds: 60
       imagePullSecrets:
         - name: sysdigcloud-pull-secret
       volumes:
