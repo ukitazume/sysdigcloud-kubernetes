@@ -104,7 +104,7 @@ data:
   # Force all non-default users to login using the configured IdP
   sysdigcloud.restrict.password.login: "false"
   # Optional: forward application logs to stdout
-  sysdigcloud.logging.stdout: "true"
+  sysdigcloud.logging.stdout: "false"
   # Optional: Sysdig Cloud application JVM options. For heavy load environments this will override the defaults
   # If using Redis statefulsets (HA) the following needs to be added to the api, worker, and collector jvm options
   # "-Ddraios.redis.useSentinel=true -Ddraios.redis.master=primary -Ddraios.redis.sentinels.0=redis-sentinel:26379"
