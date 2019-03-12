@@ -21,19 +21,19 @@ spec:
         role: cassandra
     spec:
       #affinity:
-      #podAntiAffinity:
-      #requiredDuringSchedulingIgnoredDuringExecution:
-      #- labelSelector:
-      #matchExpressions:
-      #- key: app
-      #operator: In
-      #values:
-      #- sysdigcloud
-      #- key: role
-      #operator: In
-      #values:
-      #- cassandra
-      #topologyKey: "kubernetes.io/hostname"
+      #  podAntiAffinity:
+      #    requiredDuringSchedulingIgnoredDuringExecution:
+      #    - labelSelector:
+      #        matchExpressions:
+      #        - key: app
+      #          operator: In
+      #          values:
+      #          - sysdigcloud
+      #        - key: role
+      #          operator: In
+      #          values:
+      #          - cassandra
+      #      topologyKey: "kubernetes.io/hostname"
       containers:
         - image: quay.io/sysdig/cassandra:2.1.21.2
           name: cassandra
@@ -41,12 +41,12 @@ spec:
           ## Uncomment if you want to set resource limits for Cassandra.
           ## Make sure the limits you set are appropriate for your environment.
           # resources:
-          #   requests:
-          #    cpu: 500m
-          #    memory: 1Gi
-          #   limits:
-          #    cpu: 1000m
-          #    memory: 2Gi
+          #    requests:
+          #     cpu: 500m
+          #     memory: 1Gi
+          #    limits:
+          #     cpu: 1000m
+          #     memory: 2Gi
           env:
             - name: CASSANDRA_SERVICE
               value: sysdigcloud-cassandra
