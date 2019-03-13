@@ -4,7 +4,7 @@ kind: StatefulSet
 metadata:
   name: sysdigcloud-cassandra
 spec:
-  serviceName: cassandra-service
+  serviceName: sysdigcloud-cassandra
   replicas: 3
   selector:
     matchLabels:
@@ -31,7 +31,7 @@ spec:
                 #- cassandra
             #topologyKey: "kubernetes.io/hostname"
       containers:
-        - image: quay.io/sysdig/cassandra:2.1.20.5
+        - image: quay.io/sysdig/cassandra:2.1.20.17
           name: cassandra
           env:
             - name: CASSANDRA_SERVICE
@@ -46,6 +46,11 @@ spec:
             # If using multiple directories for data, set the path list
             # - name: CASSANDRA_DATA_DIRS
             #   value: "/var/lib/cassandra/data /var/lib/cassandra/data2"
+            - name: CASSANDRA_COMPACTION_THROUGHPUT
+              valueFrom:
+                configMapKeyRef:
+                  key: cassandra.compaction.throughput
+                  name: sysdigcloud-config
             - name: JVM_EXTRA_OPTS
               valueFrom:
                 configMapKeyRef:
@@ -65,6 +70,29 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
+            ### Start of the custom Cassandra snitch group
+            # The following entries are required for the custom Cassandra snitch (see configMap)
+            - name: CASSANDRA_ENDPOINT_SNITCH
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: cassandra.endpoint.snitch
+            # - name: CASSANDRA_SNITCH_EXTRACT_CMD
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: sysdigcloud-config
+            #       key: cassandra.snitch.extract_cmd
+            # - name: CASSANDRA_SNITCH_HOSTNAME_FILE
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: sysdigcloud-config
+            #       key: cassandra.snitch.hostname.file
+            - name: CASSANDRA_DC
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: cassandra.datacenter.name
+            ##########################################
           readinessProbe:
             exec:
               command:
@@ -80,8 +108,21 @@ spec:
             # Uncomment this when using multiple mount points for data
             # - mountPath: /var/lib/cassandra/data2
             #   name: data2
+            ### Start of the custom Cassandra snitch group
+            # The following entries are required for the custom Cassandra snitch (see configMap)
+            # - mountPath: /host/etc/hostname
+            #   readOnly: true
+            #   name: host-etc-hostname
+            ##########################################
       imagePullSecrets:
         - name: sysdigcloud-pull-secret
+      ### Start of the custom Cassandra snitch group
+      # The following entries are required for the custom Cassandra snitch (see configMap)
+      # volumes:
+      # - name: host-etc-hostname
+      #   hostPath:
+      #     path: /etc/hostname
+      ##########################################
   volumeClaimTemplates:
   - metadata:
       name: data

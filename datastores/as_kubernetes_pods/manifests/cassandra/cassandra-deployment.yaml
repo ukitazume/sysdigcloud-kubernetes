@@ -2,7 +2,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: sysdigcloud-cassandra-1 # Cassandra node number
+  name: sysdigcloud-cassandra
 spec:
   replicas: 1
   template:
@@ -13,7 +13,7 @@ spec:
         role: cassandra
     spec:
       containers:
-        - image: quay.io/sysdig/cassandra:2.1.20.5
+        - image: quay.io/sysdig/cassandra:2.1.20.17
           name: cassandra
           env:
             - name: CASSANDRA_SERVICE
