@@ -24,19 +24,19 @@ spec:
       ## You may need to disable these if your number of available kubernetes hosts is less than
       ## the replication factor for your statefulset.
       affinity:
-       podAntiAffinity:
-         requiredDuringSchedulingIgnoredDuringExecution:
-         - labelSelector:
-             matchExpressions:
-             - key: app
-               operator: In
-               values:
-               - sysdigcloud
-             - key: role
-               operator: In
-               values:
-               - cassandra
-           topologyKey: "kubernetes.io/hostname"
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - sysdigcloud
+                  - key: role
+                    operator: In
+                    values:
+                      - cassandra
+              topologyKey: "kubernetes.io/hostname"
       containers:
         - image: quay.io/sysdig/cassandra:2.1.21.2
           name: cassandra
@@ -165,4 +165,3 @@ spec:
           requests:
             storage: 50Gi
         storageClassName: <INSERT_YOUR_STORAGE_CLASS_NAME>
- 
