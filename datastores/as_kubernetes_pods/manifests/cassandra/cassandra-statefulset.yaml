@@ -20,33 +20,36 @@ spec:
         app: sysdigcloud
         role: cassandra
     spec:
-      #affinity:
-      #  podAntiAffinity:
-      #    requiredDuringSchedulingIgnoredDuringExecution:
-      #    - labelSelector:
-      #        matchExpressions:
-      #        - key: app
-      #          operator: In
-      #          values:
-      #          - sysdigcloud
-      #        - key: role
-      #          operator: In
-      #          values:
-      #          - cassandra
-      #      topologyKey: "kubernetes.io/hostname"
+      ## Pod anti-affinity rules ensure that cassandra pods run on separate hosts.
+      ## You may need to disable these if your number of available kubernetes hosts is less than
+      ## the replication factor for your statefulset.
+      affinity:
+       podAntiAffinity:
+         requiredDuringSchedulingIgnoredDuringExecution:
+         - labelSelector:
+             matchExpressions:
+             - key: app
+               operator: In
+               values:
+               - sysdigcloud
+             - key: role
+               operator: In
+               values:
+               - cassandra
+           topologyKey: "kubernetes.io/hostname"
       containers:
         - image: quay.io/sysdig/cassandra:2.1.21.2
           name: cassandra
           imagePullPolicy: Always
-          ## Uncomment if you want to set resource limits for Cassandra.
-          ## Make sure the limits you set are appropriate for your environment.
-          # resources:
-          #    requests:
-          #     cpu: 500m
-          #     memory: 1Gi
-          #    limits:
-          #     cpu: 1000m
-          #     memory: 2Gi
+          ## Recommended resource limits for Cassandra pods.
+          ## Make sure to set values for these limits that are appropriate for your environment.
+          resources:
+            requests:
+              cpu: 2
+              memory: 8g
+            limits:
+              cpu: 12
+              memory: 12g
           env:
             - name: CASSANDRA_SERVICE
               value: sysdigcloud-cassandra
@@ -161,3 +164,4 @@ spec:
           requests:
             storage: 50Gi
         storageClassName: <INSERT_YOUR_STORAGE_CLASS_NAME>
+ 
