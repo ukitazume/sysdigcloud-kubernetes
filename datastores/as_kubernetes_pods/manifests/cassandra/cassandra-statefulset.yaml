@@ -114,6 +114,7 @@ spec:
             preStop:
               exec:
                 command: ["/bin/sh", "-c", "nodetool drain"]
+              terminationGracePeriodSeconds: 60
           readinessProbe:
             exec:
               command:

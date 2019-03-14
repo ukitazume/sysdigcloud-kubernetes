@@ -11,17 +11,17 @@ spec:
       labels:
         app: redis-primary
     spec:
-      #affinity:
-      #  podAntiAffinity:
-      #    requiredDuringSchedulingIgnoredDuringExecution:
-      #    - labelSelector:
-      #        matchExpressions:
-      #        - key: app
-      #          operator: In
-      #          values:
-      #          - redis-secondary
-      #          - redis-primary
-      #      topologyKey: "kubernetes.io/hostname"
+      affinity:
+       podAntiAffinity:
+         requiredDuringSchedulingIgnoredDuringExecution:
+         - labelSelector:
+             matchExpressions:
+             - key: app
+               operator: In
+               values:
+               - redis-secondary
+               - redis-primary
+           topologyKey: "kubernetes.io/hostname"
       terminationGracePeriodSeconds: 10
       containers:
         - name: redis-primary
