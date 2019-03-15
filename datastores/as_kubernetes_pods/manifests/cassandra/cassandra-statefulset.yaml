@@ -37,6 +37,7 @@ spec:
                     values:
                       - cassandra
               topologyKey: "kubernetes.io/hostname"
+      terminationGracePeriodSeconds: 60
       containers:
         - image: quay.io/sysdig/cassandra:2.1.21.2
           name: cassandra
@@ -46,10 +47,10 @@ spec:
           resources:
             requests:
               cpu: 2
-              memory: 8g
+              memory: 8Gi
             limits:
               cpu: 12
-              memory: 12g
+              memory: 12Gi
           env:
             - name: CASSANDRA_SERVICE
               value: sysdigcloud-cassandra
@@ -114,7 +115,6 @@ spec:
             preStop:
               exec:
                 command: ["/bin/sh", "-c", "nodetool drain"]
-            terminationGracePeriodSeconds: 60
           readinessProbe:
             exec:
               command:

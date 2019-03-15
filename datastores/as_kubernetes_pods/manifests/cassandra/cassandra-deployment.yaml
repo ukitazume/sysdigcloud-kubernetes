@@ -21,10 +21,10 @@ spec:
           resources:
             requests:
               cpu: 2
-              memory: 8g
+              memory: 8Gi
             limits:
               cpu: 12
-              memory: 12g
+              memory: 12Gi
           env:
             - name: CASSANDRA_SERVICE
               value: sysdigcloud-cassandra

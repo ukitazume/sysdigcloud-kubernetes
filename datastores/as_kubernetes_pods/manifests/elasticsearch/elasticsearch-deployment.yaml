@@ -29,10 +29,10 @@ spec:
           resources:
             requests:
               cpu: 2
-              memory: 6g
+              memory: 6Gi
             limits:
               cpu: 4
-              memory: 10g
+              memory: 10Gi
           env:
             - name: ELASTICSEARCH_SERVICE
               value: sysdigcloud-elasticsearch
