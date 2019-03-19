@@ -63,7 +63,7 @@ spec:
               sed -i -e '/^\s*default-authentication-plugin=/d;$a\\n# Use native auth plugin for compatibility with MariaDB driver\ndefault-authentication-plugin=mysql_native_password'  /etc/my.cnf
 
               base=1000
-              index=$(cat /etc/hostname | grep -o '[^-]*$')
+              index=$(echo $HOSTNAME | grep -o '[^-]*$')
 
               /entrypoint.sh --server_id=$(expr $base + $index) \
               --datadir=/var/lib/mysql \
@@ -106,21 +106,21 @@ spec:
                   name: sysdigcloud-config
             # These MYSQL_EXTRADB_* enviroment variables will trigger the
             # creation of the scanning database when mysql starts.
-            - name: MYSQL_EXTRADB_SCANNING_DBNAME
-              valueFrom:
-                configMapKeyRef:
-                  name: sysdigcloud-config
-                  key: scanning.mysql.dbname
-            - name: MYSQL_EXTRADB_SCANNING_USER
-              valueFrom:
-                configMapKeyRef:
-                  name: sysdigcloud-config
-                  key: scanning.mysql.user
-            - name: MYSQL_EXTRADB_SCANNING_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: sysdigcloud-scanning
-                  key: scanning.mysql.password
+            # - name: MYSQL_EXTRADB_SCANNING_DBNAME
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: sysdigcloud-config
+            #       key: scanning.mysql.dbname
+            # - name: MYSQL_EXTRADB_SCANNING_USER
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: sysdigcloud-config
+            #       key: scanning.mysql.user
+            # - name: MYSQL_EXTRADB_SCANNING_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: sysdigcloud-scanning
+            #       key: scanning.mysql.password
             - name: MYSQL_ROOT_HOST
               value: '%'
             - name: MYSQL_LOG_CONSOLE

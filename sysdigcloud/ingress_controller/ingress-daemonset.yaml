@@ -5,7 +5,6 @@ metadata:
   labels:
     run: haproxy-ingress
   name: haproxy-ingress
-  namespace: ingress-controller
 spec:
   updateStrategy:
     type: RollingUpdate
@@ -18,8 +17,6 @@ spec:
         run: haproxy-ingress
     spec:
       hostNetwork: true
-      nodeSelector:
-        role: ingress-controller
       serviceAccountName: ingress-controller
       containers:
         - name: haproxy-ingress
@@ -30,6 +27,7 @@ spec:
               - --allow-cross-namespace
               - --configmap=$(POD_NAMESPACE)/haproxy-ingress
               - --tcp-services-configmap=$(POD_NAMESPACE)/haproxy-tcp-services
+              - --default-ssl-certificate=$(POD_NAMESPACE)/sysdigcloud-ssl-secret
           ports:
             - containerPort: 10253
               hostPort: 10253

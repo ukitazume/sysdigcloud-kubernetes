@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: worker
-          image: quay.io/sysdig/sysdigcloud-backend:1630
+          image: quay.io/sysdig/sysdigcloud-backend:1765
           volumeMounts:
             - name: logs
               mountPath: /var/log/sysdigcloud
@@ -47,6 +47,16 @@ spec:
                 configMapKeyRef:
                   name: sysdigcloud-config
                   key: sysdigcloud.jvm.worker.options
+            - name: CASSANDRA_ENDPOINT_SNITCH
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: cassandra.endpoint.snitch
+            - name: CASSANDRA_DC
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: cassandra.datacenter.name
           # If you're running multiple replicas, it is advisable to configure the limits below. Limiting resources
           # can help stabilize rolling updates later down the road.
           # resources:
