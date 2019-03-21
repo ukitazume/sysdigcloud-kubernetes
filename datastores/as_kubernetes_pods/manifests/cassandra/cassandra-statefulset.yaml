@@ -9,6 +9,7 @@ metadata:
     role: cassandra
 spec:
   serviceName: sysdigcloud-cassandra
+  podManagementPolicy: Parallel
   replicas: 3
   selector:
     matchLabels:
@@ -22,6 +23,9 @@ spec:
         app: sysdigcloud
         role: cassandra
     spec:
+      ## Pod anti-affinity rules ensure that cassandra pods run on separate hosts.
+      ## You may need to disable these if your number of available kubernetes hosts is less than
+      ## the replication factor for your statefulset.
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -33,15 +37,15 @@ spec:
                 - cassandra
             topologyKey: kubernetes.io/hostname
       containers:
-        - image: quay.io/sysdig/cassandra:2.1.20.18
+        - image: quay.io/sysdig/cassandra:2.1.21.2
           name: cassandra
           env:
             - name: CASSANDRA_SERVICE
               value: sysdigcloud-cassandra
-            - name: CASSANDRA_NUM_SEEDS
-              value: "2"
             - name: CASSANDRA_CLUSTER_NAME
               value: sysdigcloud
+            - name: CASSANDRA_CLUSTER_TIME_LIMIT
+              value: "5"
             # If not using CASSANDRA_SERVICE discovery, manually configure the seeds
             # - name: CASSANDRA_SEEDS
             #   value: ""
@@ -95,12 +99,15 @@ spec:
                   name: sysdigcloud-config
                   key: cassandra.datacenter.name
             ##########################################
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "nodetool drain"]
           readinessProbe:
             exec:
               command:
-              - /bin/bash
-              - -c
-              - 'if [[ $(nodetool status | grep ${POD_IP}) == *"UN"* ]]; then exit 0; else exit 1; fi'
+                - /bin/bash
+                - /ready.sh
             initialDelaySeconds: 15
             failureThreshold: 10
             timeoutSeconds: 5
@@ -122,7 +129,13 @@ spec:
             # - mountPath: /host/etc/hostname
             #   readOnly: true
             #   name: host-etc-hostname
-            ##########################################
+            ############################################
+            # Uncomment to specify per-pod jvm options
+            # using the cassandra-jvm-opts configmap.
+            # - name: cassandra-jvm-opts
+            #   mountPath: /opt/cassandra/cassandra-jvm-opts.json
+            #   subPath: cassandra-jvm-opts.json
+            #############################################
       imagePullSecrets:
         - name: sysdigcloud-pull-secret
       ### Start of the custom Cassandra snitch group
@@ -131,13 +144,19 @@ spec:
       # - name: host-etc-hostname
       #   hostPath:
       #     path: /etc/hostname
-      ##########################################
+      ############################################
+      # Uncomment to specify per-pod jvm options
+      # using the cassandra-jvm-opts configmap.
+      # - name: cassandra-jvm-opts
+      #   configMap:
+      #     name: cassandra-jvm-opts
+      #############################################
   volumeClaimTemplates:
-  - metadata:
-      name: data
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      resources:
-        requests:
-          storage: 50Gi
-      storageClassName: <INSERT_YOUR_STORAGE_CLASS_NAME>
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 50Gi
+        storageClassName: <INSERT_YOUR_STORAGE_CLASS_NAME>
