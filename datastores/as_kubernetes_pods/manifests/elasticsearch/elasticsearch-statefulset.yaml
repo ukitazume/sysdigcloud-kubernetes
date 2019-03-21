@@ -4,6 +4,7 @@ kind: StatefulSet
 metadata:
   name: sysdigcloud-elasticsearch
   labels:
+    affinity: elasticsearch
     app: sysdigcloud
     component: elasticsearch
     role: elasticsearch
