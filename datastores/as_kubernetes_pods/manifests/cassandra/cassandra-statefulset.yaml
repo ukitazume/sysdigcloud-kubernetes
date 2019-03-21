@@ -3,35 +3,37 @@ apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
   name: sysdigcloud-cassandra
+  labels:
+    affinity: cassandra
+    app: sysdigcloud
+    role: cassandra
 spec:
   serviceName: sysdigcloud-cassandra
   replicas: 3
   selector:
     matchLabels:
+      affinity: cassandra
       app: sysdigcloud
       role: cassandra
   template:
     metadata:
       labels:
+        affinity: cassandra
         app: sysdigcloud
         role: cassandra
     spec:
-      #affinity:
-        #podAntiAffinity:
-          #requiredDuringSchedulingIgnoredDuringExecution:
-          #- labelSelector:
-              #matchExpressions:
-              #- key: app
-                #operator: In
-                #values:
-                #- sysdigcloud
-              #- key: role
-                #operator: In
-                #values:
-                #- cassandra
-            #topologyKey: "kubernetes.io/hostname"
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: affinity
+                operator: In
+                values:
+                - cassandra
+            topologyKey: kubernetes.io/hostname
       containers:
-        - image: quay.io/sysdig/cassandra:2.1.20.17
+        - image: quay.io/sysdig/cassandra:2.1.20.18
           name: cassandra
           env:
             - name: CASSANDRA_SERVICE
@@ -102,6 +104,13 @@ spec:
             initialDelaySeconds: 15
             failureThreshold: 10
             timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: "12"
+              memory: 16Gi
+            requests:
+              cpu: "4"
+              memory: 8Gi
           volumeMounts:
             - mountPath: /var/lib/cassandra
               name: data

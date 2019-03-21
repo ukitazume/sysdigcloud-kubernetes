@@ -4,10 +4,17 @@ kind: StatefulSet
 metadata:
   name: sysdigcloud-elasticsearch
   labels:
+    affinity: elasticsearch
     app: sysdigcloud
     component: elasticsearch
     role: elasticsearch
 spec:
+  selector:
+    matchLabels:
+      affinity: elasticsearch
+      app: sysdigcloud
+      component: elasticsearch
+      role: elasticsearch
   serviceName: sysdigcloud-elasticsearch
   podManagementPolicy: "Parallel"
   # The number of replicas needs to be passed to the pods by ensuring that the value of ELASTICSEARCH_GOSSIP_NODES_NUM
@@ -16,24 +23,21 @@ spec:
   template:
     metadata:
       labels:
+        affinity: elasticsearch
         app: sysdigcloud
         component: elasticsearch
         role: elasticsearch
     spec:
-      #affinity:
-        #podAntiAffinity:
-          #requiredDuringSchedulingIgnoredDuringExecution:
-          #- labelSelector:
-              #matchExpressions:
-              #- key: app
-                #operator: In
-                #values:
-                #- sysdigcloud
-              #- key: role
-                #operator: In
-                #values:
-                #- elasticsearch
-            #topologyKey: "kubernetes.io/hostname"
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: affinity
+                operator: In
+                values:
+                - elasticsearch
+            topologyKey: kubernetes.io/hostname
       containers:
       - name: elasticsearch
         image: quay.io/sysdig/elasticsearch:5.6.14.4-alpine
@@ -42,8 +46,10 @@ spec:
         resources:
           limits:
             cpu: 2000m
+            memory: 8Gi
           requests:
             cpu: 500m
+            memory: 6Gi
         env:
         - name: ELASTICSEARCH_SERVICE
           value: sysdigcloud-elasticsearch

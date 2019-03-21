@@ -38,6 +38,13 @@ spec:
             configMapKeyRef:
               name: sysdigcloud-config
               key: redis.password
+        resources:
+          limits:
+            cpu: 500m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 50Mi
         ports:
         - containerPort: 26379
           name: redis-sentinel

@@ -39,7 +39,7 @@ data:
   # Change to 1 only for POC or if running a single node deployment
   cassandra.replication.factor: "3"
   # Optional: Cassandra JVM JVM options. For heavy load environments this will override the defaults
-  cassandra.jvm.options: ""
+  cassandra.jvm.options: "-Xms5G -Xmx10G"
   # Optional: Store Sysdig captures using Cassandra instead of S3. This increases cassandra storage if set to true
   sysdigcloud.captures.cassandra.storage: "true"
   # Optional: Increase cassandra compaction throughput to 350 MB/s
@@ -99,7 +99,7 @@ data:
   # this will be the service name. If using an external database, put the proper address
   elasticsearch.url: http://sysdigcloud-elasticsearch
   # Optional: Elasticsearch JVM options. For heavy load environments this will override the defaults
-  elasticsearch.jvm.options: ""
+  elasticsearch.jvm.options: "-Xms6G -Xmx6G"
   ####################################
   ######### SMTP #########
   ####################################
@@ -140,9 +140,9 @@ data:
   # Optional: Sysdig Cloud application JVM options. For heavy load environments this will override the defaults
   # If using Redis statefulsets (HA) the following needs to be added to the api, worker, and collector jvm options
   # "-Ddraios.redis.useSentinel=true -Ddraios.redis.master=primary -Ddraios.redis.sentinels.0=redis-sentinel:26379"
-  sysdigcloud.jvm.api.options: ""
-  sysdigcloud.jvm.worker.options: ""
-  sysdigcloud.jvm.collector.options: ""
+  sysdigcloud.jvm.api.options: "-Xms4G -Xmx8G"
+  sysdigcloud.jvm.worker.options: "-Xms4G -Xmx8G"
+  sysdigcloud.jvm.collector.options: "-Xms5G -Xmx10G"
   # Required: Sysdig Cloud license
   sysdigcloud.license: ""
   # Optional: OAuth allowed domains (comma separated list of domains)
