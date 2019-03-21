@@ -8,7 +8,7 @@ metadata:
     component: elasticsearch
     role: elasticsearch
 spec:
-  serviceName: elasticsearch-data
+  serviceName: sysdigcloud-elasticsearch
   podManagementPolicy: "Parallel"
   # The number of replicas needs to be passed to the pods by ensuring that the value of ELASTICSEARCH_GOSSIP_NODES_NUM
   # matches the number set here.
@@ -36,7 +36,7 @@ spec:
             #topologyKey: "kubernetes.io/hostname"
       containers:
       - name: elasticsearch
-        image: quay.io/sysdig/elasticsearch:5.6.13.5
+        image: quay.io/sysdig/elasticsearch:5.6.14.9-sg-alpine
         securityContext:
           privileged: true
         resources:
@@ -59,6 +59,16 @@ spec:
             configMapKeyRef:
               name: sysdigcloud-config
               key: elasticsearch.jvm.options
+        - name: ELASTICSEARCH_USER
+          valueFrom:
+            configMapKeyRef:
+              name: sysdigcloud-config
+              key: elasticsearch.user
+        - name: ELASTICSEARCH_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: elasticseach-password-secret
+              key: password
         readinessProbe:
           httpGet:
             path: /_cluster/health
@@ -66,10 +76,17 @@ spec:
           initialDelaySeconds: 20
           timeoutSeconds: 5
         volumeMounts:
-        - mountPath: /usr/share/elasticsearch/data
+        - mountPath: /usr/share/elasticsearch
           name: data
+        - mountPath: /tmp/es-certs/
+          name: tool-cert
       imagePullSecrets:
       - name: sysdigcloud-pull-secret
+      volumes:
+      - name: tool-cert
+        secret:
+          secretName: ca-certs
+          defaultMode: 256
   volumeClaimTemplates:
   - metadata:
       name: data
@@ -78,4 +95,4 @@ spec:
       resources:
         requests:
           storage: 50Gi
-      storageClassName: <INSERT_YOUR_STORAGE_CLASS_NAME>
+      storageClassName: gp2 

@@ -62,6 +62,8 @@ data:
   elasticsearch.url: http://sysdigcloud-elasticsearch
   # Optional: Elasticsearch JVM options. For heavy load environments this will override the defaults
   elasticsearch.jvm.options: ""
+  #Username required for the Search Guard authentication
+  elasticsearch.user: ""
   ####################################
   ######### SMTP #########
   ####################################
