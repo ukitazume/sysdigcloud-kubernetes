@@ -78,7 +78,7 @@ spec:
         volumeMounts:
         - mountPath: /usr/share/elasticsearch
           name: data
-        - mountPath: /tmp/es-certs/
+        - mountPath: /tmp/elasticsearch-certs/
           name: tool-cert
       imagePullSecrets:
       - name: sysdigcloud-pull-secret
