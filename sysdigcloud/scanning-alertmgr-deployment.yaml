@@ -119,3 +119,10 @@ spec:
               configMapKeyRef:
                 name: sysdigcloud-config
                 key: redis.password
+          - name: BASE_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: sysdigcloud-config
+                key: api.url
+          - name: UI_SECURE_URL
+            value: "$(BASE_API_URL)/secure"
