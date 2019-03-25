@@ -116,3 +116,8 @@ spec:
               configMapKeyRef:
                 name: sysdigcloud-config
                 key: redis.password
+          - name: PDF_ASSETS_PATH
+            valueFrom:
+              configMapKeyRef:
+                name: {{ template "scanning.infra.configMap" . }}
+                key: pdf.assets.path
