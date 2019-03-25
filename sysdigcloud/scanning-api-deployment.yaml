@@ -120,4 +120,4 @@ spec:
             valueFrom:
               configMapKeyRef:
                 name: sysdigcloud-config
-                key: pdf.assets.path
+                key: scanning.pdf.assets.path
