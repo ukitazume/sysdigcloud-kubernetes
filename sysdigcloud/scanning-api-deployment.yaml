@@ -119,5 +119,5 @@ spec:
           - name: PDF_ASSETS_PATH
             valueFrom:
               configMapKeyRef:
-                name: {{ template "scanning.infra.configMap" . }}
+                name: sysdigcloud-config
                 key: pdf.assets.path
