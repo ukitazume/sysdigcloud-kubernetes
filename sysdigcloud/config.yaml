@@ -166,6 +166,7 @@ data:
   scanning.backend.url: "http://sysdigcloud-api:8080"
   scanning.backend.tlsCheck: "false"
   scanning.redis.enabled: "true"
+  scanning.pdf.assets.path: "/assets"
   anchore.url: "http://sysdigcloud-anchore-core:8228"
   anchore.admin.user: admin
   anchore.db.endpoint: sysdigcloud-postgresql
