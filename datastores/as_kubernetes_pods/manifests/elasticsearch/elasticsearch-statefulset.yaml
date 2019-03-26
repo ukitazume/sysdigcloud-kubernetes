@@ -67,7 +67,7 @@ spec:
         - name: ELASTICSEARCH_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: elasticseach-password-secret
+              name: elasticsearch-password-secret
               key: password
         readinessProbe:
           httpGet:
