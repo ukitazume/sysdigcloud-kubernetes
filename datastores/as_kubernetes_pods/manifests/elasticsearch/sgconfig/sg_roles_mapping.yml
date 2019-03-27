@@ -1,0 +1,7 @@
+sg_admin:
+  users:
+    - admin
+sg_readall:
+  users:
+    - readall
+    - test

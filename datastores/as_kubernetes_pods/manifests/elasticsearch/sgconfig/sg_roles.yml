@@ -1,0 +1,15 @@
+sg_admin:
+  cluster:
+    - UNLIMITED
+  indices:
+    '*':
+      '*':
+        - ALL
+sg_readall:
+  cluster:
+    - CLUSTER_MONITOR
+    - CLUSTER_COMPOSITE_OPS_RO
+  indices:
+    '*':
+      '*':
+        - READ
