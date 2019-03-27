@@ -64,11 +64,11 @@ spec:
             configMapKeyRef:
               name: sysdigcloud-config
               key: elasticsearch.user
-        - name: ELASTICSEARCH_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: elasticsearch-password-secret
-              key: password
+#        - name: ELASTICSEARCH_PASSWORD
+#          valueFrom:
+#            secretKeyRef:
+#              name: elasticsearch-password-secret
+#              key: password
         readinessProbe:
           httpGet:
             path: /_cluster/health
