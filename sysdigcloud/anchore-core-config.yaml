@@ -65,7 +65,7 @@ data:
 
         event_log:
           notification:
-            enabled: true
+            enabled: false
             level:
               - error
         archive:
