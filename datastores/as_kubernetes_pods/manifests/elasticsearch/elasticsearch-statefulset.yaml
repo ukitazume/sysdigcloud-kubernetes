@@ -102,4 +102,5 @@ spec:
       resources:
         requests:
           storage: 50Gi
-      storageClassName: <INSERT_YOUR_STORAGE_CLASS_NAME> 
+      storageClassName: <INSERT_YOUR_STORAGE_CLASS_NAME>
+ 
