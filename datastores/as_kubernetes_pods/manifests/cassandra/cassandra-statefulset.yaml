@@ -111,13 +111,13 @@ spec:
             initialDelaySeconds: 15
             failureThreshold: 10
             timeoutSeconds: 5
-          resources:
-            limits:
-              cpu: "12"
-              memory: 16Gi
-            requests:
-              cpu: "4"
-              memory: 8Gi
+          #resources:
+          #  limits:
+          #    cpu: 12
+          #    memory: 16Gi
+          #  requests:
+          #    cpu: 4
+          #    memory: 8Gi
           volumeMounts:
             - mountPath: /var/lib/cassandra
               name: data
