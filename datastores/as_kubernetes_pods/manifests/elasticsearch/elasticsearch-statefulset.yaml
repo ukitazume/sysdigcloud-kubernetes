@@ -36,7 +36,7 @@ spec:
             #topologyKey: "kubernetes.io/hostname"
       containers:
       - name: elasticsearch
-        image: quay.io/sysdig/elasticsearch:5.6.14.36-sg-alpine
+        image: quay.io/sysdig/elasticsearch:5.6.15.7-alpine
         securityContext:
           privileged: true
         resources:
@@ -59,22 +59,28 @@ spec:
             configMapKeyRef:
               name: sysdigcloud-config
               key: elasticsearch.jvm.options
+        - name: SEARCHGUARD_ENABLED
+          valueFrom:
+            configMapKeyRef:
+              name: sysdigcloud-config
+              key: elasticsearch.searchguard.enabled
         - name: ELASTICSEARCH_USER
           valueFrom:
             configMapKeyRef:
               name: sysdigcloud-config
               key: elasticsearch.user
-#        - name: ELASTICSEARCH_PASSWORD
-#          valueFrom:
-#            secretKeyRef:
-#              name: elasticsearch-password-secret
-#              key: password
+        - name: SG_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: sg-password-secret
+              key: password
         readinessProbe:
-          httpGet:
-            path: /_cluster/health
-            port: 9200
-            scheme: HTTPS
-          initialDelaySeconds: 20
+          exec:
+            command:
+              - /bin/bash
+              - /readiness_probe.sh
+          initialDelaySeconds: 15
+          failureThreshold: 10
           timeoutSeconds: 5
         volumeMounts:
         - mountPath: /usr/share/elasticsearch/data

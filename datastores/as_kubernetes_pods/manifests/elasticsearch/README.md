@@ -1,12 +1,15 @@
 # Generating Certs for Search Guard
+Make sure that `elasticsearch.searchguard.enabled` is set to "true" in `sysdigcloud/config.yaml`
+Set `elasticsearch.user` to the searchguard role that the elasticsearch cluster will be using
+
 **Steps**
 
 1. Run the following docker command to generate the root/admin certs to a directory of your choice
-`docker run -d -it -v "$(pwd)"/out:/tools/out sg-certs`
+`docker run -d -it -v "$(pwd)"/out:/tools/out quay.io/sysdig/elasticsearch:sg-certs-1.0`
 2. Generate the required kubernetes secret file 
 `kubectl -n <my-namespace> create secret generic ca-certs --from-file=out`
-
-**_Note_**: The current configuration settings for the certs do not use passwords when creating the root cert
+3. Generate the secret for your searchguard role password
+`kubectl -n <my-namespace> create secret generic sg-password-secret --from-literal=password='<your-password-here>'`
 
 **Roles**
 
