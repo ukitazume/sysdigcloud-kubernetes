@@ -220,6 +220,68 @@ kubectl -n sysdigcloud create -f manifests/cassandra/cassandra-statefulset.yaml
 This creates a Cassandra cluster of size 3. To expand the Cassandra cluster, change the `replicas` to the
 desired higher number.
 
+#### Snitches
+
+Using a [Snitch](https://docs.datastax.com/en/archived/cassandra/2.1/cassandra/architecture/architectureSnitchesAbout_c.html) allows Cassandra to use place replicas in different racks to avoid losing all replicas if a specific group of hosts (i.e. physical rack or avaibility zone) are offline at the same time due to a network partition or other outage affecting an entire related group of hosts in the underlying infrastructure.
+
+The Snitch configuration for the Sysdig Cassandra cluster can be set using variables in the [sysdigcloud-config ConfigMap](../../sysdigcloud/config.yaml).
+
+Make sure to read the documenatation for the specific snitch you wish to use. You may need to set other specific options for it to work properly. For example, the [Ec2Snitch](https://docs.datastax.com/en/archived/cassandra/2.1/cassandra/architecture/architectureSnitchEC2_t.html) treats each availability zone as a rack, and requires that the Datacenter be specified as the region name without the suffix (i.e. `us-east` if you are deploying in `us-east-1`). In this case you would add the following in your `config.yaml`:
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sysdigcloud-config
+data:
+...
+  cassandra.endpoint.snitch: Ec2Snitch
+  cassandra.datacenter.name: us-east
+...
+```
+
+This will instruct the Sysdig application to use `us-east` as the datacenter when specifying the replication strategy for its keyspaces.
+
+#### Specifying JVM Parameters for an Individual Pod
+
+There are some instances where it may be necessary to specify a JVM option for only one pod in the Cassandra Statefulset. An optional configuration is provided for this purpose.
+
+To specify JVM options for a specific pod first deploy the [cassandra-jvm-opts-configmap.yaml](manifests/cassandra/cassandra-jvm-opts-configmap.yaml) ConfigMap object. You will also need to modify the Cassandra [Statefulset](manifests/cassandra/cassandra-statefulset.yaml) to mount this configuration file into the Cassandra pods.
+
+Add the following sections to the StatefulSet (examples are included in comments which can simply be uncommented):
+
+```yaml
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: sysdigcloud-cassandra
+...
+spec:
+  template:
+...
+    spec:
+...
+    containers:
+...
+          volumeMounts:
+            - name: cassandra-jvm-opts
+              mountPath: /opt/cassandra/cassandra-jvm-opts.json
+              subPath: cassandra-jvm-opts.json
+...
+    volumes:
+    - name: cassandra-jvm-opts
+      configmap:
+        name: cassandra-jvm-options
+...
+```
+
+For each pod specified in the `cassandra-jvm-opts` configuration it is possible to set one of two mutually exclusive options:
+
+* `additional_jvm_options`: JVM parameters specified here will be appended to any other options set elsewhere in the Cassandra configuration.
+* `override_jvm_options`: JVM parameters specified here will replace any other JVM parameters.
+
+Only one of the above options can be set for a given pod. If both options are non-empty strings then the related pod will fail to start.
+
 ### Deployment
 
 Before deploying the deployment object, the proper Cassandra headless service must be created (the headless
