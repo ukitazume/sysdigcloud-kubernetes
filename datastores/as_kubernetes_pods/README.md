@@ -312,7 +312,7 @@ To create a Elasticsearch statefulset, the provided manifest under
 `manifests/elasticsearch/elasticsearch-statefulset.yaml`
 can be used. By default, it will use a local non-persistent volume (standard dir).
 
-```
+```bash
 kubectl -n sysdigcloud create -f manifests/elasticsearch/elasticsearch-service.yaml
 kubectl -n sysdigcloud create -f manifests/elasticsearch/elasticsearch-statefulset.yaml
 ```
