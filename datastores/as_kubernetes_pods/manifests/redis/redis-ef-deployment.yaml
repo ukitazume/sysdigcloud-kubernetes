@@ -1,0 +1,45 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-ef
+  labels:
+    app: sysdigcloud
+    role: redis-ef
+spec:
+  ports:
+    - port: 6379
+      protocol: TCP
+      targetPort: 6379
+  selector:
+    app: sysdigcloud
+    role: redis-ef
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: sysdigcloud-redis-ef
+spec:
+  template:
+    metadata:
+      labels:
+        app: sysdigcloud
+        role: redis-ef
+    spec:
+      containers:
+        - name: redis-ef
+          image: quay.io/sysdig/redis:4.0.12.1-alpine
+          ports:
+           - containerPort: 6379
+          resources:
+            requests:
+              cpu: 100m
+              memory: 1Gi
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: redis.ef.password
+      imagePullSecrets:
+        - name: sysdigcloud-pull-secret
