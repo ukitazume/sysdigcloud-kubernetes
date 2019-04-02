@@ -5,7 +5,7 @@ sg_admin:
     '*':
       '*':
         - ALL
-sg_readall:
+sg_readonly:
   cluster:
     - CLUSTER_MONITOR
     - CLUSTER_COMPOSITE_OPS_RO

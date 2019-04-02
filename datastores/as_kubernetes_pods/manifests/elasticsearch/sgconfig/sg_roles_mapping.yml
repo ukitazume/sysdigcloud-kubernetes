@@ -1,7 +1,6 @@
 sg_admin:
   users:
     - admin
-sg_readall:
+sg_readonly:
   users:
-    - readall
-    - test
+    - readonly
