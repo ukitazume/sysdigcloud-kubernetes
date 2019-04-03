@@ -43,7 +43,7 @@ spec:
               protocol: TCP
             - containerPort: 6443
               hostPort: 6443
-              name: tslCollector
+              name: tlsCollector
               protocol: TCP
           readinessProbe:
               failureThreshold: 3
