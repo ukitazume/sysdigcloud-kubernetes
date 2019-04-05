@@ -13,7 +13,7 @@ spec:
         role: cassandra
     spec:
       containers:
-        - image: quay.io/sysdig/cassandra:2.1.21.5
+        - image: quay.io/sysdig/cassandra:2.1.21.6
           name: cassandra
           imagePullPolicy: Always
           ## Recommended resource limits for Cassandra pods.
