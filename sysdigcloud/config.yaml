@@ -64,7 +64,7 @@ data:
   elasticsearch.jvm.options: ""
   #Username required for the Search Guard authentication
   elasticsearch.searchguard.enabled: "false"
-  elasticsearch.user: ""
+  elasticsearch.user: "admin"
   ####################################
   ######### SMTP #########
   ####################################
