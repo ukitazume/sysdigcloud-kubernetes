@@ -3,7 +3,8 @@ kind: Route
 metadata:
   name: collector-passthrough-ssl
 spec:
-  host: <COLLECTOR_HOST_NAME_MUST_BE_DIFFERENT_FROM_API_HOSTNAME>
+  # Note: this dns name MUST be different from the Api dns name
+  host: <COLLECTOR_DNS_NAME>
   to:
     kind: Service
     name: sysdigcloud-collector
