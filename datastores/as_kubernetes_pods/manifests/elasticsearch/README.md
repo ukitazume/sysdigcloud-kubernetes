@@ -1,10 +1,4 @@
-# Search Guard Roles
-
-There are currently only 2 roles that SG has set up:
-- **admin**: Has access to everything in the cluster and all indices
-- **readonly**: Can only read indices and access monitoring endpoints for the cluster (Ex. Health)
-
-# Enabling Search Guard
+# Enabling authentication on a new cluster
 
 **Steps**
 
@@ -17,6 +11,7 @@ There are currently only 2 roles that SG has set up:
 `kubectl -n <my-namespace> create secret generic sg-readonly-secret --from-literal=password='<readonly-password-here>'`
 4. Uncomment all the required environment variables/volumes that will be needed for setting up SG
 5. Make sure that `elasticsearch.searchguard.enabled` is set to "true" in `sysdigcloud/config.yaml` and set `elasticsearch.user` to the searchguard role that the elasticsearch cluster will be using
+6. Create the elasticsearch cluster `kubectl -n <my-namespace> create -f elasticsearch-statefulset.yaml`
 
 # Search Guard Configuration Files
 
@@ -49,7 +44,17 @@ If you would like to use this role/password you need to make sure to set `elasti
 Once you are satisfied with the configuration, run the following command:
 `kubectl -n <my-namespace> create secret generic sg-config-files --from-file=sgconfig`
 
-If you are running an existing cluster you will need to `apply` your changes for both the config and statefulset files.
+# Search Guard Roles
+
+There are currently only 2 roles that SG has set up:
+- **admin**: Has access to everything in the cluster and all indices
+- **readonly**: Can only read indices and access monitoring endpoints for the cluster (Ex. Health)
+
+# Enabling authentication on an existing cluster
+
+The steps for enabling on an existing cluster are almost the same as for enabling on a new cluster.
+
+Follow steps 1-5 from `Enabling authentication on a new cluster` and then you will need to `apply` your changes for both the config and statefulset files.
 `kubectl -n <my-namespace> apply -f config.yaml`
 `kubectl -n <my-namespace> apply -f elasticsearch-statefulset.yaml`
 
