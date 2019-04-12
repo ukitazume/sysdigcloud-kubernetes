@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: worker
-          image: quay.io/sysdig/sysdigcloud-backend:1765
+          image: quay.io/sysdig/sysdigcloud-backend:1929
           volumeMounts:
             - name: logs
               mountPath: /var/log/sysdigcloud
@@ -78,6 +78,13 @@ spec:
             preStop:
               exec:
                 command: ["curl","-v","http://127.0.0.1:9000/api/admin/drain"]
+          #resources:
+          #  limits:
+          #    cpu: 8
+          #    memory: 8Gi
+          #  requests:
+          #    cpu: 4
+          #    memory: 4Gi
       terminationGracePeriodSeconds: 60
       imagePullSecrets:
         - name: sysdigcloud-pull-secret

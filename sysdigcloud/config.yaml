@@ -38,7 +38,7 @@ data:
   # initial keyspace creation. This will not change an already running install.
   # Change to 1 only for POC or if running a single node deployment
   cassandra.replication.factor: "3"
-  # Optional: Cassandra JVM JVM options. For heavy load environments this will override the defaults
+  # Optional: Cassandra JVM JVM options. For heavy load environments this will override the defaults (e.g. -Xms5G -Xmx10G)
   cassandra.jvm.options: ""
   # Optional: Store Sysdig captures using Cassandra instead of S3. This increases cassandra storage if set to true
   sysdigcloud.captures.cassandra.storage: "true"
@@ -98,7 +98,7 @@ data:
   # Required: Elasticsearch URL. If Elasticsearch is deployed as a Kubernetes service,
   # this will be the service name. If using an external database, put the proper address
   elasticsearch.url: http://sysdigcloud-elasticsearch
-  # Optional: Elasticsearch JVM options. For heavy load environments this will override the defaults
+  # Optional: Elasticsearch JVM options. For heavy load environments this will override the defaults (e.g. -Xms6G -Xmx6G)
   elasticsearch.jvm.options: ""
   ####################################
   ######### SMTP #########
@@ -140,6 +140,7 @@ data:
   # Optional: Sysdig Cloud application JVM options. For heavy load environments this will override the defaults
   # If using Redis statefulsets (HA) the following needs to be added to the api, worker, and collector jvm options
   # "-Ddraios.redis.useSentinel=true -Ddraios.redis.master=primary -Ddraios.redis.sentinels.0=redis-sentinel:26379"
+  # e.g. (-Xms4G -Xmx8G)
   sysdigcloud.jvm.api.options: ""
   sysdigcloud.jvm.worker.options: ""
   sysdigcloud.jvm.collector.options: ""

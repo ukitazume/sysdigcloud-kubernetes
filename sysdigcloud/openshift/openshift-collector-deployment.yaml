@@ -2,17 +2,17 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: sysdigcloud-api
+  name: sysdigcloud-collector
 spec:
   replicas: 1
   template:
     metadata:
       labels:
         app: sysdigcloud
-        role: api
+        role: collector
     spec:
       containers:
-        - name: api
+        - name: collector
           image: quay.io/sysdig/sysdigcloud-backend:1929
           volumeMounts:
             - name: logs
@@ -29,9 +29,9 @@ spec:
             #  mountPath: /opt/kubernets_secrets
           env:
             - name: ROLES
-              value: api
+              value: collector
             - name: LOG_ROLE
-              value: api
+              value: collector
             - name: LOG_TO_STDOUT
               valueFrom:
                 configMapKeyRef:
@@ -46,7 +46,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: sysdigcloud-config
-                  key: sysdigcloud.jvm.api.options
+                  key: sysdigcloud.jvm.collector.options
             - name: CASSANDRA_ENDPOINT_SNITCH
               valueFrom:
                 configMapKeyRef:
@@ -69,9 +69,8 @@ spec:
           #     memory: "64G"
           #     cpu: "32"
           readinessProbe:
-            httpGet:
-              path: /api/ping
-              port: 9000
+            tcpSocket:
+              port: 6000
             initialDelaySeconds: 30
             timeoutSeconds: 2
           lifecycle:
@@ -80,11 +79,11 @@ spec:
                 command: ["curl","-v","http://127.0.0.1:9000/api/admin/drain"]
           #resources:
           #  limits:
-          #    cpu: 8
-          #    memory: 8Gi
+          #    cpu: 10
+          #    memory: 10Gi
           #  requests:
-          #    cpu: 2
-          #    memory: 4Gi
+          #    cpu: 4
+          #    memory: 5Gi
       terminationGracePeriodSeconds: 60
       imagePullSecrets:
         - name: sysdigcloud-pull-secret
@@ -95,7 +94,7 @@ spec:
             name: sysdigcloud-config
         - name: ssl
           secret:
-            secretName: sysdigcloud-ssl-secret
+            secretName: sysdigcloud-ssl-secret-collector
         # Uncomment this if you need to import self-signed SSL certs
         #- name: java-certs
         #  secret:
