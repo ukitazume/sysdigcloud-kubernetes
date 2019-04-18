@@ -23,14 +23,9 @@ data:
           vulnerabilities: True
           nvd: True
           packages: False
+    default_admin_password: ${ANCHORE_ADMIN_PASSWORD}
+    default_admin_email: 'admin@myemail.com'
     credentials:
-      users:
-        admin:
-          password: ${ANCHORE_ADMIN_PASSWORD}
-          # This email address is not used, but shouldn't be blank.
-          email: test@sysdig.com
-          external_service_auths:
-          auto_policy_sync: false
       database:
         db_connect: "postgresql+pg8000://${ANCHORE_DB_USER}:${ANCHORE_DB_PASSWORD}@${ANCHORE_DB_ENDPOINT}/${ANCHORE_DB}"
         db_connect_args:
@@ -70,7 +65,7 @@ data:
 
         event_log:
           notification:
-            enabled: true
+            enabled: false
             level:
               - error
         archive:

@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: collector
-          image: quay.io/sysdig/sysdigcloud-backend:1630
+          image: quay.io/sysdig/sysdigcloud-backend:1765
           volumeMounts:
             - name: logs
               mountPath: /var/log/sysdigcloud
@@ -47,11 +47,16 @@ spec:
                 configMapKeyRef:
                   name: sysdigcloud-config
                   key: sysdigcloud.jvm.collector.options
-            - name: JAVA_GC_PARAMETERS
+            - name: CASSANDRA_ENDPOINT_SNITCH
               valueFrom:
                 configMapKeyRef:
                   name: sysdigcloud-config
-                  key: sysdigcloud.jvmgc.collector.options
+                  key: cassandra.endpoint.snitch
+            - name: CASSANDRA_DC
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: cassandra.datacenter.name
           # If you're running multiple replicas, it is advisable to configure the limits below. Limiting resources
           # can help stabilize rolling updates later down the road.
           # resources:
@@ -68,6 +73,18 @@ spec:
               port: 6000
             initialDelaySeconds: 30
             timeoutSeconds: 2
+          lifecycle:
+            preStop:
+              exec:
+                command: ["curl","-v","http://127.0.0.1:9000/api/admin/drain"]
+          resources:
+            limits:
+              cpu: "8"
+              memory: "10Gi"
+            requests:
+              cpu: "2"
+              memory: "5Gi"
+      terminationGracePeriodSeconds: 60
       imagePullSecrets:
         - name: sysdigcloud-pull-secret
       volumes:
