@@ -85,7 +85,6 @@ spec:
         - name: sysdigcloud-pull-secret
       volumes:
         - name: logs
-          emptyDir: {}
         - name: config
           configMap:
             name: sysdigcloud-config
