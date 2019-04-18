@@ -9,7 +9,7 @@
 3. Generate the password secrets for the admin/readonly searchguard roles
 `kubectl -n <my-namespace> create secret generic sg-admin-secret --from-literal=password='<admin-password-here>'`
 `kubectl -n <my-namespace> create secret generic sg-readonly-secret --from-literal=password='<readonly-password-here>'`
-4. Uncomment all the required environment variables/volumes that will be needed for setting up SG
+4. Uncomment all the required environment variables/volumes that will be needed for setting up AWS Security Group 
 5. Make sure that `elasticsearch.searchguard.enabled` is set to "true" in `sysdigcloud/config.yaml` and set `elasticsearch.user` to the searchguard role that the elasticsearch cluster will be using
 6. Create the elasticsearch cluster `kubectl -n <my-namespace> create -f elasticsearch-statefulset.yaml`
 
