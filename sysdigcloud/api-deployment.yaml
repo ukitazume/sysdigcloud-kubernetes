@@ -12,15 +12,28 @@ spec:
         role: api
     spec:
       containers:
+        - name: nginx
+          image: quay.io/sysdig/sysdigcloud-backend:1970-nginx
+          volumeMounts:
+            - name: ssl
+              mountPath: /opt/certs/
+            - name: config
+              mountPath: /opt/kubernets_config
+          env:
+            - name: LOG_ROLE
+              value: api
+            - name: API_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: api.url
         - name: api
-          image: quay.io/sysdig/sysdigcloud-backend:1765
+          image: quay.io/sysdig/sysdigcloud-backend:1970-allinone-java
           volumeMounts:
             - name: logs
               mountPath: /var/log/sysdigcloud
             - name: config
               mountPath: /opt/kubernets_config
-            - name: ssl
-              mountPath: /opt/certs/
             # Uncomment this if you need to import self-signed SSL certs
             #- name: java-certs
             #  mountPath: /opt/java-certs/
@@ -37,11 +50,6 @@ spec:
                 configMapKeyRef:
                   name: sysdigcloud-config
                   key: sysdigcloud.logging.stdout
-            - name: API_ENDPOINT
-              valueFrom:
-                configMapKeyRef:
-                  name: sysdigcloud-config
-                  key: api.url
             - name: JVM_EXTRA_OPTS
               valueFrom:
                 configMapKeyRef:
