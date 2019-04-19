@@ -104,8 +104,11 @@ data:
   # Required: Elasticsearch URL. If Elasticsearch is deployed as a Kubernetes service,
   # this will be the service name. If using an external database, put the proper address
   elasticsearch.url: http://sysdigcloud-elasticsearch
-  # Optional: Elasticsearch JVM options. For heavy load environments this will override the defaults
-  elasticsearch.jvm.options: "-Xms6G -Xmx6G"
+  # Optional: Elasticsearch JVM options. Suggested value "-Xms6G -Xmx6G"
+  elasticsearch.jvm.options: ""
+  #Username required for the Search Guard authentication
+  elasticsearch.searchguard.enabled: "false"
+  elasticsearch.user: "admin"
   ####################################
   ######### SMTP #########
   ####################################
