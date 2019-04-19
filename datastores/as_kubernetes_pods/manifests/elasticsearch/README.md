@@ -3,7 +3,7 @@
 **Steps**
 
 1. Run the following docker command to generate the root/admin certs to a directory of your choice
-`docker run -d -it -v "$(pwd)"/out:/usr/share/elasticsearch/tools/out quay.io/sysdig/elasticsearch:sg-certs-1.0`
+`docker run -d -v "$(pwd)"/out:/tools/out quay.io/sysdig/elasticsearch:1.0.1-es-certs`
 2. Generate the required kubernetes secret file 
 `kubectl -n <my-namespace> create secret generic ca-certs --from-file=out`
 3. Generate the password secrets for the admin/readonly searchguard roles
