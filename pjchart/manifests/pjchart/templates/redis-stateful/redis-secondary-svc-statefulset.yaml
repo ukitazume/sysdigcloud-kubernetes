@@ -1,0 +1,16 @@
+---
+# Source: pjchart/templates/redis-stateful/redis-secondary-svc-statefulset.yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: sysdigcloud-pj-template
+  name: redis-secondary
+  labels:
+    app: redis-secondary
+spec:
+  ports:
+  - port: 6379
+    name: redis-secondary
+  selector:
+    app: redis-secondary
