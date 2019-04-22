@@ -1,0 +1,16 @@
+---
+# Source: pjchart/templates/redis-stateful/redis-sentinel-svc-statefulset.yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: sysdigcloud-pj-template
+  name: redis-sentinel
+  labels:
+    app: redis-sentinel
+spec:
+  ports:
+  - port: 26379
+    name: redis-sentinel
+  selector:
+    app: redis-sentinel

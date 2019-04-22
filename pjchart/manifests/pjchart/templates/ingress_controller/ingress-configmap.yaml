@@ -1,0 +1,8 @@
+---
+# Source: pjchart/templates/ingress_controller/ingress-configmap.yaml
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: haproxy-ingress
+  namespace: sysdigcloud-pj-template
