@@ -10,7 +10,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: ingress-controller
-    namespace: <namespace>
+    namespace: sysdigcloud
   - apiGroup: rbac.authorization.k8s.io
     kind: User
     name: ingress-controller
