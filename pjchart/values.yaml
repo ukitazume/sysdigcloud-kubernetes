@@ -24,5 +24,4 @@ sysdig:
 #agents 
 #do we need secure?
 #replicas - pods #cassy #elastic
-
--> #dcpu #moemory #disk
+#cpu #memory #disk
