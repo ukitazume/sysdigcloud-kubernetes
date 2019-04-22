@@ -27,10 +27,6 @@ spec:
       containers:
         - name: redis
           image: quay.io/sysdig/redis:4.0.12.1-alpine
-          resources:
-            requests:
-              cpu: 100m
-              memory: 1Gi
           env:
             - name: REDIS_PASSWORD
               valueFrom:

@@ -132,12 +132,12 @@ data:
   ####################################
   # Required: Collector service endpoint is the FQDN which should match the <EXTERNAL-DNS-NAME>
   # found in the file api-ingress.yaml
-  collector.endpoint: <EXTERNAL-DNS-NAME>
+  collector.endpoint: ae3cb4ecd57f111e9afc90a5a199fa68-757061889.us-east-1.elb.amazonaws.com
   # Required: Collector port. If using a LoadBalancer service for the collector, the port can be left as the default.
   collector.port: "6443"
   # Required: Api service https URL is the URL using the FQDN which should match the <EXTERNAL-DNS-NAME>
   # found in the file api-ingress.yaml
-  api.url: https://<EXTERNAL-DNS-NAME>:443
+  api.url: https://ae3cb4ecd57f111e9afc90a5a199fa68-757061889.us-east-1.elb.amazonaws.com:443
   # Required: Sysdig Cloud super admin user. This will be used for the initial login in the web interface
   sysdigcloud.default.user: test@sysdig.com
   # Required: Sysdig Cloud super admin user password
@@ -145,9 +145,9 @@ data:
   sysdigcloud.default.user.password: test
   # Required: Restrict password login to super admin user
   # Force all non-default users to login using the configured IdP
-  sysdigcloud.restrict.password.login: "false"
+  sysdigcloud.restrict.password.login: "true"
   # Optional: forward application logs to stdout
-  sysdigcloud.logging.stdout: "false"
+  sysdigcloud.logging.stdout: "true"
   # Optional: Sysdig Cloud application JVM options. For heavy load environments this will override the defaults
   # If using Redis statefulsets (HA) the following needs to be added to the api, worker, and collector jvm options
   # "-Ddraios.redis.useSentinel=true -Ddraios.redis.master=primary -Ddraios.redis.sentinels.0=redis-sentinel:26379"
