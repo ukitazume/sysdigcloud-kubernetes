@@ -44,6 +44,10 @@ spec:
               hostPort: 443
               name: https
               protocol: TCP
+            - containerPort: 6443
+              hostPort: 6443
+              name: tlscollector
+              protocol: TCP
           readinessProbe:
               failureThreshold: 3
               httpGet:
