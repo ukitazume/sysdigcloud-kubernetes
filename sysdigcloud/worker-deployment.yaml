@@ -13,12 +13,10 @@ spec:
     spec:
       containers:
         - name: email-renderer
-          image: quay.io/sysdig/sysdigcloud-backend:1970-email-renderer
+          image: quay.io/sysdig/sysdigcloud-backend:1985-email-renderer
         - name: worker
-          image: quay.io/sysdig/sysdigcloud-backend:1970-allinone-java
+          image: quay.io/sysdig/sysdigcloud-backend:1985-allinone-java
           volumeMounts:
-            - name: logs
-              mountPath: /var/log/sysdigcloud
             - name: config
               mountPath: /opt/kubernets_config
             # Uncomment this if you need to import self-signed SSL certs
@@ -84,7 +82,6 @@ spec:
       imagePullSecrets:
         - name: sysdigcloud-pull-secret
       volumes:
-        - name: logs
         - name: config
           configMap:
             name: sysdigcloud-config

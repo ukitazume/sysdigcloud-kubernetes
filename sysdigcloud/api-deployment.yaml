@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: quay.io/sysdig/sysdigcloud-backend:1970-nginx
+          image: quay.io/sysdig/sysdigcloud-backend:1985-nginx
           volumeMounts:
             - name: ssl
               mountPath: /opt/certs/
@@ -28,10 +28,8 @@ spec:
                   name: sysdigcloud-config
                   key: api.url
         - name: api
-          image: quay.io/sysdig/sysdigcloud-backend:1970-allinone-java
+          image: quay.io/sysdig/sysdigcloud-backend:1985-allinone-java
           volumeMounts:
-            - name: logs
-              mountPath: /var/log/sysdigcloud
             - name: config
               mountPath: /opt/kubernets_config
             # Uncomment this if you need to import self-signed SSL certs
@@ -97,7 +95,6 @@ spec:
       imagePullSecrets:
         - name: sysdigcloud-pull-secret
       volumes:
-        - name: logs
         - name: config
           configMap:
             name: sysdigcloud-config
