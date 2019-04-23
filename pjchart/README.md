@@ -13,6 +13,10 @@ Inputs:
 9.  Flavor - k8s, openshift, GKE
 10. Product - monitor, monitor+secure
 
+Adding Marks inputs
+#machines #of nodes, cpu/mem/disk
+#replicas - pods #cassy #elastic
+
 values.yaml contains all the variables
 
 helm template --values values.yaml --output-dir manifests/ .
