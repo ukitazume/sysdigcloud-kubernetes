@@ -4,3 +4,5 @@ resources:
   - api-ingress.yaml
   - api-headless-service.yaml
   - api-deployment.yaml
+patches:
+  - custom.yaml
