@@ -12,13 +12,19 @@ sysdig:
     username: mysql-admin
     password: RandomGeneratedMySqlPassword
     root:
-      password: RandomGeneratedMySqlRootPassoword
+      password: RandomGeneratedMySqlRootPassword
+    secure:
+      password: RandomGeneratedMySqlSecurePassword
   redis:
     password: RandomGeneratedRedisPassword
   storageclass:
     name: pj-gp2-retain
   endpoint: aa2ca63f362ea11e9a0710a2da0e6c53-896137843.us-east-1.elb.amazonaws.com
-
+  secure:
+    admin:
+      password: RandomGeneratedSecureAdminPassword
+    db:
+      password: RandomGeneratedSecurePassword
 
 #machines #of nodes, cpu/mem
 #agents 
