@@ -14,9 +14,21 @@ helm template --values values.yaml --output-dir manifests/ .
 echo "step2: generate commong files"
 kustomize build manifests/pjchart/templates/common-config/ > manifests/final/common-config.yaml
 
-echo "step3: data-stores cassandra"
-kustomize build manifests//pjchart/templates/data-stores/overlays/cassandra/small/ > manifests/final/cassandra.yaml
-
+echo "step3a: data-stores cassandra"
+echo "---" >> manifests/final/infra.yaml
+kustomize build manifests//pjchart/templates/data-stores/overlays/cassandra/small/    >> manifests/final/infra.yaml
+echo "step3b: data-stores elasticsearch"
+echo "---" >> manifests/final/infra.yaml
+kustomize build manifests/pjchart/templates/data-stores/overlays/elasticsearch/small/ >> manifests/final/infra.yaml
+echo "step3c: data-stores mysql"
+echo "---" >> manifests/final/infra.yaml
+kustomize build manifests//pjchart/templates/data-stores/overlays/mysql-single/small/ >> manifests/final/infra.yaml
+echo "step3d: data-stores postgres"
+echo "---" >> manifests/final/infra.yaml
+kustomize build manifests//pjchart/templates/data-stores/overlays/postgres/small/     >> manifests/final/infra.yaml
+echo "step3e: data-stores redis"
+echo "---" >> manifests/final/infra.yaml
+kustomize build manifests//pjchart/templates/data-stores/redis-single/                >> manifests/final/infra.yaml
 
 #echo "step 5: generate postgres yaml"
 #kustomize build manifests/pjchart/templates/infra/postgres/ > manifests/final/postgres.yaml

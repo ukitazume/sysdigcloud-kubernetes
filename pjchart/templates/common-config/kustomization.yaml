@@ -6,3 +6,5 @@ resources:
   - storage-class.yaml
   - lb-config.yaml
   - config.yaml
+  - anchore-secrets.yaml
+  - scanning-secrets.yaml
