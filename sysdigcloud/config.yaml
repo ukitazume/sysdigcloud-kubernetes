@@ -81,25 +81,36 @@ data:
   cassandra.datacenter.name: ""
   # End Snitch Group ###########################################
   ####################################
-  ######### REDIS #########
+  ######### REDIS ####################
   ####################################
-  # Required: Redis endpoint DNS/IP. If Redis is deployed as a Kubernetes service,
-  # this will be the service name. If using an external database, put the proper address
-  # The assumption is that the redis port will always be 6339
-  # This is the value for HA Redis and non-HA Redis
+  # Required: Redis endpoint DNS/IP. When Redis is deployed as a Kubernetes service,
+  # this will be the service name. If using an external service, put the proper address.
+  # This is the value for either HA Redis or non-HA Redis
   redis.endpoint: redis-primary
   # Optional: Redis password
   redis.password: ""
   # If using Redis HA/Statefulsets, see the SYSDIG ONPREM section below about adding jvm options to
   # sysdigcloud.jvm.api.options, sysdigcloud.jvm.worker.options, sysdigcloud.jvm.collector.options
+  #############################################
+  ######### REDIS - EVENTS FORWARDING #########
+  #############################################
+  redis.ef.endpoint: redis-events-forwarding
+  redis.ef.port: "6379"
+  # Optional: Redis password
+  redis.ef.password: ""
   ####################################
-  ######### ELASTICSEARCH #########
+  ######### ELASTICSEARCH ############
   ####################################
   # Required: Elasticsearch URL. If Elasticsearch is deployed as a Kubernetes service,
   # this will be the service name. If using an external database, put the proper address
   elasticsearch.url: http://sysdigcloud-elasticsearch
   # Optional: Elasticsearch JVM options. For heavy load environments this will override the defaults (e.g. -Xms6G -Xmx6G)
   elasticsearch.jvm.options: ""
+  # Optional: Elasticsearch JVM options. Suggested value "-Xms6G -Xmx6G"
+  elasticsearch.jvm.options: ""
+  #Username required for the Search Guard authentication
+  elasticsearch.searchguard.enabled: "false"
+  elasticsearch.user: "admin"
   ####################################
   ######### SMTP #########
   ####################################
