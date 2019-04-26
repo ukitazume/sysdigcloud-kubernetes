@@ -1,0 +1,15 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: sysdigcloud-cassandra
+spec:
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 50Gi
+        storageClassName: {{ .Values.sysdig.storageclass.name }}

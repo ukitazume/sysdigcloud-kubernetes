@@ -12,6 +12,7 @@ Inputs:
 8.  Certs - tls certs, java certs
 9.  Flavor - k8s, openshift, GKE
 10. Product - monitor, monitor+secure
+11. Ability to turn on/off pod antiaffinity
 
 Adding Marks inputs
 #machines #of nodes, cpu/mem/disk

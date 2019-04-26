@@ -18,16 +18,6 @@ data:
                 "podname": "sysdigcloud-cassandra-0",
                 "additional_jvm_options": "",
                 "override_jvm_options": ""
-            },
-            {
-                "podname": "sysdigcloud-cassandra-1",
-                "additional_jvm_options": ""
-                "override_jvm_options": ""
-            },
-            {
-                "podname": "sysdigcloud-cassandra-2",
-                "additional_jvm_options": "",
-                "override_jvm_options": ""
             }
         ]
     }
