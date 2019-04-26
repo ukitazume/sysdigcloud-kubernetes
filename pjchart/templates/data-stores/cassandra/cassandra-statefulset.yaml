@@ -112,16 +112,12 @@ spec:
             initialDelaySeconds: 15
             failureThreshold: 10
             timeoutSeconds: 5
-#          resources:
-#            limits:
-#              cpu: "12"
-#              memory: 16Gi
-#            requests:
-#              cpu: "4"
-#              memory: 8Gi
           volumeMounts:
             - mountPath: /var/lib/cassandra
               name: data
+            - mountPath: /opt/cassandra/cassandra-jvm-opts.json
+              name: cassandra-jvm-opts
+              subPath: cassandra-jvm-opts.json
             # Uncomment this when using multiple mount points for data
             # - mountPath: /var/lib/cassandra/data2
             #   name: data2
@@ -130,28 +126,17 @@ spec:
             # - mountPath: /host/etc/hostname
             #   readOnly: true
             #   name: host-etc-hostname
-            ############################################
-            # Uncomment to specify per-pod jvm options
-            # using the cassandra-jvm-opts configmap.
-            # - name: cassandra-jvm-opts
-            #   mountPath: /opt/cassandra/cassandra-jvm-opts.json
-            #   subPath: cassandra-jvm-opts.json
-            #############################################
       imagePullSecrets:
         - name: sysdigcloud-pull-secret
       ### Start of the custom Cassandra snitch group
       # The following entries are required for the custom Cassandra snitch (see configMap)
-      # volumes:
+      volumes:
+        - name: cassandra-jvm-opts
+          configMap:
+            name: cassandra-jvm-opts
       # - name: host-etc-hostname
       #   hostPath:
       #     path: /etc/hostname
-      ############################################
-      # Uncomment to specify per-pod jvm options
-      # using the cassandra-jvm-opts configmap.
-      # - name: cassandra-jvm-opts
-      #   configMap:
-      #     name: cassandra-jvm-opts
-      #############################################
   volumeClaimTemplates:
     - metadata:
         name: data
