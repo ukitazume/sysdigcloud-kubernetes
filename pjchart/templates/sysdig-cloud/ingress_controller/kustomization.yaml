@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ingress-clusterrole.yaml 
+  - ingress-clusterrolebinding.yaml
+  - ingress-role.yaml
+  - ingress-rolebinding.yaml
+  - ingress-serviceaccount.yaml
+  - default-backend-service.yaml
+  - default-backend-deployment.yaml
+  - ingress-configmap.yaml
+  - ingress-tcp-services-configmap.yaml
+  - ingress-daemonset.yaml 

@@ -8,3 +8,11 @@ resources:
   - config.yaml
   - anchore-secrets.yaml
   - scanning-secrets.yaml
+generatorOptions:
+ disableNameSuffixHash: true
+secretGenerator:
+- name: sysdigcloud-ssl-secret
+  namespace: {{ .Values.namespace }}
+  files:
+    - tls.crt={{ .Values.sysdig.certificate.cert }}
+    - tls.key={{ .Values.sysdig.certificate.key  }}
