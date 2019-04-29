@@ -8,8 +8,16 @@ rm -rf manifests/
 echo "step2: creating manifest dirs"
 mkdir manifests && mkdir manifests/final
 
+SECRET_FILE= secret.yaml
+if [ -f "$SECRET_FILE" ]; then
+    echo "$SECRET_FILE exist"
+else
+    echo "Secret file does not exist. Creating Secretfile"
+    helm template -x templates/secrets.yaml secrets > secrets.yaml
+fi
+
 echo "step1: running through helm template engine"
-helm template --values values.yaml --output-dir manifests/ .
+helm template -f values.yaml -f secrets.yaml --output-dir manifests/ .
 
 echo "step2: generate commong files"
 kustomize build manifests/pjchart/templates/overlays/common-config/small/ > manifests/final/common-config.yaml
