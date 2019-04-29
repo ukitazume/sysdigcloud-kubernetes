@@ -3,4 +3,4 @@ kind: Kustomization
 resources:
   - collector-deployment.yaml
   - collector-headless-service.yaml
-  - woker-deployment.yaml
+  - worker-deployment.yaml
