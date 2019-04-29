@@ -42,5 +42,10 @@ values.yaml contains the variables
 
 Needs: kustomize & helm - brew install
 
-steps to run:
+Instructions:
+values.yaml - containts parameters - license, quaypull secret, dns endpoint
+secret.yaml - contains generated/custom passwords for infrastructure modules
+generate_templates uses values.yaml & secrets.yaml to generate sysdigcloud yaml files
+outputDir: manifests/final
+Run:
 ./generate_templates.sh
