@@ -43,8 +43,4 @@ values.yaml contains the variables
 Needs: kustomize & helm - brew install
 
 steps to run:
-1. mkdir manifests
-2. helm template --values values.yaml --output-dir manifests/ .
-3. overlays
-3.1 kustomize build manifests/pjchart/templates/apps/overlays/collector/small
-3.2 kustomize build manifests/pjchart/templates/apps/overlays/api/small
+./generate_templates.sh
