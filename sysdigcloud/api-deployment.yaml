@@ -12,6 +12,8 @@ spec:
         role: api
     spec:
       containers:
+        - name: email-renderer
+          image: quay.io/sysdig/sysdigcloud-backend:1985-email-renderer
         - name: nginx
           image: quay.io/sysdig/sysdigcloud-backend:1985-nginx
           volumeMounts:
