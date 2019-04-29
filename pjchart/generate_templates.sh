@@ -8,9 +8,9 @@ rm -rf manifests/
 echo "step2: creating manifest dirs"
 mkdir manifests && mkdir manifests/final
 
-SECRET_FILE= secret.yaml
+SECRET_FILE=secrets.yaml
 if [ -f "$SECRET_FILE" ]; then
-    echo "$SECRET_FILE exist"
+    echo "$SECRET_FILE exists"
 else
     echo "Secret file does not exist. Creating Secretfile"
     helm template -x templates/secrets.yaml secrets > secrets.yaml
