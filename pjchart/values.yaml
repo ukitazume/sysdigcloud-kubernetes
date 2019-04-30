@@ -1,5 +1,5 @@
 #Set k8s namespace for sysdigcloud
-namespace: sysdigcloud-pj-template-rev3
+namespace: sysdigcloud-pj-template-rev4
 #Set Quay.Io secrets
 quaypullsecret: ewogICJhdXRocyI6IHsKICAgICJxdWF5LmlvIjogewogICAgICAiYXV0aCI6ICJjM2x6WkdsbkszQnlZWFpwYm1wdmRHaHBibUYwYUdGdU9rOUROekUwTmtneFdsZFdNVVpZUmxaTlRrYzNOa2xWUVZSSE1VaFNRMFpOTUZoUFJUWlFSemxGT0VoRFNsSmFVelJETXpCVlZVY3dUVFZMUmxGSVJWRT0iLAogICAgICAiZW1haWwiOiAiIgogICAgfQogIH0KfQ==
 #Set Sysdig license
@@ -17,3 +17,4 @@ sysdig:
 #do we need secure?
 #replicas - pods #cassy #elastic
 #cpu #memory #disk
+#add backend version number?
