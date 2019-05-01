@@ -12,6 +12,7 @@ sysdig:
   storageclass:
     name: pj1-gp2-retain
   endpoint: ec2-54-210-34-178.compute-1.amazonaws.com
+  monitorVersion: 1985
 #Notes:
 #machines #of nodes, cpu/mem
 #do we need secure?

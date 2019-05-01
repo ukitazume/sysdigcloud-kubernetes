@@ -11,10 +11,11 @@ spec:
       labels:
         app: sysdigcloud
         role: collector
+        version: {{ .Values.sysdig.monitorVersion | quote }}
     spec:
       containers:
         - name: nginx
-          image: quay.io/sysdig/sysdigcloud-backend:1970-nginx
+          image: quay.io/sysdig/sysdigcloud-backend:{{ .Values.sysdig.monitorVersion }}-nginx
           volumeMounts:
             - name: ssl
               mountPath: /opt/certs/
@@ -29,7 +30,7 @@ spec:
                   name: sysdigcloud-config
                   key: api.url
         - name: collector
-          image: quay.io/sysdig/sysdigcloud-backend:1970-allinone-java
+          image: quay.io/sysdig/sysdigcloud-backend:{{ .Values.sysdig.monitorVersion }}-allinone-java
           volumeMounts:
             - name: logs
               mountPath: /var/log/sysdigcloud
