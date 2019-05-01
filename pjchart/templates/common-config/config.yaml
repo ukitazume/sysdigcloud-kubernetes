@@ -12,7 +12,7 @@ data:
   # this will be the service name. If using an external database, put the proper address
   mysql.endpoint: sysdigcloud-mysql
   # Required: MySQL user
-  mysql.user: {{ .Values.sysdig.mysql.username }}
+  mysql.user: mysql-admin
   # Required: MySQL password
   mysql.password: {{ .Values.sysdig.mysql.password }}
   mysql.root.password: {{ .Values.sysdig.mysql.root.password }}
