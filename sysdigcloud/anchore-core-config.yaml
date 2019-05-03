@@ -31,8 +31,8 @@ data:
         db_connect_args:
           timeout: 120
           ssl: false
-        db_pool_size: 30
-        db_pool_max_overflow: 30
+        db_pool_size: 50
+        db_pool_max_overflow: 70
     services:
       apiext:
         enabled: True
