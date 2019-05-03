@@ -87,3 +87,5 @@ data:
         endpoint_hostname: sysdigcloud-anchore-core
         listen: '0.0.0.0'
         port: 8087
+        catalog_client_conn_timeout: 30
+        catalog_client_read_timeout: 3600
