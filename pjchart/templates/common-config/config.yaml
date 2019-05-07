@@ -101,7 +101,7 @@ data:
   # this will be the service name. If using an external database, put the proper address
   elasticsearch.url: http://sysdigcloud-elasticsearch
   # Optional: Elasticsearch JVM options. For heavy load environments this will override the defaults
-  elasticsearch.jvm.options: "-Xms2G "
+  elasticsearch.jvm.options: ""
   ####################################
   ######### SMTP #########
   ####################################
@@ -142,9 +142,9 @@ data:
   # Optional: Sysdig Cloud application JVM options. For heavy load environments this will override the defaults
   # If using Redis statefulsets (HA) the following needs to be added to the api, worker, and collector jvm options
   # "-Ddraios.redis.useSentinel=true -Ddraios.redis.master=primary -Ddraios.redis.sentinels.0=redis-sentinel:26379"
-  sysdigcloud.jvm.api.options: "-Xms1G -Xmx8G"
-  sysdigcloud.jvm.worker.options: "-Xms1G -Xmx8G"
-  sysdigcloud.jvm.collector.options: "-Xms1G -Xmx10G"
+  sysdigcloud.jvm.api.options: ""
+  sysdigcloud.jvm.worker.options: ""
+  sysdigcloud.jvm.collector.options: ""
   # Required: Sysdig Cloud license
   sysdigcloud.license: {{ .Values.sysdig.license }}
   # Optional: OAuth allowed domains (comma separated list of domains)
