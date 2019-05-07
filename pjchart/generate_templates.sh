@@ -24,32 +24,33 @@ helm template -f values.yaml -f secrets.yaml --output-dir manifests/ .
 echo "step5: generate commong files"
 kustomize build manifests/pjchart/templates/overlays/common-config/small/ > $GENERATED_DIR/common-config.yaml
 
-echo "step6:  Generating data-stores"
-echo "step6a: data-stores cassandra"
+echo "step 6: generate ingress yaml"
+kustomize build manifests/pjchart/templates/sysdig-cloud/ingress_controller/               > $GENERATED_DIR/ingress.yaml
+
+echo "step7:  Generating data-stores"
+echo "step7a: data-stores cassandra"
 echo "---" >>$GENERATED_DIR/infra.yaml
 kustomize build manifests//pjchart/templates/data-stores/overlays/cassandra/small/    >> $GENERATED_DIR/infra.yaml
-echo "step6b: data-stores elasticsearch"
+echo "step7b: data-stores elasticsearch"
 echo "---" >>$GENERATED_DIR/infra.yaml
 kustomize build manifests/pjchart/templates/data-stores/overlays/elasticsearch/small/ >> $GENERATED_DIR/infra.yaml
-echo "step6c: data-stores mysql"
+echo "step7c: data-stores mysql"
 echo "---" >>$GENERATED_DIR/infra.yaml
 kustomize build manifests//pjchart/templates/data-stores/overlays/mysql-single/small/ >> $GENERATED_DIR/infra.yaml
-echo "step6d: data-stores postgres"
+echo "step7d: data-stores postgres"
 echo "---" >>$GENERATED_DIR/infra.yaml
 kustomize build manifests//pjchart/templates/data-stores/overlays/postgres/small/     >> $GENERATED_DIR/infra.yaml
-echo "step6e: data-stores redis"
+echo "step7e: data-stores redis"
 echo "---" >>$GENERATED_DIR/infra.yaml
 kustomize build manifests//pjchart/templates/data-stores/redis-single/                >> $GENERATED_DIR/infra.yaml
 
-echo "step 7: Generating monitor"
-echo "step 7a: generate monitor-api yamls"
+echo "step 8: Generating monitor"
+echo "step 8a: generate monitor-api yamls"
 kustomize build manifests//pjchart/templates/sysdig-cloud/overlays/api/small/              > $GENERATED_DIR/api.yaml
 
-echo "step 7b: generate monitor-collectorworker yamls"
+echo "step 8b: generate monitor-collectorworker yamls"
 kustomize build manifests//pjchart/templates/sysdig-cloud/overlays/collector-worker/small/ > $GENERATED_DIR/collector-worker.yaml
 
-echo "step 8: genrating secure yaml"
+echo "step 9: genrating secure yaml"
 kustomize build manifests/pjchart/templates/sysdig-cloud/secure/                           > $GENERATED_DIR/secure.yaml
 
-echo "step 9: generate ingress yaml"
-kustomize build manifests/pjchart/templates/sysdig-cloud/ingress_controller/               > $GENERATED_DIR/ingress.yaml
