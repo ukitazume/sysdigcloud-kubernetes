@@ -1,0 +1,6 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: sysdigcloud-cassandra
+spec:
+  replicas: 3

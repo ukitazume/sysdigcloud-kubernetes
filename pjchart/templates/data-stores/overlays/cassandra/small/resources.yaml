@@ -9,7 +9,7 @@ spec:
         - name: cassandra  
           resources:
             limits:
-              cpu: "4"
+              cpu: "2"
               memory: 8Gi
             requests:
               cpu: "1"
