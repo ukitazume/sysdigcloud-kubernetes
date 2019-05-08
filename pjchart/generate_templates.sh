@@ -1,6 +1,23 @@
 #!/bin/bash
+set -euo pipefail
 
-echo "happy templating!!"
+while getopts "m:s:" opt; do
+  case ${opt} in
+    m ) # process option a
+      mode=$OPTARG
+      echo "Mode selection $mode"
+      ;;
+    s ) # process option t
+      size=$OPTARG
+      echo "Size selection $size"
+      ;;
+    \? ) echo "Usage: cmd [-m monitor|monitor+secure] [-s small|medium|large]"
+         exit 1
+      ;;
+  esac
+done
+
+echo "happy templating!! with mode $mode & size $size"
 
 echo "step1: removing exiting manifests"
 rm -rf manifests/
@@ -22,10 +39,10 @@ echo "step4: running through helm template engine"
 helm template -f values.yaml -f secrets.yaml --output-dir manifests/ .
 
 echo "step5: generate commong files"
-kustomize build manifests/pjchart/templates/overlays/common-config/small/ > $GENERATED_DIR/common-config.yaml
+kustomize build manifests/pjchart/templates/overlays/common-config/small/             > $GENERATED_DIR/common-config.yaml
 
 echo "step 6: generate ingress yaml"
-kustomize build manifests/pjchart/templates/sysdig-cloud/ingress_controller/               > $GENERATED_DIR/ingress.yaml
+kustomize build manifests/pjchart/templates/sysdig-cloud/ingress_controller/          > $GENERATED_DIR/ingress.yaml
 
 echo "step7:  Generating data-stores"
 echo "step7a: data-stores cassandra"
@@ -37,9 +54,13 @@ kustomize build manifests/pjchart/templates/data-stores/overlays/elasticsearch/s
 echo "step7c: data-stores mysql"
 echo "---" >>$GENERATED_DIR/infra.yaml
 kustomize build manifests//pjchart/templates/data-stores/overlays/mysql-single/small/ >> $GENERATED_DIR/infra.yaml
-echo "step7d: data-stores postgres"
-echo "---" >>$GENERATED_DIR/infra.yaml
-kustomize build manifests//pjchart/templates/data-stores/overlays/postgres/small/     >> $GENERATED_DIR/infra.yaml
+if [ $mode = "monitor+secure" ]; then
+  echo "step7d: data-stores postgres"
+  echo "---" >>$GENERATED_DIR/infra.yaml
+  kustomize build manifests//pjchart/templates/data-stores/overlays/postgres/small/   >> $GENERATED_DIR/infra.yaml
+else
+  echo "skipping step7d: data-stores postgres - needed only for secure"
+fi
 echo "step7e: data-stores redis"
 echo "---" >>$GENERATED_DIR/infra.yaml
 kustomize build manifests//pjchart/templates/data-stores/redis-single/                >> $GENERATED_DIR/infra.yaml
@@ -51,6 +72,9 @@ kustomize build manifests//pjchart/templates/sysdig-cloud/overlays/api/small/   
 echo "step 8b: generate monitor-collectorworker yamls"
 kustomize build manifests//pjchart/templates/sysdig-cloud/overlays/collector-worker/small/ > $GENERATED_DIR/collector-worker.yaml
 
-echo "step 9: genrating secure yaml"
-kustomize build manifests/pjchart/templates/sysdig-cloud/secure/                           > $GENERATED_DIR/secure.yaml
-
+if [ $mode = "monitor+secure" ]; then
+  echo "step 9: genrating secure yaml"
+  kustomize build manifests/pjchart/templates/sysdig-cloud/secure/                         > $GENERATED_DIR/secure.yaml
+else
+  echo "skipping step 9: genrating secure yaml - needed only for secure"
+fi
