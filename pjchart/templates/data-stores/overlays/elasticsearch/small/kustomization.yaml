@@ -6,4 +6,3 @@ patches:
   - replicas.yaml
   - resources.yaml
   - volume-claim.yaml
-  - env.yaml

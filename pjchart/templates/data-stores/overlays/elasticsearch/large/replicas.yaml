@@ -4,3 +4,13 @@ metadata:
   name: sysdigcloud-elasticsearch
 spec:
   replicas: 5
+  template:
+    spec:
+      containers:
+        - name: elasticsearch
+          env:
+              # ELASTICSEARCH_GOSSIP_NODES_NUM needs to match the number of replicas specified for the statefulset. It will be used to calculate
+              # The value of the -Ediscovery.zen.minimum_master_nodes parameter. To override this calculation and set this
+              # parameter manually use the DISCOVERY_ZEN_MINIMUM_MASTER_NODES variable.
+            - name: ELASTICSEARCH_GOSSIP_NODES_NUM
+              value: "5"
