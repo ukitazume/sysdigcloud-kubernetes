@@ -1,0 +1,6 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: sysdigcloud-elasticsearch
+spec:
+  replicas: 3
