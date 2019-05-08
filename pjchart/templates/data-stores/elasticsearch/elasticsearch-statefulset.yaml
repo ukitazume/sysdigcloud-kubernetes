@@ -20,7 +20,6 @@ spec:
   podManagementPolicy: Parallel
   # The number of replicas needs to be passed to the pods by ensuring that the value of ELASTICSEARCH_GOSSIP_NODES_NUM
   # matches the number set here.
-  replicas: 3
   template:
     metadata:
       labels:
@@ -47,23 +46,9 @@ spec:
           image: quay.io/sysdig/elasticsearch:5.6.15.6-alpine
           securityContext:
             privileged: true
-          ## Recommended resource limits for Elasticsearch pods.
-          ## Make sure to set values for these limits that are appropriate for your environment.
-#          resources:
-#            requests:
-#              cpu: 2
-#              memory: 6Gi
-#            limits:
-#              cpu: 4
-#              memory: 10Gi
           env:
             - name: ELASTICSEARCH_SERVICE
               value: sysdigcloud-elasticsearch
-              # ELASTICSEARCH_GOSSIP_NODES_NUM needs to match the number of replicas specified for the statefulset. It will be used to calculate
-              # The value of the -Ediscovery.zen.minimum_master_nodes parameter. To override this calculation and set this
-              # parameter manually use the DISCOVERY_ZEN_MINIMUM_MASTER_NODES variable.
-            - name: ELASTICSEARCH_GOSSIP_NODES_NUM
-              value: "3"
             - name: ELASTICSEARCH_CLUSTER_NAME
               value: sysdigcloud
             - name: ES_JAVA_OPTS
@@ -82,12 +67,3 @@ spec:
               name: data
       imagePullSecrets:
         - name: sysdigcloud-pull-secret
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        resources:
-          requests:
-            storage: 25Gi
-        storageClassName: {{ .Values.sysdig.storageclass.name }}
