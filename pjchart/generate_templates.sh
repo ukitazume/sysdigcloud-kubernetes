@@ -47,10 +47,10 @@ kustomize build manifests/pjchart/templates/sysdig-cloud/ingress_controller/    
 echo "step7:  Generating data-stores"
 echo "step7a: data-stores cassandra"
 echo "---" >>$GENERATED_DIR/infra.yaml
-kustomize build manifests//pjchart/templates/data-stores/overlays/cassandra/small/    >> $GENERATED_DIR/infra.yaml
+kustomize build manifests//pjchart/templates/data-stores/overlays/cassandra/$size/    >> $GENERATED_DIR/infra.yaml
 echo "step7b: data-stores elasticsearch"
 echo "---" >>$GENERATED_DIR/infra.yaml
-kustomize build manifests/pjchart/templates/data-stores/overlays/elasticsearch/small/ >> $GENERATED_DIR/infra.yaml
+kustomize build manifests/pjchart/templates/data-stores/overlays/elasticsearch/$size/ >> $GENERATED_DIR/infra.yaml
 echo "step7c: data-stores mysql"
 echo "---" >>$GENERATED_DIR/infra.yaml
 kustomize build manifests//pjchart/templates/data-stores/overlays/mysql-single/small/ >> $GENERATED_DIR/infra.yaml
