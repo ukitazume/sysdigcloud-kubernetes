@@ -1,17 +1,16 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: sysdigcloud-collector 
+  name: sysdigcloud-worker  
 spec:
-  replicas: 1
   template:
     spec:
       containers:
-        - name: collector        
+        - name: worker        
           resources:
             limits:
               cpu: "4"
               memory: "4Gi"
             requests:
               cpu: "1"
-              memory: "2Gi"
+              memory: "1Gi"

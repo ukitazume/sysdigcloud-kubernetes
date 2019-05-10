@@ -3,4 +3,7 @@ kind: Kustomization
 bases:
   - ../../../collector-worker
 patches:
-  - small.yaml
+  - replicas-collector.yaml
+  - resources-collector.yaml
+  - replicas-worker.yaml
+  - resources-worker.yaml

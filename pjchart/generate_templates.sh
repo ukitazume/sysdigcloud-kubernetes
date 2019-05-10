@@ -79,10 +79,10 @@ fi
 
 echo "step 8: Generating monitor"
 echo "step 8a: generate monitor-api yamls"
-kustomize build manifests//pjchart/templates/sysdig-cloud/overlays/api/$size/              > $GENERATED_DIR/api.yaml
+kustomize build manifests//pjchart/templates/sysdig-cloud/overlays/api/$size               > $GENERATED_DIR/api.yaml
 
 echo "step 8b: generate monitor-collectorworker yamls"
-kustomize build manifests//pjchart/templates/sysdig-cloud/overlays/collector-worker/small/ > $GENERATED_DIR/collector-worker.yaml
+kustomize build manifests//pjchart/templates/sysdig-cloud/overlays/collector-worker/$size  > $GENERATED_DIR/collector-worker.yaml
 
 if [ $mode = "monitor+secure" ]; then
   echo "step 9: genrating secure yaml"
