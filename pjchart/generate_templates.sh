@@ -63,7 +63,7 @@ fi
 if [ $mode = "monitor+secure" ]; then
   echo "step7d: data-stores postgres"
   echo "---" >>$GENERATED_DIR/infra.yaml
-  kustomize build manifests//pjchart/templates/data-stores/overlays/postgres/small/     >> $GENERATED_DIR/infra.yaml
+  kustomize build manifests//pjchart/templates/data-stores/overlays/postgres/$size/     >> $GENERATED_DIR/infra.yaml
 else
   echo "skipping step7d: data-stores postgres - needed only for secure"
 fi

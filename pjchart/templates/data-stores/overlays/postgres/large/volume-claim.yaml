@@ -10,5 +10,5 @@ spec:
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            storage: 25Gi
+            storage: 60Gi
         storageClassName: {{ .Values.sysdig.storageclass.name }}
