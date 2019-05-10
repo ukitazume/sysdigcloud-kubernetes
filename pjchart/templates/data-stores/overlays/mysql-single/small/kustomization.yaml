@@ -3,6 +3,6 @@ kind: Kustomization
 bases:
   - ../../../mysql-single
 patches:
-  - small-replicas.yaml
-  - small-resources.yaml
-  - small-volume-claim.yaml
+  - replicas.yaml
+  - resources.yaml
+  - volume-claim.yaml
