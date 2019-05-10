@@ -8,6 +8,7 @@ spec:
       containers:
         - name: mysql  
           resources:
+            limits:
               cpu: "1"
               memory: 2Gi
             requests:
