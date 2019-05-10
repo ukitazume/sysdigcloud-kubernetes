@@ -27,10 +27,6 @@ spec:
       - name: redis-sentinel
         image: quay.io/sysdig/redis:4.0.12.1-alpine-ha
         imagePullPolicy: Always
-#        resources:
-#          requests:
-#            cpu: 100m
-#            memory: 1Gi
         env:
         - name: SENTINEL
           value: redis-primary
@@ -39,13 +35,6 @@ spec:
             configMapKeyRef:
               name: sysdigcloud-config
               key: redis.password
-#        resources:
-#          limits:
-#            cpu: 500m
-#            memory: 100Mi
-#          requests:
-#            cpu: 100m
-#            memory: 50Mi
         ports:
         - containerPort: 26379
           name: redis-sentinel

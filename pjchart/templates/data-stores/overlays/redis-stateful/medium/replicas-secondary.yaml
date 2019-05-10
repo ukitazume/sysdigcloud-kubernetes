@@ -1,0 +1,6 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: redis-secondary
+spec:
+  replicas: 2
