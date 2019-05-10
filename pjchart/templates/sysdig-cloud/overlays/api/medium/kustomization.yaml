@@ -4,4 +4,4 @@ bases:
   - ../../../api
 patches:
   - replicas-api.yaml
-  - resources-api.yaml
+  - resources-api.yaml 

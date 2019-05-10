@@ -3,4 +3,5 @@ kind: Kustomization
 bases:
   - ../../../api
 patches:
-  - small.yaml 
+  - replicas-api.yaml
+  - resources-api.yaml

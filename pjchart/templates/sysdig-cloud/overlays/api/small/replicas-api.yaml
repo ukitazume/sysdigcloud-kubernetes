@@ -1,0 +1,6 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: sysdigcloud-api  
+spec:
+  replicas: 1
