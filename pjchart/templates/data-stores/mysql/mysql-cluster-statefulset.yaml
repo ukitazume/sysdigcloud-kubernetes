@@ -102,23 +102,21 @@ spec:
                 configMapKeyRef:
                   key: mysql.root.password
                   name: sysdigcloud-config
-            # These MYSQL_EXTRADB_* enviroment variables will trigger the
-            # creation of the scanning database when mysql starts.
-            # - name: MYSQL_EXTRADB_SCANNING_DBNAME
-            #   valueFrom:
-            #     configMapKeyRef:
-            #       name: sysdigcloud-config
-            #       key: scanning.mysql.dbname
-            # - name: MYSQL_EXTRADB_SCANNING_USER
-            #   valueFrom:
-            #     configMapKeyRef:
-            #       name: sysdigcloud-config
-            #       key: scanning.mysql.user
-            # - name: MYSQL_EXTRADB_SCANNING_PASSWORD
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: sysdigcloud-scanning
-            #       key: scanning.mysql.password
+            - name: MYSQL_EXTRADB_SCANNING_DBNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: scanning.mysql.dbname
+            - name: MYSQL_EXTRADB_SCANNING_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: scanning.mysql.user
+            - name: MYSQL_EXTRADB_SCANNING_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sysdigcloud-scanning
+                  key: scanning.mysql.password
             - name: MYSQL_ROOT_HOST
               value: '%'
             - name: MYSQL_LOG_CONSOLE
@@ -164,12 +162,6 @@ spec:
               port: 10512
       imagePullSecrets:
         - name: sysdigcloud-pull-secret
-      # Uncomment this in case it's preferred to use non persistent volumes
-      # instead of the volume claim templates. Can be used for quick testing,
-      # but not recommended for production workloads
-      # volumes:
-      #   - emptyDir: {}
-      #     name: data
   volumeClaimTemplates:
     - metadata:
         name: data
