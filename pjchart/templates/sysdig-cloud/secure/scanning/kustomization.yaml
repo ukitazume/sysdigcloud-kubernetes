@@ -1,11 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - anchore-core-config.yaml
-  - anchore-core-deployment.yaml
-  - anchore-worker-config.yaml
-  - anchore-worker-deployment.yaml
-  - anchore-service.yaml
   - scanning-api-deployment.yaml
   - scanning-alertmgr-deployment.yaml
   - scanning-service.yaml

@@ -85,8 +85,10 @@ echo "step 8b: generate monitor-collectorworker yamls"
 kustomize build manifests//pjchart/templates/sysdig-cloud/overlays/collector-worker/$size  > $GENERATED_DIR/collector-worker.yaml
 
 if [ $mode = "monitor+secure" ]; then
-  echo "step 9: genrating secure yaml"
-  kustomize build manifests/pjchart/templates/sysdig-cloud/secure/                         > $GENERATED_DIR/secure.yaml
+  echo "step 9a: generating secure-scanning yaml"
+  kustomize build manifests/pjchart/templates/sysdig-cloud/secure/scanning                 > $GENERATED_DIR/scanning.yaml
+  echo "step 9b: generating secure-anchore yaml"
+  kustomize build manifests/pjchart/templates/sysdig-cloud/secure/anchore                  > $GENERATED_DIR/anchore.yaml
 else
   echo "skipping step 9: genrating secure yaml - needed only for secure"
 fi
