@@ -51,9 +51,15 @@ kustomize build manifests//pjchart/templates/data-stores/overlays/cassandra/$siz
 echo "step7b: data-stores elasticsearch"
 echo "---" >>$GENERATED_DIR/infra.yaml
 kustomize build manifests/pjchart/templates/data-stores/overlays/elasticsearch/$size/ >> $GENERATED_DIR/infra.yaml
-echo "step7c: data-stores mysql"
-echo "---" >>$GENERATED_DIR/infra.yaml
-kustomize build manifests//pjchart/templates/data-stores/overlays/mysql-single/small/ >> $GENERATED_DIR/infra.yaml
+if [ $size = "small" ]; then
+  echo "step7c: data-stores mysql-single small"
+  echo "---" >>$GENERATED_DIR/infra.yaml
+  kustomize build manifests//pjchart/templates/data-stores/overlays/mysql-single/small/ >> $GENERATED_DIR/infra.yaml
+else
+  echo "step7c: data-stores mysql $size"
+  echo "---" >>$GENERATED_DIR/infra.yaml
+  kustomize build manifests//pjchart/templates/data-stores/overlays/mysql/$size/        >> $GENERATED_DIR/infra.yaml
+fi
 if [ $mode = "monitor+secure" ]; then
   echo "step7d: data-stores postgres"
   echo "---" >>$GENERATED_DIR/infra.yaml
