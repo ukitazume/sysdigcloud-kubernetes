@@ -28,20 +28,20 @@ spec:
         app: sysdigcloud
         role: mysql-router
     spec:
-      #affinity:
-      #  podAntiAffinity:
-      #    requiredDuringSchedulingIgnoredDuringExecution:
-      #    - labelSelector:
-      #        matchExpressions:
-      #        - key: app
-      #          operator: In
-      #          values:
-      #          - sysdigcloud
-      #        - key: role
-      #          operator: In
-      #          values:
-      #          - mysql-router
-      #      topologyKey: "kubernetes.io/hostname"
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - sysdigcloud
+              - key: role
+                operator: In
+                values:
+                - mysql-router
+            topologyKey: "kubernetes.io/hostname"
       containers:
         - name: mysql-router
           image: quay.io/sysdig/mysql-router:8.0.13.2
@@ -59,12 +59,5 @@ spec:
               value: sysdigcloud-mysql-cluster
             - name: MYSQL_INNODB_NUM_MEMBERS
               value: "3"
-#          resources:
-#            limits:
-#              cpu: 500m
-#              memory: 500Mi
-#            requests:
-#              cpu: 250m
-#              memory: 100Mi
       imagePullSecrets:
         - name: sysdigcloud-pull-secret

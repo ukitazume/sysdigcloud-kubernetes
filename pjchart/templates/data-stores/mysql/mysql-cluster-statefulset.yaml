@@ -123,13 +123,6 @@ spec:
               value: '%'
             - name: MYSQL_LOG_CONSOLE
               value: "true"
-#          resources:
-#            limits:
-#              cpu: "1"
-#              memory: 2Gi
-#            requests:
-#              cpu: 500m
-#              memory: 1Gi
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: data
