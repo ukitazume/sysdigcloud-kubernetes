@@ -9,7 +9,7 @@ spec:
         - name: api        
           resources:
             limits:
-              cpu: "8"
+              cpu: "16"
               memory: "16Gi"
             requests:
               cpu: "4"
