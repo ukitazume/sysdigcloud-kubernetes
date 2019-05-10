@@ -1,6 +1,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - cassandra-jvm-opts-configmap.yaml
-  - cassandra-service.yaml
-  - cassandra-statefulset.yaml
+  - redis-sentinel-svc-statefulset.yaml
+  - redis-primary-svc-statefulset.yaml
+  - redis-secondary-svc-statefulset.yaml
+  - redis-sentinel-statefulset.yaml
+  - redis-primary-statefulset.yaml
+  - redis-secondary-statefulset.yaml
