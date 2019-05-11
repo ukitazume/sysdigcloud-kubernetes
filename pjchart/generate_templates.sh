@@ -88,7 +88,8 @@ if [ $mode = "monitor+secure" ]; then
   echo "step 9a: generating secure-scanning yaml"
   kustomize build manifests/pjchart/templates/sysdig-cloud/overlays/secure/scanning/$size  > $GENERATED_DIR/scanning.yaml
   echo "step 9b: generating secure-anchore yaml"
-  kustomize build manifests/pjchart/templates/sysdig-cloud/secure/anchore                  > $GENERATED_DIR/anchore.yaml
+  kustomize build manifests/pjchart/templates/sysdig-cloud/overlays/secure/anchore/$size        > $GENERATED_DIR/anchore-core.yaml
+  kustomize build manifests/pjchart/templates/sysdig-cloud/overlays/secure/anchore/worker/$size > $GENERATED_DIR/anchore-worker.yaml
 else
   echo "skipping step 9: genrating secure yaml - needed only for secure"
 fi

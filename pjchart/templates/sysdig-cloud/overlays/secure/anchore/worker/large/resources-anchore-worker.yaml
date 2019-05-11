@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sysdigcloud-anchore-worker 
+spec:
+  template:
+    spec:
+      containers:
+        - name: anchore-worker    
+          resources:
+            limits:
+              cpu: "4"
+              memory: "4Gi"
+            requests:
+              cpu: "1"
+              memory: "1Gi"

@@ -3,6 +3,4 @@ kind: Kustomization
 resources:
   - anchore-core-config.yaml
   - anchore-core-deployment.yaml
-  - anchore-worker-config.yaml
-  - anchore-worker-deployment.yaml
   - anchore-service.yaml
