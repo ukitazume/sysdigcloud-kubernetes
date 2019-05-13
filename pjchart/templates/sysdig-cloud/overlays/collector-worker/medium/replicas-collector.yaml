@@ -3,4 +3,4 @@ kind: Deployment
 metadata:
   name: sysdigcloud-collector 
 spec:
-  replicas: 3
+  replicas: {{ .Values.sysdig.collectorReplicaCount | default 3 }}

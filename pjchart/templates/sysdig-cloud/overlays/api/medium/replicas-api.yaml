@@ -3,4 +3,4 @@ kind: Deployment
 metadata:
   name: sysdigcloud-api  
 spec:
-  replicas: 3
+  replicas: {{ .Values.sysdig.apiReplicaCount | default 3 }}

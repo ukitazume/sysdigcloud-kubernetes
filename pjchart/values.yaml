@@ -1,5 +1,5 @@
 #Set k8s namespace for sysdigcloud
-namespace: sysdigcloud-pj-template-rev4
+namespace: sysdigcloud-pj-template-rev5
 #Set Quay.Io secrets
 quaypullsecret: ewogICJhdXRocyI6IHsKICAgICJxdWF5LmlvIjogewogICAgICAiYXV0aCI6ICJjM2x6WkdsbkszQnlZWFpwYm1wdmRHaHBibUYwYUdGdU9rOUROekUwTmtneFdsZFdNVVpZUmxaTlRrYzNOa2xWUVZSSE1VaFNRMFpOTUZoUFJUWlFSemxGT0VoRFNsSmFVelJETXpCVlZVY3dUVFZMUmxGSVJWRT0iLAogICAgICAiZW1haWwiOiAiIgogICAgfQogIH0KfQ==
 #Set Sysdig license
@@ -13,6 +13,10 @@ sysdig:
     name: pj1-gp2-retain
   endpoint: ec2-54-210-34-178.compute-1.amazonaws.com
   monitorVersion: 1985
+#Advanced settings
+  apiReplicaCount: 6
+  collectorReplicaCount: 7
+  workerReplicaCount: 8
 #Notes:
 #machines #of nodes, cpu/mem
 #do we need secure?

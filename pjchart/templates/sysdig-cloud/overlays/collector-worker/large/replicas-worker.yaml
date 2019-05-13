@@ -3,4 +3,4 @@ kind: Deployment
 metadata:
   name: sysdigcloud-worker 
 spec:
-  replicas: 5
+  replicas: {{ .Values.sysdig.workerReplicaCount | default 5 }}
