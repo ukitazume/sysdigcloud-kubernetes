@@ -51,11 +51,6 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: sysdigcloud-config
-                  key: sysdigcloud.jvmgc.collector.options
-            - name: CASSANDRA_ENDPOINT_SNITCH
-              valueFrom:
-                configMapKeyRef:
-                  name: sysdigcloud-config
                   key: cassandra.endpoint.snitch
             - name: CASSANDRA_DC
               valueFrom:
