@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: collector
-          image: quay.io/sysdig/sysdigcloud-backend:1722
+          image: quay.io/sysdig/sysdigcloud-backend:1929
           volumeMounts:
             - name: logs
               mountPath: /var/log/sysdigcloud
@@ -47,7 +47,7 @@ spec:
                 configMapKeyRef:
                   name: sysdigcloud-config
                   key: sysdigcloud.jvm.collector.options
-            - name: JAVA_GC_PARAMETERS
+            - name: CASSANDRA_ENDPOINT_SNITCH
               valueFrom:
                 configMapKeyRef:
                   name: sysdigcloud-config

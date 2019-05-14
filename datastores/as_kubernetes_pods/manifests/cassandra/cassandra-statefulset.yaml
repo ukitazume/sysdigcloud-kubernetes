@@ -3,43 +3,49 @@ apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
   name: sysdigcloud-cassandra
+  labels:
+    affinity: cassandra
+    app: sysdigcloud
+    role: cassandra
 spec:
   serviceName: sysdigcloud-cassandra
+  podManagementPolicy: Parallel
   replicas: 5
   selector:
     matchLabels:
+      affinity: cassandra
       app: sysdigcloud
       role: cassandra
   template:
     metadata:
       labels:
+        affinity: cassandra
         app: sysdigcloud
         role: cassandra
     spec:
+      ## Pod anti-affinity rules ensure that cassandra pods run on separate hosts.
+      ## You may need to disable these if your number of available kubernetes hosts is less than
+      ## the replication factor for your statefulset.
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchExpressions:
-              - key: app
-                operator: In
-                values:
-                - sysdigcloud
-              - key: role
+              - key: affinity
                 operator: In
                 values:
                 - cassandra
-            topologyKey: "kubernetes.io/hostname"
+            topologyKey: kubernetes.io/hostname
       containers:
-        - image: quay.io/sysdig/cassandra:2.1.20.17
+        - image: quay.io/sysdig/cassandra:2.1.21.6
           name: cassandra
           env:
             - name: CASSANDRA_SERVICE
               value: sysdigcloud-cassandra
-            - name: CASSANDRA_NUM_SEEDS
-              value: "2"
             - name: CASSANDRA_CLUSTER_NAME
               value: sysdigcloud
+            - name: CASSANDRA_CLUSTER_TIME_LIMIT
+              value: "5"
             # If not using CASSANDRA_SERVICE discovery, manually configure the seeds
             # - name: CASSANDRA_SEEDS
             #   value: ""
@@ -93,6 +99,10 @@ spec:
                   name: sysdigcloud-config
                   key: cassandra.datacenter.name
             ##########################################
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "nodetool drain"]
           resources:
             requests:
               memory: "16G"
@@ -103,9 +113,8 @@ spec:
           readinessProbe:
             exec:
               command:
-              - /bin/bash
-              - -c
-              - 'if [[ $(nodetool status | grep ${POD_IP}) == *"UN"* ]]; then exit 0; else exit 1; fi'
+                - /bin/bash
+                - /ready.sh
             initialDelaySeconds: 15
             failureThreshold: 10
             timeoutSeconds: 5
@@ -117,6 +126,21 @@ spec:
             path: /mnt/nvme/cassandra-data-volume
             type: ""
           name: data
+            # Uncomment this when using multiple mount points for data
+            # - mountPath: /var/lib/cassandra/data2
+            #   name: data2
+            ### Start of the custom Cassandra snitch group
+            # The following entries are required for the custom Cassandra snitch (see configMap)
+            # - mountPath: /host/etc/hostname
+            #   readOnly: true
+            #   name: host-etc-hostname
+            ############################################
+            # Uncomment to specify per-pod jvm options
+            # using the cassandra-jvm-opts configmap.
+            # - name: cassandra-jvm-opts
+            #   mountPath: /opt/cassandra/cassandra-jvm-opts.json
+            #   subPath: cassandra-jvm-opts.json
+            #############################################
       imagePullSecrets:
         - name: sysdigcloud-pull-secret
       ### Start of the custom Cassandra snitch group
@@ -125,6 +149,12 @@ spec:
       # - name: host-etc-hostname
       #   hostPath:
       #     path: /etc/hostname
-      ##########################################
+      ############################################
+      # Uncomment to specify per-pod jvm options
+      # using the cassandra-jvm-opts configmap.
+      # - name: cassandra-jvm-opts
+      #   configMap:
+      #     name: cassandra-jvm-opts
+      #############################################
       nodeSelector:
         kops.k8s.io/instancegroup: storage-nodes

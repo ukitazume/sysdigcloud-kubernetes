@@ -7,11 +7,11 @@ metadata:
     app: sysdigcloud
     role: collector
 spec:
-  clusterIP: None
+  type: ClusterIP
   ports:
-    - port: 6000
+    - port: 6443
       name: secure-collector
-      targetPort: 6000
+      targetPort: 6443
   selector:
     app: sysdigcloud
     role: collector

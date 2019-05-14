@@ -37,7 +37,7 @@ spec:
         #     secretName: sysdigcloud-anchore-custom-certs
       containers:
       - name: anchore-core
-        image: quay.io/sysdig/anchore:v0.3.2.1
+        image: quay.io/sysdig/anchore:v0.3.3.1
         imagePullPolicy:
         resources:
           {}
@@ -90,6 +90,8 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        - name: ANCHORE_POLICY_ENGINE_EVALUATION_CACHE_ENABLED
+          value: "false"
         - name: ANCHORE_POD_IP
           valueFrom:
             fieldRef:
