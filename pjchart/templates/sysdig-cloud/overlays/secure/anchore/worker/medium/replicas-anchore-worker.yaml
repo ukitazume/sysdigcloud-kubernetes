@@ -3,4 +3,4 @@ kind: Deployment
 metadata:
   name: sysdigcloud-anchore-worker 
 spec:
-  replicas: 1
+  replicas: {{ .Values.sysdig.anchoreWorkerReplicaCount | default 1 }}

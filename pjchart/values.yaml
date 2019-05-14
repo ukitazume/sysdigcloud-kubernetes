@@ -14,9 +14,15 @@ sysdig:
   endpoint: ec2-54-210-34-178.compute-1.amazonaws.com
   monitorVersion: 1985
 #Advanced settings
+  cassandraReplicaCount:
+  elasticSearchReplicaCount:
   apiReplicaCount:
   collectorReplicaCount:
   workerReplicaCount:
+  anchoreCoreReplicaCount:
+  anchoreWorkerReplicaCount:
+  scanningApiReplicaCount:
+  scanningAlertMgrReplicaCount:
 #Notes:
 #machines #of nodes, cpu/mem
 #do we need secure?

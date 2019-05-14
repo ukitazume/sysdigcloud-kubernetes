@@ -3,4 +3,4 @@ kind: Deployment
 metadata:
   name: sysdigcloud-anchore-core 
 spec:
-  replicas: 1
+  replicas: {{ .Values.sysdig.anchoreCoreReplicaCount | default 1 }}

@@ -3,4 +3,4 @@ kind: Deployment
 metadata:
   name: sysdigcloud-scanning-api  
 spec:
-  replicas: 1
+  replicas: {{ .Values.sysdig.scanningApiReplicaCount | default 1 }}

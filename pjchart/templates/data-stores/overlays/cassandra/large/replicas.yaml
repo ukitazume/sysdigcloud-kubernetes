@@ -3,4 +3,4 @@ kind: StatefulSet
 metadata:
   name: sysdigcloud-cassandra
 spec:
-  replicas: 5
+  replicas: {{ .Values.sysdig.cassandraReplicaCount | default 6 }}

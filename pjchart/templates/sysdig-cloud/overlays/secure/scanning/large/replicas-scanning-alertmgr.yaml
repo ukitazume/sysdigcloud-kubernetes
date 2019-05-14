@@ -3,4 +3,4 @@ kind: Deployment
 metadata:
   name: sysdigcloud-scanning-alertmgr  
 spec:
-  replicas: 1
+  replicas: {{ .Values.sysdig.scanningAlertMgrReplicaCount | default 1 }}
