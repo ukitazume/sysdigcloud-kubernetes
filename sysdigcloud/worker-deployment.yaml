@@ -12,15 +12,13 @@ spec:
         role: worker
     spec:
       containers:
+        - name: email-renderer
+          image: quay.io/sysdig/sysdigcloud-backend:1985-email-renderer
         - name: worker
-          image: quay.io/sysdig/sysdigcloud-backend:1929
+          image: quay.io/sysdig/sysdigcloud-backend:1985-allinone-java
           volumeMounts:
-            - name: logs
-              mountPath: /var/log/sysdigcloud
             - name: config
               mountPath: /opt/kubernets_config
-            - name: ssl
-              mountPath: /opt/certs/
             # Uncomment this if you need to import self-signed SSL certs
             #- name: java-certs
             #  mountPath: /opt/java-certs/
@@ -37,11 +35,6 @@ spec:
                 configMapKeyRef:
                   name: sysdigcloud-config
                   key: sysdigcloud.logging.stdout
-            - name: API_ENDPOINT
-              valueFrom:
-                configMapKeyRef:
-                  name: sysdigcloud-config
-                  key: api.url
             - name: JVM_EXTRA_OPTS
               valueFrom:
                 configMapKeyRef:
@@ -74,17 +67,20 @@ spec:
             preStop:
               exec:
                 command: ["curl","-v","http://127.0.0.1:9000/api/admin/drain"]
+          #resources:
+          #  limits:
+          #    cpu: 8
+          #    memory: 8Gi
+          #  requests:
+          #    cpu: 4
+          #    memory: 4Gi
       terminationGracePeriodSeconds: 60
       imagePullSecrets:
         - name: sysdigcloud-pull-secret
       volumes:
-        - name: logs
         - name: config
           configMap:
             name: sysdigcloud-config
-        - name: ssl
-          secret:
-            secretName: sysdigcloud-ssl-secret
         # Uncomment this if you need to import self-signed SSL certs, wich can be created with
         # kubectl create secret generic example-cert --from-file=${HOME}/cert.pem
         #- name: java-certs

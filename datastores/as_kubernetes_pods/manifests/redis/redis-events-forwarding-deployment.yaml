@@ -1,0 +1,29 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: redis-events-forwarding
+spec:
+  template:
+    metadata:
+      labels:
+        app: sysdigcloud
+        role: redis-ef
+    spec:
+      containers:
+        - name: redis-ef
+          image: quay.io/sysdig/redis:4.0.12.4
+          ports:
+           - containerPort: 6379
+          resources:
+            requests:
+              cpu: 100m
+              memory: 1Gi
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: redis.ef.password
+      imagePullSecrets:
+        - name: sysdigcloud-pull-secret
