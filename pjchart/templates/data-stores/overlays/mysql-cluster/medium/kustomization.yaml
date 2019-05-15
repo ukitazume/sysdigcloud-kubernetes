@@ -6,3 +6,5 @@ patches:
   - replicas.yaml
   - resources.yaml
   - volume-claim.yaml
+  - replicas-router.yaml
+  - resources-router.yaml

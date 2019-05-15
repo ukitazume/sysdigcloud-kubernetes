@@ -1,6 +1,6 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: sysdigcloud-mysql-cluster
+  name: sysdigcloud-mysql
 spec:
-  replicas: 3
+  replicas: 1

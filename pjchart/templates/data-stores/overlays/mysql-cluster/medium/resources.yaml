@@ -1,13 +1,16 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: sysdigcloud-mysql
+  name: sysdigcloud-mysql-cluster
 spec:
   template:
     spec:
       containers:
         - name: mysql  
           resources:
+            limits:
+              cpu: "1"
+              memory: 2Gi
             requests:
-              cpu: 500m
-              memory: 1Gi     
+              cpu: "500m"
+              memory: 1Gi

@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: sysdigcloud-mysql
+  name: sysdigcloud-mysql-cluster
 spec:
   volumeClaimTemplates:
     - metadata:
@@ -10,5 +10,5 @@ spec:
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            storage: 25Gi
+            storage: 30Gi
         storageClassName: {{ .Values.sysdig.storageclass.name }}
