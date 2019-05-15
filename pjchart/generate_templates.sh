@@ -38,7 +38,33 @@ fi
 echo "step4: running through helm template engine"
 helm template -f values.yaml -f secrets.yaml --output-dir manifests/ .
 
+TEMPLATE_BASE=manifests/pjchart/templates/
+GENERATE_CERTIFICATE=$(cat values.yaml | yq .sysdig.certificate.generate)
+DNS_NAME=$(cat values.yaml | yq .sysdig.dnsName)
+mkdir $TEMPLATE_BASE/common-config/certs
+if [ "$GENERATE_CERTIFICATE" = true ]; then
+  if [[ -f "certs/server.key" && -f "certs/server.crt" ]]; then
+    echo "Certificates are present. Copying the existing certs"
+  else
+    echo "Generating new certificate"
+    openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 -subj "/C=US/ST=CA/L=SanFrancisco/O=ICT/CN=$DNS_NAME" -keyout certs/server.key -out certs/server.crt
+  fi
+  cp certs/server.* $TEMPLATE_BASE/common-config/certs/
+else
+  CRT_FILE=$(cat values.yaml | yq .sysdig.certificate.crt | tr -d '"')
+  KEY_FILE=$(cat values.yaml | yq .sysdig.certificate.key | tr -d '"')
+  echo "Using provided certificates at crt:$CRT_FILE key:$KEY_FILE"
+  if [[ -f $CRT_FILE && -f $KEY_FILE ]]; then
+    cp $CRT_FILE $TEMPLATE_BASE/common-config/certs/server.crt
+    cp $KEY_FILE $TEMPLATE_BASE/common-config/certs/server.key
+  else
+    echo "Cannot find certificate files. Exiting"
+    exit 2
+  fi
+fi
+
 echo "step5: generate commong files"
+cp -r templates/certs manifests/pjchart/templates/common-config
 kustomize build manifests/pjchart/templates/overlays/common-config/small/             > $GENERATED_DIR/common-config.yaml
 
 echo "step 6: generate ingress yaml"

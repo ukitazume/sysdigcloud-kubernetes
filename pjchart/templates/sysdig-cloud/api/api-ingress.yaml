@@ -16,7 +16,7 @@ metadata:
   namespace: {{ .Values.namespace }}
 spec:
   rules:
-    - host: {{ .Values.sysdig.endpoint }}
+    - host: {{ .Values.sysdig.dnsName }}
       http:
         paths:
           - backend:
@@ -25,5 +25,5 @@ spec:
             path: /
   tls:
     - hosts:
-        - {{ .Values.sysdig.endpoint }}
+        - {{ .Values.sysdig.dnsName }}
       secretName: sysdigcloud-ssl-secret

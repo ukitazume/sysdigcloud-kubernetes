@@ -13,5 +13,5 @@ secretGenerator:
 - name: sysdigcloud-ssl-secret
   namespace: {{ .Values.namespace }}
   files:
-    - tls.crt={{ .Values.sysdig.certificate.cert }}
-    - tls.key={{ .Values.sysdig.certificate.key  }}
+    - tls.crt=certs/server.crt
+    - tls.key=certs/server.key
