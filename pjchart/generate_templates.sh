@@ -64,7 +64,6 @@ else
 fi
 
 echo "step5: generate commong files"
-cp -r templates/certs manifests/pjchart/templates/common-config
 kustomize build manifests/pjchart/templates/overlays/common-config/small                > $GENERATED_DIR/common-config.yaml
 
 echo "step 6: generate ingress yaml"
