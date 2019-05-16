@@ -13,9 +13,9 @@ spec:
     spec:
       containers:
         - name: email-renderer
-          image: quay.io/sysdig/sysdigcloud-backend:1985-email-renderer
+          image: quay.io/sysdig/sysdigcloud-backend:2115-email-renderer
         - name: nginx
-          image: quay.io/sysdig/sysdigcloud-backend:1985-nginx
+          image: quay.io/sysdig/sysdigcloud-backend:2115-nginx
           volumeMounts:
             - name: ssl
               mountPath: /opt/certs/
@@ -30,7 +30,14 @@ spec:
                   name: sysdigcloud-config
                   key: api.url
         - name: api
-          image: quay.io/sysdig/sysdigcloud-backend:1985-allinone-java
+          image: quay.io/sysdig/sysdigcloud-backend:2115-allinone-java
+          resources:
+            requests:
+              memory: "10G"
+              cpu: "2"
+            limits:
+              memory: "14G"
+              cpu: "8"
           volumeMounts:
             - name: config
               mountPath: /opt/kubernets_config
@@ -65,13 +72,6 @@ spec:
                 configMapKeyRef:
                   name: sysdigcloud-config
                   key: cassandra.datacenter.name
-          resources:
-            requests:
-              memory: "10G"
-              cpu: "2"
-            limits:
-              memory: "14G"
-              cpu: "8"
           readinessProbe:
             httpGet:
               path: /api/ping
