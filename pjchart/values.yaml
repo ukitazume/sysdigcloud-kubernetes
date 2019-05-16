@@ -1,20 +1,24 @@
 #Set k8s namespace for sysdigcloud
-namespace: sysdigcloud-pj-template-rev5
+namespace: sysdigcloud
 #Set Quay.Io secrets
-quaypullsecret: ewogICJhdXRocyI6IHsKICAgICJxdWF5LmlvIjogewogICAgICAiYXV0aCI6ICJjM2x6WkdsbkszQnlZWFpwYm1wdmRHaHBibUYwYUdGdU9rOUROekUwTmtneFdsZFdNVVpZUmxaTlRrYzNOa2xWUVZSSE1VaFNRMFpOTUZoUFJUWlFSemxGT0VoRFNsSmFVelJETXpCVlZVY3dUVFZMUmxGSVJWRT0iLAogICAgICAiZW1haWwiOiAiIgogICAgfQogIH0KfQ==
-#Set Sysdig license
+quaypullsecret: <Insert QuaySecret>
 sysdig:
   agentCount: 10
-  license: 61689bdaaaa0abed294ef2d446ddf6af25cb3669bdd24f7dfa04f75f1598d56ceabaa5aaf4cb18256bf01b0071e53f838df7d939dae960eed31efa809369ae14ffde60ddd2b21244772b46febfd117e198bbdaa612a21f8b37bbc123140f2ca74ad92c3e30afde2350463a2a7dc0a4373caf107d38438d498029f6dad6dde21c1c068c453e106296005e4d7f436cc89defe7b1681bbb8b70c4a2ed1de838ba54b9d9fcce8c2c09d51732e2e34a8ef213aba56746abbf14038d93cd77ba63f27d101f0b372baa444fa89519ffa7d3eea6
+  #Set Sysdig license
+  license: <Insert SysdigLicense>
+  storageclass:
+    name: <Insert StorageClassName>
+  dnsName: <Insert DNS Name>
+  monitorVersion: 1985
+  #Advanced settings
+  #autogenerate certificate by default - generate to false and provide crt,key to use existing certs
   certificate:
     generate: true
     crt:
     key:
-  storageclass:
-    name: pj1-gp2-retain
-  dnsName: ec2-54-210-34-178.compute-1.amazonaws.com
-  monitorVersion: 1985
-#Advanced settings
+  #replicas settings
+  #default replicas are set based on size - small, medium & large
+  #below section acts as a override
   cassandraReplicaCount:
   elasticSearchReplicaCount:
   apiReplicaCount:
@@ -24,9 +28,3 @@ sysdig:
   anchoreWorkerReplicaCount:
   scanningApiReplicaCount:
   scanningAlertMgrReplicaCount:
-#Notes:
-#machines #of nodes, cpu/mem
-#do we need secure?
-#replicas - pods #cassy #elastic
-#cpu #memory #disk
-#add backend version number?
