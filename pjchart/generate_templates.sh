@@ -27,16 +27,16 @@ GENERATED_DIR=manifests/generated
 mkdir manifests && mkdir $GENERATED_DIR
 
 echo "step3: creating secret file - if it does not exist"
-SECRET_FILE=secrets.yaml
+SECRET_FILE=secrets-values.yaml
 if [ -f "$SECRET_FILE" ]; then
     echo "$SECRET_FILE exists"
 else
     echo "Secret file does not exist. Creating Secretfile"
-    helm template -x templates/secrets.yaml secrets > secrets.yaml
+    helm template -x templates/$SECRET_FILE secret-generator > $SECRET_FILE
 fi
 
 echo "step4: running through helm template engine"
-helm template -f values.yaml -f secrets.yaml --output-dir manifests/ .
+helm template -f values.yaml -f $SECRET_FILE --output-dir manifests/ .
 
 TEMPLATE_BASE=manifests/pjchart/templates/
 GENERATE_CERTIFICATE=$(cat values.yaml | yq .sysdig.certificate.generate)
