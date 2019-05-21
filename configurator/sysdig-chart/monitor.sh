@@ -1,7 +1,7 @@
 #/bin/bash
 
 #Important framework functions.
-. framework.sh
+. /sysdig-chart/framework.sh
 
 #Create config
 broadcast 'g' "Creating common-config"

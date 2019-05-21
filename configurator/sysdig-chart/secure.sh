@@ -1,7 +1,7 @@
 #/bin/bash
 
 #Important framework functions.
-. framework.sh
+. /sysdig-chart/framework.sh
 
 broadcast 'g' "Deploying AnchoreCore"
 ka /manifests/generated/anchore-core.yaml
