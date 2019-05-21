@@ -1,5 +1,6 @@
 #!/bin/bash
 
+export PATH=$PATH:/helm/linux-386/:/kubernetes:/kubernetes/kubernetes-cli
 #Echo function
 function broadcast() {
   WHITE='\033[1;37m'
@@ -63,7 +64,7 @@ function get_access_key() {
   get_sysdig_user
   get_sysdig_pass
   accesskey=$(curl -s -k "$api_url/api/login" -H 'X-Sysdig-Product: SDC' -H 'Content-Type: application/json' --compressed --data-binary '{"username":"'$sysdigcloud_user'","password":"'$sysdigcloud_pass'"}' -c /tmp/sysdig.monitor.cookie | jq . | grep accessKey | awk 'NR==1 {print $2}')
-  accesskey=$(echo $accessKey | sed -e 's/^"//' -e 's/"$//' <<<"$accesskey")
+  #accesskey=$(echo $accessKey | sed -e 's/^"//' -e 's/"$//' <<<"$accesskey")
   }
 
 function get_monitor_api_key() {
@@ -71,7 +72,7 @@ function get_monitor_api_key() {
   get_sysdig_user
   get_sysdig_pass
   monitor_api_key=$(curl -s -k -X GET  "$api_url/api/token" -H 'X-Sysdig-Product: SDC' -H 'Content-Type: application/json' --compressed --data-binary '{"username":"'$sysdigcloud_user'","password":"'$sysdigcloud_pass'"} ' -b /tmp/sysdig.monitor.cookie | jq . | grep key | awk {'print $2'})
-  monitor_api_key=$(echo $monitor_api_key | sed -e 's/^"//' -e 's/"$//' <<<"$monitor_api_key")
+  #monitor_api_key=$(echo $monitor_api_key | sed -e 's/^"//' -e 's/"$//' <<<"$monitor_api_key")
   }
 
 function get_secure_api_key() {
@@ -80,7 +81,7 @@ function get_secure_api_key() {
   get_sysdig_pass
   secure_cookie=$(curl -s -k "$api_url/api/login" -H 'X-Sysdig-Product: SDS' -H 'Content-Type: application/json' --compressed --data-binary '{"username":"'$sysdigcloud_user'","password":"'$sysdigcloud_pass'"}' -c /tmp/sysdig.secure.cookie | jq . | grep accessKey | awk 'NR==1 {print $2}' > /dev/null)
   secure_api_key=$(curl -s -k -X GET  "$api_url/api/token" -H 'X-Sysdig-Product: SDS' -H 'Content-Type: application/json' --compressed --data-binary '{"username":"'$sysdigcloud_user'","password":"'$sysdigcloud_pass'"} ' -b /tmp/sysdig.secure.cookie | jq . | grep key | awk {'print $2'})
-  secure_api_key=$(echo $secure_api_key | sed -e 's/^"//' -e 's/"$//' <<<"$secure_api_key")
+  #secure_api_key=$(echo $secure_api_key | sed -e 's/^"//' -e 's/"$//' <<<"$secure_api_key")
   }
 
 #Function to update all the ingress files with api.url from configmap
@@ -278,12 +279,10 @@ function wait_for_pods() {
       return 2
     else
       sleep "$interval"
-      if ! (( $attempts % 5 )); then
+      if [[ $(( $attempts % 5 )) == 0 ]]; then
         broadcast 'r' "We have checked $attempts times"
-        attempts=$((attempts + 1))
       fi
       attempts=$((attempts + 1))
-      interval=$((interval + 1 ))
     fi
   done
   }
