@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: events-forwarder
+  labels:
+   app: sysdigcloud
+   role: events-forwarder
+spec:
+  replicas: 1
+  selector:
+   matchLabels:
+    app: sysdigcloud
+    role: events-forwarder
+  template:
+    metadata:
+      labels:
+        app: sysdigcloud
+        role: events-forwarder
+    spec:
+      containers:
+        - name: events-forwarder
+          image: quay.io/sysdig/events-forwarder:8d1a093-05-21-2019-01-03-53
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "1000Mi"
+              cpu: "250m"
+          env:
+          - name: REDIS_ENDPOINT
+            valueFrom:
+              configMapKeyRef:
+                name: sysdigcloud-config
+                key: redis.ef.endpoint
+          - name: REDIS_PORT
+            value: "6379"
+          - name: MYSQL_PORT
+            value: "3306"
+          - name: MYSQL_ENDPOINT
+            valueFrom:
+              configMapKeyRef:
+                name: sysdigcloud-config
+                key: mysql.endpoint
+          - name: MYSQL_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: sysdigcloud-config
+                key: mysql.user
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: sysdigcloud-config
+                key: mysql.password
+          - name: THREAD_POOL_SIZE_FOR_POLLING_REDIS
+            value: "5"
