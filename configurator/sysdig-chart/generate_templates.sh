@@ -29,28 +29,31 @@ mkdir $GENERATED_DIR
 
 echo "step3: creating secret file - if it does not exist"
 SECRET_FILE=secrets-values.yaml
-if [ -f "$SECRET_FILE" ]; then
+GENERATED_SECRET_FILE=$GENERATED_DIR/secrets-values.yaml
+if [ -f "$GENERATED_SECRET_FILE" ]; then
     echo "$SECRET_FILE exists"
 else
     echo "Secret file does not exist. Creating Secretfile"
-    helm template -x templates/$SECRET_FILE secret-generator > $SECRET_FILE
+    helm template -x templates/$SECRET_FILE secret-generator > $GENERATED_SECRET_FILE
 fi
 
 echo "step4: running through helm template engine"
-helm template -f values.yaml -f $SECRET_FILE --output-dir $MANIFESTS .
+helm template -f values.yaml -f $GENERATED_SECRET_FILE --output-dir $MANIFESTS .
 
 TEMPLATE_BASE=$MANIFESTS/sysdig-chart/templates/
 GENERATE_CERTIFICATE=$(cat values.yaml | yq .sysdig.certificate.generate)
+GENERATED_CRT=$GENERATED_DIR/certs/server.crt
+GENERATED_KEY=$GENERATED_DIR/certs/server.key
 DNS_NAME=$(cat values.yaml | yq .sysdig.dnsName)
-mkdir $TEMPLATE_BASE/common-config/certs
+mkdir $TEMPLATE_BASE/common-config/certs && mkdir $GENERATED_DIR/certs
 if [ "$GENERATE_CERTIFICATE" = true ]; then
-  if [[ -f "certs/server.key" && -f "certs/server.crt" ]]; then
+  if [[ -f $GENERATED_KEY && -f $GENERATED_CRT ]]; then
     echo "Certificates are present. Copying the existing certs"
   else
     echo "Generating new certificate"
-    openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 -subj "/C=US/ST=CA/L=SanFrancisco/O=ICT/CN=$DNS_NAME" -keyout certs/server.key -out certs/server.crt
+    openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 -subj "/C=US/ST=CA/L=SanFrancisco/O=ICT/CN=$DNS_NAME" -keyout $GENERATED_KEY -out $GENERATED_CRT
   fi
-  cp certs/server.* $TEMPLATE_BASE/common-config/certs/
+  cp $GENERATED_KEY $GENERATED_CRT $TEMPLATE_BASE/common-config/certs/
 else
   CRT_FILE=$(cat values.yaml | yq .sysdig.certificate.crt | tr -d '"')
   KEY_FILE=$(cat values.yaml | yq .sysdig.certificate.key | tr -d '"')
