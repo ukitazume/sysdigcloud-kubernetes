@@ -47,7 +47,7 @@ GENERATED_CRT=$MANIFESTS/certs/server.crt
 GENERATED_KEY=$MANIFESTS/certs/server.key
 DNS_NAME=$(cat $TEMPLATE_DIR/values.yaml | yq .sysdig.dnsName)
 mkdir $MANIFESTS_TEMPLATE_BASE/common-config/certs
-if [ ! -d mkdir $MANIFESTS/certs]; then
+if [ ! -d $MANIFESTS/certs ]; then
   echo "Making certs manifests dir"
   mkdir $MANIFESTS/certs
 fi
