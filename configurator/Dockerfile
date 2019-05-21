@@ -1,6 +1,6 @@
 FROM alpine:3.9.4
 
-RUN apk add python py-pip jq 
+RUN apk add python py-pip jq openssl
 RUN pip install yq
 
 RUN mkdir -p helm kubernetes/kubernetes-cli
