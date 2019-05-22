@@ -18,7 +18,7 @@ while getopts "m:s:" opt; do
 done
 
 TEMPLATE_DIR=/sysdig-chart
-SIZE=$(cat $TEMPLATE_DIR/values.yaml | yq .size)
+SIZE=$(cat $TEMPLATE_DIR/values.yaml | yq .size | tr -d '"')
 
 echo "happy templating!! with mode $mode & size $SIZE"
 
