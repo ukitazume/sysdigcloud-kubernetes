@@ -10,7 +10,7 @@ SECURE=false
 for app in ${APPS}
 do
  if [[ ${app} == "secure" ]]; then
-  ${SECURE}=true
+  SECURE=true
  fi
 done
 echo "secure enabled: ${SECURE}"
@@ -86,7 +86,7 @@ kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/elasticsearch/$SIZ
 echo "step7c: data-stores mysql $SIZE"
 echo "---" >>$GENERATED_DIR/infra.yaml
 kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/mysql/$SIZE              >> $GENERATED_DIR/infra.yaml
-if [[ ${SECURE} ]]; then
+if [[ ${SECURE} == true ]]; then
   echo "step7d: data-stores postgres"
   echo "---" >>$GENERATED_DIR/infra.yaml
   kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/postgres/$SIZE         >> $GENERATED_DIR/infra.yaml
@@ -110,7 +110,7 @@ kustomize build $MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/api/$SIZE        
 echo "step 8b: generate monitor-collectorworker yamls"
 kustomize build $MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/collector-worker/$SIZE  > $GENERATED_DIR/collector-worker.yaml
 
-if [[ ${SECURE} ]]; then
+if [[ ${SECURE} == true ]]; then
   echo "step 9a: generating secure-scanning yaml"
   kustomize build $MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/secure/scanning/$SIZE       > $GENERATED_DIR/scanning.yaml
   echo "step 9b: generating secure-anchore yaml"
