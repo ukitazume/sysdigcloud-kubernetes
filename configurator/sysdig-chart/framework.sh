@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/ash
 
 export PATH=$PATH:/helm/linux-386/:/kubernetes:/kubernetes/kubernetes-cli
 #Echo function
@@ -10,13 +10,13 @@ function broadcast() {
   NC='\033[0m'
   
   if [ $1 = 'w' ]; then
-     echo -e "${WHITE}*******************$2*******************${NC}"
+     echo -e "${WHITE}$2${NC}"
   elif [ $1 = 'r' ]; then 
-     echo -e "${RED}*******************$2*******************${NC}"
+     echo -e "${RED}$2${NC}"
   elif [ $1 = 'g' ]; then
-     echo -e "${GREEN}*******************$2*******************${NC}"
+     echo -e "${GREEN}$2${NC}"
   elif [ $1 = 'p' ]; then
-     echo -e "${PURPLE}*******************$2*******************${NC}"
+     echo -e "${PURPLE}$2${NC}"
   fi
   }
 

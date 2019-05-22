@@ -10,5 +10,6 @@ RUN wget https://storage.googleapis.com/kubernetes-release/release/v1.14.0/bin/l
 RUN chmod u+x kubernetes/kustomize kubernetes/kubernetes-cli/kubectl*
 RUN export PATH=$PATH:/helm/linux-386/:/kubernetes:/kubernetes/kubernetes-cli
 COPY sysdig-chart sysdig-chart
+COPY install.sh install.sh
 
-ENTRYPOINT ash
+ENTRYPOINT /install.sh

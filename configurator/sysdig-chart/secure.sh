@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/ash
 
 #Important framework functions.
 . /sysdig-chart/framework.sh
