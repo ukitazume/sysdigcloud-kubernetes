@@ -17,7 +17,10 @@ while getopts "m:s:" opt; do
   esac
 done
 
-echo "happy templating!! with mode $mode & size $size"
+TEMPLATE_DIR=/sysdig-chart
+SIZE=$(cat $TEMPLATE_DIR/values.yaml | yq .size)
+
+echo "happy templating!! with mode $mode & size $SIZE"
 
 echo "step1: removing exiting manifests"
 rm -rf /manifests/generated/ /manifests/sysdig-chart/
@@ -28,7 +31,6 @@ GENERATED_DIR=$MANIFESTS/generated
 mkdir $GENERATED_DIR
 
 echo "step3: creating secret file - if it does not exist"
-TEMPLATE_DIR=/sysdig-chart
 SECRET_FILE=secrets-values.yaml
 GENERATED_SECRET_FILE=$MANIFESTS/secrets-values.yaml
 if [ -f "$GENERATED_SECRET_FILE" ]; then
@@ -81,43 +83,43 @@ kustomize build $MANIFESTS_TEMPLATE_BASE/sysdig-cloud/ingress_controller        
 echo "step7:  Generating data-stores"
 echo "step7a: data-stores cassandra"
 echo "---" >>$GENERATED_DIR/infra.yaml
-kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/cassandra/$size          >> $GENERATED_DIR/infra.yaml
+kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/cassandra/$SIZE          >> $GENERATED_DIR/infra.yaml
 echo "step7b: data-stores elasticsearch"
 echo "---" >>$GENERATED_DIR/infra.yaml
-kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/elasticsearch/$size      >> $GENERATED_DIR/infra.yaml
-echo "step7c: data-stores mysql $size"
+kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/elasticsearch/$SIZE      >> $GENERATED_DIR/infra.yaml
+echo "step7c: data-stores mysql $SIZE"
 echo "---" >>$GENERATED_DIR/infra.yaml
-kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/mysql/$size              >> $GENERATED_DIR/infra.yaml
+kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/mysql/$SIZE              >> $GENERATED_DIR/infra.yaml
 if [ $mode = "monitor+secure" ]; then
   echo "step7d: data-stores postgres"
   echo "---" >>$GENERATED_DIR/infra.yaml
-  kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/postgres/$size         >> $GENERATED_DIR/infra.yaml
+  kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/postgres/$SIZE         >> $GENERATED_DIR/infra.yaml
 else
   echo "skipping step7d: data-stores postgres - needed only for secure"
 fi
-if [ $size = "small" ]; then
+if [ $SIZE = "small" ]; then
   echo "step7e: data-stores redis-single small"
   echo "---" >>$GENERATED_DIR/infra.yaml
   kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/redis-single                    >> $GENERATED_DIR/infra.yaml
 else
-  echo "step7e: data-stores redis-ha $size"
+  echo "step7e: data-stores redis-ha $SIZE"
   echo "---" >>$GENERATED_DIR/infra.yaml
-  kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/redis-stateful/$size   >> $GENERATED_DIR/infra.yaml
+  kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/redis-stateful/$SIZE   >> $GENERATED_DIR/infra.yaml
 fi
 
 echo "step 8: Generating monitor"
 echo "step 8a: generate monitor-api yamls"
-kustomize build $MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/api/$size               > $GENERATED_DIR/api.yaml
+kustomize build $MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/api/$SIZE               > $GENERATED_DIR/api.yaml
 
 echo "step 8b: generate monitor-collectorworker yamls"
-kustomize build $MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/collector-worker/$size  > $GENERATED_DIR/collector-worker.yaml
+kustomize build $MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/collector-worker/$SIZE  > $GENERATED_DIR/collector-worker.yaml
 
 if [ $mode = "monitor+secure" ]; then
   echo "step 9a: generating secure-scanning yaml"
-  kustomize build $MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/secure/scanning/$size       > $GENERATED_DIR/scanning.yaml
+  kustomize build $MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/secure/scanning/$SIZE       > $GENERATED_DIR/scanning.yaml
   echo "step 9b: generating secure-anchore yaml"
-  kustomize build $MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/secure/anchore/$size        > $GENERATED_DIR/anchore-core.yaml
-  kustomize build $MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/secure/anchore/worker/$size > $GENERATED_DIR/anchore-worker.yaml
+  kustomize build $MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/secure/anchore/$SIZE        > $GENERATED_DIR/anchore-core.yaml
+  kustomize build $MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/secure/anchore/worker/$SIZE > $GENERATED_DIR/anchore-worker.yaml
 else
   echo "skipping step 9: genrating secure yaml - needed only for secure"
 fi
