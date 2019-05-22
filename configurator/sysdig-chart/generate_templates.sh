@@ -1,26 +1,22 @@
 #!/bin/ash
 set -euo pipefail
 export PATH=$PATH:/helm/linux-386/:/kubernetes:/kubernetes/kubernetes-cli
-while getopts "m:s:" opt; do
-  case ${opt} in
-    m ) # process option a
-      mode=$OPTARG
-      echo "Mode selection $mode"
-      ;;
-    s ) # process option t
-      size=$OPTARG
-      echo "Size selection $size"
-      ;;
-    \? ) echo "Usage: cmd [-m monitor|monitor+secure] [-s small|medium|large]"
-         exit 1
-      ;;
-  esac
-done
 
 TEMPLATE_DIR=/sysdig-chart
+#apps selection
+APPS=$(cat ${TEMPLATE_DIR}/values.yaml | yq .apps | tr -d '"')
+echo ${APPS}
+SECURE=false
+for app in ${APPS}
+do
+ if [[ ${app} == "secure" ]]; then
+  ${SECURE}=true
+ fi
+done
+echo "secure enabled: ${SECURE}"
+#size selection
 SIZE=$(cat $TEMPLATE_DIR/values.yaml | yq .size | tr -d '"')
-
-echo "happy templating!! with mode $mode & size $SIZE"
+echo "size selection: $SIZE"
 
 echo "step1: removing exiting manifests"
 rm -rf /manifests/generated/ /manifests/sysdig-chart/
@@ -90,14 +86,14 @@ kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/elasticsearch/$SIZ
 echo "step7c: data-stores mysql $SIZE"
 echo "---" >>$GENERATED_DIR/infra.yaml
 kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/mysql/$SIZE              >> $GENERATED_DIR/infra.yaml
-if [ $mode = "monitor+secure" ]; then
+if [[ ${SECURE} ]]; then
   echo "step7d: data-stores postgres"
   echo "---" >>$GENERATED_DIR/infra.yaml
   kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/postgres/$SIZE         >> $GENERATED_DIR/infra.yaml
 else
   echo "skipping step7d: data-stores postgres - needed only for secure"
 fi
-if [ $SIZE = "small" ]; then
+if [[ ${SIZE} == "small" ]]; then
   echo "step7e: data-stores redis-single small"
   echo "---" >>$GENERATED_DIR/infra.yaml
   kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/redis-single                    >> $GENERATED_DIR/infra.yaml
@@ -114,7 +110,7 @@ kustomize build $MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/api/$SIZE        
 echo "step 8b: generate monitor-collectorworker yamls"
 kustomize build $MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/collector-worker/$SIZE  > $GENERATED_DIR/collector-worker.yaml
 
-if [ $mode = "monitor+secure" ]; then
+if [[ ${SECURE} ]]; then
   echo "step 9a: generating secure-scanning yaml"
   kustomize build $MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/secure/scanning/$SIZE       > $GENERATED_DIR/scanning.yaml
   echo "step 9b: generating secure-anchore yaml"

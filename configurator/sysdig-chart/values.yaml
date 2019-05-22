@@ -1,10 +1,10 @@
 #defines which scripts needs to be run
 #generate - performs templating & kustomization
 #deploy   - apply's the generated script in k8s environment
-scripts: generate, deploy
+scripts: generate deploy
 #defines applications needed. Monitor installed by default.
 #Secure is optional. Remove secure if not.
-apps: monitor, secure
+apps: monitor secure
 #Size of the cluster. Takes [ small | medium | large ]
 #This defines CPU & Memory & Disk & Replicas
 #Replicas overwritten - for medium , large by advancedconfig replicas
