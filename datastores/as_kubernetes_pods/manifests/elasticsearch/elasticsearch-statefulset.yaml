@@ -70,6 +70,13 @@ spec:
                 configMapKeyRef:
                   name: sysdigcloud-config
                   key: elasticsearch.jvm.options
+          resources:
+            requests:
+              memory: "16G"
+              cpu: "4"
+            limits:
+              memory: "16G"
+              cpu: "8"
           readinessProbe:
             httpGet:
               path: /_cluster/health
@@ -79,14 +86,12 @@ spec:
           volumeMounts:
             - mountPath: /usr/share/elasticsearch/data
               name: data
+      volumes:
+        - hostPath:
+            path: /mnt/nvme/es-data-volume
+            type: ""
+          name: data
       imagePullSecrets:
-        - name: sysdigcloud-pull-secret
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        resources:
-          requests:
-            storage: 50Gi
-        storageClassName: <INSERT_YOUR_STORAGE_CLASS_NAME>
+      - name: sysdigcloud-pull-secret
+      nodeSelector:
+        kops.k8s.io/instancetype: cassandra

@@ -103,6 +103,13 @@ spec:
             preStop:
               exec:
                 command: ["/bin/sh", "-c", "nodetool drain"]
+          resources:
+            requests:
+              memory: "16G"
+              cpu: "8"
+            limits:
+              memory: "16G"
+              cpu: "8"
           readinessProbe:
             exec:
               command:
@@ -121,6 +128,11 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/cassandra
               name: data
+      volumes:
+        - hostPath:
+            path: /mnt/nvme/cassandra-data-volume
+            type: ""
+          name: data
             # Uncomment this when using multiple mount points for data
             # - mountPath: /var/lib/cassandra/data2
             #   name: data2
@@ -151,12 +163,5 @@ spec:
       #   configMap:
       #     name: cassandra-jvm-opts
       #############################################
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        resources:
-          requests:
-            storage: 50Gi
-        storageClassName: <INSERT_YOUR_STORAGE_CLASS_NAME>
+      nodeSelector:
+        kops.k8s.io/instancetype: cassandra

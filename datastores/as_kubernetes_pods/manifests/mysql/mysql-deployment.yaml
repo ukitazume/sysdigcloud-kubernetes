@@ -5,8 +5,8 @@ metadata:
   name: sysdig-mysql-disk
 spec:
   accessModes:
-    - ReadWriteOnce
-  storageClassName: <INSERT_YOUR_STORAGE_CLASS_NAME>
+  - ReadWriteOnce
+  storageClassName: default
   resources:
     requests:
       storage: 15Gi
@@ -137,3 +137,5 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: sysdig-mysql-disk
+      nodeSelector:
+        kops.k8s.io/instancetype: cassandra

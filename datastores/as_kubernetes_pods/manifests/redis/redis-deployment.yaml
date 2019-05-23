@@ -29,8 +29,11 @@ spec:
           image: quay.io/sysdig/redis:4.0.12.1-alpine
           resources:
             requests:
-              cpu: 100m
-              memory: 1Gi
+              memory: "4G"
+              cpu: "1"
+            limits:
+              memory: "4G"
+              cpu: "1"
           env:
             - name: REDIS_PASSWORD
               valueFrom:
@@ -39,3 +42,5 @@ spec:
                   key: redis.password
       imagePullSecrets:
         - name: sysdigcloud-pull-secret
+      nodeSelector:
+        kops.k8s.io/instancetype: cassandra
