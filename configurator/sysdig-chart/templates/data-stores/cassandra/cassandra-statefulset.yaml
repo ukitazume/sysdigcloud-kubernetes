@@ -38,7 +38,7 @@ spec:
                 - cassandra
             topologyKey: kubernetes.io/hostname
       containers:
-        - image: quay.io/sysdig/cassandra:2.1.21.2
+        - image: quay.io/sysdig/cassandra:2.1.21.6
           name: cassandra
           env:
             - name: CASSANDRA_SERVICE
