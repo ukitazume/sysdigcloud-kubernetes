@@ -7,7 +7,7 @@ scripts: generate deploy
 apps: monitor secure
 #Size of the cluster. Takes [ small | medium | large ]
 #This defines CPU & Memory & Disk & Replicas
-#Replicas overwritten - for medium , large by advancedconfig replicas
+#Replicas can be overwritten for medium , large in advanced   config section
 size: medium
 #Set k8s namespace for sysdigcloud
 namespace: sysdigcloud
