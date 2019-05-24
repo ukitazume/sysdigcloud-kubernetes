@@ -91,13 +91,6 @@ data:
   redis.password: ""
   # If using Redis HA/Statefulsets, see the SYSDIG ONPREM section below about adding jvm options to
   # sysdigcloud.jvm.api.options, sysdigcloud.jvm.worker.options, sysdigcloud.jvm.collector.options
-  #############################################
-  ######### REDIS - EVENTS FORWARDING #########
-  #############################################
-  redis.ef.endpoint: redis-events-forwarding
-  redis.ef.port: "6379"
-  # Optional: Redis password
-  redis.ef.password: ""
   ####################################
   ######### ELASTICSEARCH ############
   ####################################
