@@ -1,16 +1,5 @@
 #!/bin/ash
 
-APPS=$(cat /sysdig-chart/values.yaml | yq .apps | tr -d '"')
-echo ${APPS}
-SECURE=false
-for app in ${APPS}
-do
- if [[ ${app} == "secure" ]]; then
-  SECURE=true
- fi
-done
-
-
 SCRIPTS=$(cat /sysdig-chart/values.yaml | yq .scripts | tr -d '"')
 echo ${SCRIPTS}
 for script in ${SCRIPTS}
@@ -32,11 +21,5 @@ fi
 
 if [[ ${DEPLOY} == true ]];
 then
-  echo "Deploying Monitor..."
-  /sysdig-chart/monitor.sh
-  if [[ ${SECURE} == true ]];
-  then
-    echo "Deploying Secure..."
-    /sysdig-chart/secure.sh
-  fi
+  /deploy.sh
 fi
