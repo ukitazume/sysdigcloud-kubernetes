@@ -9,6 +9,12 @@ metadata:
     component: elasticsearch
     role: elasticsearch
 spec:
+  selector:
+    matchLabels:
+      affinity: elasticsearch
+      app: sysdigcloud
+      component: elasticsearch
+      role: elasticsearch
   serviceName: sysdigcloud-elasticsearch
   podManagementPolicy: Parallel
   selector:
@@ -42,44 +48,44 @@ spec:
                 - elasticsearch
             topologyKey: kubernetes.io/hostname
       containers:
-      - name: elasticsearch
-        image: quay.io/sysdig/elasticsearch:5.6.16.1
-        securityContext:
-          privileged: true
-        ## Recommended resource limits for Elasticsearch pods.
-        ## Make sure to set values for these limits that are appropriate for your environment.
-        #resources:
-        #  requests:
-        #    cpu: 2
-        #    memory: 6Gi
-        #  limits:
-        #    cpu: 4
-        #    memory: 10Gi
-        env:
-          - name: ELASTICSEARCH_SERVICE
-            value: sysdigcloud-elasticsearch
-            # ELASTICSEARCH_GOSSIP_NODES_NUM needs to match the number of replicas specified for the statefulset. It will be used to calculate
-            # The value of the -Ediscovery.zen.minimum_master_nodes parameter. To override this calculation and set this
-            # parameter manually use the DISCOVERY_ZEN_MINIMUM_MASTER_NODES variable.
-          - name: ELASTICSEARCH_GOSSIP_NODES_NUM
-            value: "3"
-          - name: ELASTICSEARCH_CLUSTER_NAME
-            value: sysdigcloud
-          - name: ES_JAVA_OPTS
-            valueFrom:
-              configMapKeyRef:
-                name: sysdigcloud-config
-                key: elasticsearch.jvm.options
-        readinessProbe:
-          httpGet:
-            path: /_cluster/health
-            port: 9200
-          initialDelaySeconds: 20
-          timeoutSeconds: 5
-          failureThreshold: 10
-        volumeMounts:
-          - mountPath: /usr/share/elasticsearch/data
-            name: data
+        - name: elasticsearch
+          image: quay.io/sysdig/elasticsearch:5.6.16.1
+          securityContext:
+            privileged: true
+          ## Recommended resource limits for Elasticsearch pods.
+          ## Make sure to set values for these limits that are appropriate for your environment.
+          #resources:
+          #  requests:
+          #    cpu: 2
+          #    memory: 6Gi
+          #  limits:
+          #    cpu: 4
+          #    memory: 10Gi
+          env:
+            - name: ELASTICSEARCH_SERVICE
+              value: sysdigcloud-elasticsearch
+              # ELASTICSEARCH_GOSSIP_NODES_NUM needs to match the number of replicas specified for the statefulset. It will be used to calculate
+              # The value of the -Ediscovery.zen.minimum_master_nodes parameter. To override this calculation and set this
+              # parameter manually use the DISCOVERY_ZEN_MINIMUM_MASTER_NODES variable.
+            - name: ELASTICSEARCH_GOSSIP_NODES_NUM
+              value: "3"
+            - name: ELASTICSEARCH_CLUSTER_NAME
+              value: sysdigcloud
+            - name: ES_JAVA_OPTS
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: elasticsearch.jvm.options
+          readinessProbe:
+            httpGet:
+              path: /_cluster/health
+              port: 9200
+            initialDelaySeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 10
+          volumeMounts:
+            - mountPath: /usr/share/elasticsearch/data
+              name: data
       imagePullSecrets:
         - name: sysdigcloud-pull-secret
       volumes:
