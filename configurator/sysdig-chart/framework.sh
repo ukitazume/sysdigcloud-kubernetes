@@ -45,7 +45,7 @@ function wait_for_pods() {
     pods="$(kubectl -n ${NAMESPACE} get po -o 'jsonpath={.items[*].metadata.name}')"
     if pods_ready ${pods}; then
       broadcast 'w' "All Pods Ready.....Continuing"
-      return 2
+      return 0
     else
       sleep "$interval"
       if [[ $(( $attempts % 5 )) == 0 ]]; then
