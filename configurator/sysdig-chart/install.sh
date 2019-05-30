@@ -22,5 +22,5 @@ fi
 
 if [[ ${DEPLOY} == true ]];
 then
-  /deploy.sh
+  /sysdig-chart/deploy.sh
 fi
