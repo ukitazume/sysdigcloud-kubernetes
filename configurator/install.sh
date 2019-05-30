@@ -1,4 +1,5 @@
 #!/bin/ash
+set -euo pipefail
 
 SCRIPTS=$(cat /sysdig-chart/values.yaml | yq .scripts | tr -d '"')
 echo ${SCRIPTS}

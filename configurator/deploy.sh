@@ -1,4 +1,5 @@
 #!/bin/ash
+set -euo pipefail
 
 APPS=$(cat /sysdig-chart/values.yaml | yq .apps | tr -d '"')
 echo ${APPS}

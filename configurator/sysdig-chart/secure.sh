@@ -1,4 +1,5 @@
 #!/bin/ash
+set -euo pipefail
 
 #Important framework functions.
 . /sysdig-chart/framework.sh

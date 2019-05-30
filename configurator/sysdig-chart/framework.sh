@@ -49,6 +49,10 @@ function wait_for_pods() {
     else
       sleep "$interval"
       if [[ $(( $attempts % 5 )) == 0 ]]; then
+        if [[ $(( $attempts % 30 )) == 0 ]]; then
+          broadcast 'r' "We have checked $attempts times. Its talking too long deploy bailing out. Please contact support."
+          return 3
+         fi
         broadcast 'r' "We have checked $attempts times"
       fi
       attempts=$((attempts + 1))
