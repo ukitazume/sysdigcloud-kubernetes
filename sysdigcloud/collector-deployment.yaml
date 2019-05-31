@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: quay.io/sysdig/sysdigcloud-backend:2115-nginx
+          image: quay.io/sysdig/sysdigcloud-backend:2172-nginx
           volumeMounts:
             - name: ssl
               mountPath: /opt/certs/
@@ -28,7 +28,7 @@ spec:
                   name: sysdigcloud-config
                   key: api.url
         - name: collector
-          image: quay.io/sysdig/sysdigcloud-backend:2115-allinone-java
+          image: quay.io/sysdig/sysdigcloud-backend:2172-allinone-java
           resources:
             requests:
               memory: "10G"
