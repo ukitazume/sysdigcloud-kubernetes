@@ -3,6 +3,11 @@ set -euo pipefail
 
 SCRIPTS=$(cat /sysdig-chart/values.yaml | yq .scripts | tr -d '"')
 echo ${SCRIPTS}
+
+#set defaults
+GENERATE=false
+DEPLOY=false
+
 for script in ${SCRIPTS}
 do
  if [[ ${script} == "generate" ]];
