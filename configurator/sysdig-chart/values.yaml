@@ -22,8 +22,6 @@ sysdig:
   agentCount: 10
   #Set Sysdig license
   license: <Insert SysdigLicense>
-  storageclass:
-    name: <Insert StorageClassName>
   dnsName: <Insert DNS Name>
   monitorVersion: 2172
   #Advanced settings

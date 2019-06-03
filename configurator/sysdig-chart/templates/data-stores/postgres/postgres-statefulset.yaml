@@ -21,7 +21,7 @@ spec:
       resources:
         requests:
           storage: 60Gi
-      storageClassName: {{ .Values.sysdig.storageclass.name }}
+      storageClassName: {{ .Values.storageClassName }}
   template:
     metadata:
       labels:
