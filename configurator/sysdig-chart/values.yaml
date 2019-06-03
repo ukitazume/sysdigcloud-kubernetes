@@ -14,7 +14,7 @@ namespace: sysdigcloud
 #Set Quay.Io secrets
 quaypullsecret: <Insert QuaySecret>
 #StorageClass config
-storageClassName: pj-storage
+storageClassName: <Insert StorageClassName>
 #supports aws | gke
 storageClassProvisioner: aws
 #Sysdig application config
