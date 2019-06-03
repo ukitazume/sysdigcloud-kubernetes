@@ -79,7 +79,7 @@ data:
           alpine:
             enabled: true
           snyk:
-            enabled: true
+            enabled: false
         certDir: ""
         ssl_cert: ""
         ssl_key: ""
