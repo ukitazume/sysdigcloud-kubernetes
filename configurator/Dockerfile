@@ -1,7 +1,7 @@
 FROM alpine:3.9.4
 
 RUN apk add python py-pip jq openssl
-RUN pip install yq
+RUN pip install yq kubernetes
 
 RUN mkdir -p helm kubernetes/kubernetes-cli openshift
 RUN wget https://storage.googleapis.com/kubernetes-helm/helm-v2.14.0-linux-386.tar.gz && tar xvf helm-v2.14.0-linux-386.tar.gz -C helm/ && rm helm-v2.14.0-linux-386.tar.gz

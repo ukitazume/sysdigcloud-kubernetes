@@ -70,7 +70,10 @@ else
   fi
 fi
 
-echo "step5: generate commong files"
+echo "step5a: generate storage"
+kustomize build $MANIFESTS_TEMPLATE_BASE/storage/                                      > $GENERATED_DIR/storage-class.yaml
+
+echo "step5b: generate commong files"
 kustomize build $MANIFESTS_TEMPLATE_BASE/overlays/common-config/$SIZE                  > $GENERATED_DIR/common-config.yaml
 
 echo "step 6: generate ingress yaml"

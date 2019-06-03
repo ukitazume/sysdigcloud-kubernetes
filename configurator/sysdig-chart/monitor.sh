@@ -4,6 +4,15 @@ set -euo pipefail
 #Important framework functions.
 . /sysdig-chart/framework.sh
 
+STORAGE_CLASS_NAME=$(cat ${TEMPLATE_DIR}/values.yaml | yq .storageClassName | tr -d '"')
+#Create config
+if python /sysdig-chart/check_storageclass.py ${STORAGE_CLASS_NAME}; then
+  broadcast 'g' "StorageClass exits"
+else
+  broadcast 'g' "Creating StorageClass"
+  kubectl apply -f /manifests/generated/storage-class.yaml
+fi
+
 #Create config
 broadcast 'g' "Creating common-config"
 kubectl apply -f /manifests/generated/common-config.yaml

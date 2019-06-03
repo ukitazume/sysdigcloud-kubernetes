@@ -13,6 +13,11 @@ size: medium
 namespace: sysdigcloud
 #Set Quay.Io secrets
 quaypullsecret: <Insert QuaySecret>
+#StorageClass config
+storageClassName: pj-storage
+#supports aws | gke
+storageClassProvisioner: aws
+#Sysdig application config
 sysdig:
   agentCount: 10
   #Set Sysdig license
