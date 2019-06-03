@@ -7,7 +7,7 @@ set -euo pipefail
 STORAGE_CLASS_NAME=$(cat /sysdig-chart/values.yaml | yq .storageClassName | tr -d '"')
 #Create config
 if python /sysdig-chart/check_storageclass.py ${STORAGE_CLASS_NAME}; then
-  broadcast 'g' "StorageClass exits"
+  broadcast 'g' "StorageClass ${STORAGE_CLASS_NAME} exits. Skipping storageClass creation..."
 else
   broadcast 'g' "Creating StorageClass"
   kubectl apply -f /manifests/generated/storage-class.yaml
