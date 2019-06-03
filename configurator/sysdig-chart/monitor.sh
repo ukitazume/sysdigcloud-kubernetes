@@ -4,7 +4,7 @@ set -euo pipefail
 #Important framework functions.
 . /sysdig-chart/framework.sh
 
-STORAGE_CLASS_NAME=$(cat ${TEMPLATE_DIR}/values.yaml | yq .storageClassName | tr -d '"')
+STORAGE_CLASS_NAME=$(cat /sysdig-chart/values.yaml | yq .storageClassName | tr -d '"')
 #Create config
 if python /sysdig-chart/check_storageclass.py ${STORAGE_CLASS_NAME}; then
   broadcast 'g' "StorageClass exits"
