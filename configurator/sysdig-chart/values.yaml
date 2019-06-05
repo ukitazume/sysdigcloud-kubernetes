@@ -13,14 +13,17 @@ size: medium
 namespace: sysdigcloud
 #Set Quay.Io secrets
 quaypullsecret: <Insert QuaySecret>
+#StorageClass config
+storageClassName: <Insert StorageClassName>
+#supports aws | gke
+storageClassProvisioner: aws
+#Sysdig application config
 sysdig:
   agentCount: 10
   #Set Sysdig license
   license: <Insert SysdigLicense>
-  storageclass:
-    name: <Insert StorageClassName>
   dnsName: <Insert DNS Name>
-  monitorVersion: 1985
+  monitorVersion: 2172
   #Advanced settings
   #autogenerate certificate by default - generate to false and provide crt,key to use existing certs
   certificate:

@@ -3,7 +3,6 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - pull-secret.yaml
-  - storage-class.yaml
   - lb-config.yaml
   - config.yaml
   - scanning-secrets.yaml

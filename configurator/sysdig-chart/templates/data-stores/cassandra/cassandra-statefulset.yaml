@@ -145,4 +145,4 @@ spec:
         resources:
           requests:
             storage: 20Gi
-        storageClassName: {{ .Values.sysdig.storageclass.name }}
+        storageClassName: {{ .Values.storageClassName }}

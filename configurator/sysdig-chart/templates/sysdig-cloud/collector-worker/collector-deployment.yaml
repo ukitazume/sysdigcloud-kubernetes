@@ -11,6 +11,7 @@ spec:
       labels:
         app: sysdigcloud
         role: collector
+      annotations:
         version: {{ .Values.sysdig.monitorVersion | quote }}
     spec:
       containers:
