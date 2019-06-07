@@ -1,6 +1,5 @@
 #!/bin/ash
 set -euo pipefail
-export PATH=$PATH:/helm/linux-386/:/kubernetes:/kubernetes/kubernetes-cli
 
 TEMPLATE_DIR=/sysdig-chart
 #apps selection
