@@ -1,6 +1,5 @@
 #!/bin/ash
 
-export PATH=$PATH:/helm/linux-386/:/kubernetes:/kubernetes/kubernetes-cli
 NAMESPACE=$(cat /sysdig-chart/values.yaml | yq .namespace | tr -d '"')
 
 #Echo function
