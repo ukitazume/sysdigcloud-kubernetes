@@ -15,6 +15,14 @@ namespace: sysdigcloud
 quaypullsecret: <Insert QuaySecret>
 #StorageClass config
 storageClassName: <Insert StorageClassName>
+#This drives multi-az awareness, if sysdigcloud is deployed to a multi-az setup
+#this should be updated as adequate
+# cloudProvider:
+#   defaults to an empty string
+#   name: aws
+#   defaults to false
+#   isMultiAZ: true
+#   region: us-east-1
 #supports aws | gke
 storageClassProvisioner: aws
 #Sysdig application config
