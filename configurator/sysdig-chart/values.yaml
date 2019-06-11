@@ -17,6 +17,8 @@ quaypullsecret: <Insert QuaySecret>
 storageClassName: <Insert StorageClassName>
 #supports aws | gke
 storageClassProvisioner: aws
+#supports openshift | vanilla defaults to vanilla install
+deployment: vanilla
 #Sysdig application config
 sysdig:
   agentCount: 10
@@ -42,3 +44,7 @@ sysdig:
   anchoreWorkerReplicaCount:
   scanningApiReplicaCount:
   scanningAlertMgrReplicaCount:
+  #Please provide openshift parameters
+  openshiftUrl:
+  openshiftUsername:
+  openshiftPassword:
