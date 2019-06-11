@@ -16,6 +16,6 @@ RUN apk add python py-pip jq openssl ca-certificates \
       && chmod +x /usr/bin/oc /usr/bin/oc-kubectl \
       && cp /tmp/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit/kubectl /usr/bin/oc-kubectl-bin \
       && cp /tmp/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit/oc /usr/bin/oc-bin \
-      && rm -rf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz /tmp/openshift* linux-386 \
+      && rm -rf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz /tmp/openshift* linux-386
 
 ENTRYPOINT /sysdig-chart/install.sh
