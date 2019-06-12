@@ -91,6 +91,14 @@ data:
   cassandra.endpoint.snitch: "Ec2Snitch"
   cassandra.snitch.hostname.file: ""
   cassandra.snitch.extract_cmd: ""
+  {{ else if (and (eq (.Values.cloudProvider.name | default "") "ibm") (.Values.cloudProvider.isMultiAZ | default false)) }}
+  # TODO replace with customGossipingPropertyFileSnitch once code in:
+  # https://github.com/draios/infrastructure/pull/620
+  # has been deployed everywhere
+  cassandra.endpoint.snitch: "customHostBasedGossipingPropertyFileSnitch"
+  cassandra.snitch.hostname.file: "/host/etc/hostname"
+  cassandra.datacenter.name: "sysdig"
+  cassandra.snitch.extract_cmd: "cut -d- -f2"
   {{ else }}
   # Optional but required as a group: file containing the worker node name
   cassandra.endpoint.snitch: ""

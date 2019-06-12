@@ -84,16 +84,16 @@ spec:
                 configMapKeyRef:
                   name: sysdigcloud-config
                   key: cassandra.endpoint.snitch
-            # - name: CASSANDRA_SNITCH_EXTRACT_CMD
-            #   valueFrom:
-            #     configMapKeyRef:
-            #       name: sysdigcloud-config
-            #       key: cassandra.snitch.extract_cmd
-            # - name: CASSANDRA_SNITCH_HOSTNAME_FILE
-            #   valueFrom:
-            #     configMapKeyRef:
-            #       name: sysdigcloud-config
-            #       key: cassandra.snitch.hostname.file
+            - name: CASSANDRA_SNITCH_EXTRACT_CMD
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: cassandra.snitch.extract_cmd
+            - name: CASSANDRA_SNITCH_HOSTNAME_FILE
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: cassandra.snitch.hostname.file
             - name: CASSANDRA_DC
               valueFrom:
                 configMapKeyRef:
