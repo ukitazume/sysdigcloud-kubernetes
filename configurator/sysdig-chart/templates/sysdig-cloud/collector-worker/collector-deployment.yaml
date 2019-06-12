@@ -14,6 +14,39 @@ spec:
       annotations:
         version: {{ .Values.sysdig.monitorVersion | quote }}
     spec:
+      affinity:
+        podAntiAffinity:
+          ## Strive to spread the pods across multiple AZs
+          {{ if (.Values.cloudProvider.isMultiAZ | default false) }}
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - sysdigcloud
+                    - key: role
+                      operator: In
+                      values:
+                        - collector
+                topologyKey: failure-domain.beta.kubernetes.io/zone
+          {{ end }}
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - sysdigcloud
+                    - key: role
+                      operator: In
+                      values:
+                        - collector
+                topologyKey: kubernetes.io/hostname
       containers:
         - name: nginx
           image: quay.io/sysdig/sysdigcloud-backend:{{ .Values.sysdig.monitorVersion }}-nginx

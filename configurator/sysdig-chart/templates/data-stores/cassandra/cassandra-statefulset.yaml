@@ -29,14 +29,29 @@ spec:
       ## the replication factor for your statefulset.
       affinity:
         podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: affinity
-                operator: In
-                values:
-                - cassandra
-            topologyKey: kubernetes.io/hostname
+          ## Strive to spread the pods across multiple AZs
+          {{ if (.Values.cloudProvider.isMultiAZ | default false) }}
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: affinity
+                      operator: In
+                      values:
+                        - cassandra
+                topologyKey: failure-domain.beta.kubernetes.io/zone
+          {{ end }}
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: affinity
+                      operator: In
+                      values:
+                        - cassandra
+                topologyKey: kubernetes.io/hostname
       containers:
         - image: quay.io/sysdig/cassandra:2.1.21.12
           name: cassandra
