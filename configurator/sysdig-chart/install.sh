@@ -25,6 +25,12 @@ then
   /sysdig-chart/generate_templates.sh
 fi
 
+DEPLOYMENT=$(cat /sysdig-chart/values.yaml | yq .deployment | tr -d '"')
+if [[ ${DEPLOYMENT} == "openshift" ]];
+then
+  /sysdig-chart/openshift.sh
+fi
+
 if [[ ${DEPLOY} == true ]];
 then
   /sysdig-chart/deploy.sh
