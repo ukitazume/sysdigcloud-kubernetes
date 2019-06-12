@@ -31,7 +31,7 @@ oc adm policy add-scc-to-user privileged -n ${NAMESPACE} -z default
 DNS_NAME=$(cat /sysdig-chart/values.yaml | yq .sysdig.dnsName | tr -d '"')
 
 STATUS_API=$(oc get route sysdigcloud-api)
-if $?; then
+if [[ $? == 0 ]]; then
   echo "Route sysdigcloud-api exists."
 else
   echo "Creating sysdigcloud-api route"
@@ -44,7 +44,7 @@ else
 fi
 
 STATUS_COLLECTOR=$(oc get route sysdigcloud-collector)
-if $?; then
+if [[ $? == 0 ]]; then
   echo "Route sysdigcloud-collector exists."
 else
   echo "Creating route sysdigcloud-collector"
