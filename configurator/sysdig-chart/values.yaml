@@ -17,8 +17,8 @@ quaypullsecret: <Insert QuaySecret>
 storageClassName: <Insert StorageClassName>
 #supports aws | gke
 storageClassProvisioner: aws
-#supports openshift | vanilla defaults to vanilla install
-deployment: vanilla
+#supports openshift | kubernetes defaults to kubernetes install
+deployment: kubernetes
 #Sysdig application config
 sysdig:
   agentCount: 10
