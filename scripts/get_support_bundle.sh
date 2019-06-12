@@ -41,6 +41,13 @@ for object in svc deployment sts pvc daemonset ingress replicaset; do
     done
 done
 
+# get node data, might be nice to have a selector here eg: -l role=sysdigcloud
+kubectl get nodes > ${LOG_DIR}/nodes.txt
+echo " " >> ${LOG_DIR}/nodes.txt
+kubectl describe nodes >> ${LOG_DIR}/nodes.txt
+#get event data
+kubectl ${KUBE_OPTS} get events --sort-by=.metadata.creationTimestamp >> ${LOG_DIR}/events.txt
+
 kubectl ${KUBE_OPTS} get configmap sysdigcloud-config -o yaml | grep -v password > ${LOG_DIR}/config.yaml
 
 BUNDLE_NAME=$(date +%s)_sysdig_cloud_support_bundle.tgz
