@@ -21,7 +21,7 @@ data:
   ####################################
   ######### CASSANDRA #########
   ####################################
-  cassandra.endpoint: sysdigcloud-cassandra
+  cassandra.endpoint: sysdigcloud-cassandra.{{ .Values.namespace }}.svc.cluster.local.
   # Optional: enable or disable cassandra authentication and authorization in sysdigcloud cassandra image,
   # if you want to enable it, make sure to follow the support guide in the official sysdigcloud documentation (needs link)
   cassandra.secure: "false"
@@ -74,13 +74,39 @@ data:
   # (assuming that hostname is: "hostname-zone01-kubernetes-w1.domain.com", rack will contain: "zone01")
   # ATTENTION: these new values should be used in conjuction with extra entries in the Cassandra statefulset
   # and with a specific version of Sysdig Cassandra image (TBD)
-  cassandra.endpoint.snitch: ""
-  # Optional but required as a group: file containing the worker node name
+
+  # This hack is an implementation of:
+  # https://github.com/apache/cassandra/blob/a85afbc7a83709da8d96d92fc4154675794ca7fb/src/java/org/apache/cassandra/locator/Ec2Snitch.java#L61-L63
+  # This conditional has to be kept here because golang templates do not
+  # support nesting if conditionals, it expects an if conditional to close at an
+  # end statement.
+  {{ if (and (eq (.Values.cloudProvider.name | default "") "aws") (hasSuffix "1" .Values.cloudProvider.region)) }}
+  {{ $ec2Region := (substr 0 (int (sub (len .Values.cloudProvider.region) 2)) .Values.cloudProvider.region) }}
+  cassandra.datacenter.name: {{ $ec2Region }}
+  {{ else if (eq (.Values.cloudProvider.name | default "") "aws") }}
+  cassandra.datacenter.name: {{ .Values.cloudProvider.region }}
+  {{ end }}
+
+  {{ if (and (eq (.Values.cloudProvider.name | default "") "aws") (.Values.cloudProvider.isMultiAZ | default false)) }}
+  cassandra.endpoint.snitch: "Ec2Snitch"
   cassandra.snitch.hostname.file: ""
+  cassandra.snitch.extract_cmd: ""
+  {{ else if (and (eq (.Values.cloudProvider.name | default "") "ibm") (.Values.cloudProvider.isMultiAZ | default false)) }}
+  # TODO replace with customGossipingPropertyFileSnitch once code in:
+  # https://github.com/draios/infrastructure/pull/620
+  # has been deployed everywhere
+  cassandra.endpoint.snitch: "customHostBasedGossipingPropertyFileSnitch"
+  cassandra.snitch.hostname.file: "/host/etc/hostname"
+  cassandra.datacenter.name: "sysdig"
+  cassandra.snitch.extract_cmd: "cut -d- -f2"
+  {{ else }}
+  # Optional but required as a group: file containing the worker node name
+  cassandra.endpoint.snitch: ""
   # Optional but required as a group: command to extract the zone from the hostname
   cassandra.snitch.extract_cmd: ""
   # Optional but required as a group: datacenter name used for snitch and network topology
   cassandra.datacenter.name: ""
+  {{ end }}
   # End Snitch Group ###########################################
   ####################################
   ######### REDIS #########

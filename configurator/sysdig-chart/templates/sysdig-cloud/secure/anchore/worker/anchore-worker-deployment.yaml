@@ -19,6 +19,39 @@ spec:
         app: sysdigcloud
         role: anchore-worker
     spec:
+      affinity:
+        podAntiAffinity:
+          ## Strive to spread the pods across multiple AZs
+          {{ if (.Values.cloudProvider.isMultiAZ | default false) }}
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - sysdigcloud
+                    - key: role
+                      operator: In
+                      values:
+                        - anchore-worker
+                topologyKey: failure-domain.beta.kubernetes.io/zone
+          {{ end }}
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - sysdigcloud
+                    - key: role
+                      operator: In
+                      values:
+                        - anchore-worker
+                topologyKey: kubernetes.io/hostname
       imagePullSecrets:
         - name: sysdigcloud-pull-secret
       volumes:

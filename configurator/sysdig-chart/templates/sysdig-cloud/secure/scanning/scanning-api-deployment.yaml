@@ -4,6 +4,7 @@ metadata:
   name: sysdigcloud-scanning-api
   namespace: {{ .Values.namespace }}
   labels:
+    affinity: sysdigcloud-scanning-api
     app: sysdigcloud
     role: scanning-api
 spec:
@@ -23,6 +24,31 @@ spec:
         prometheus.io/path: '/metrics'
         prometheus.io/port: '80'
     spec:
+      affinity:
+        podAntiAffinity:
+          ## Strive to spread the pods across multiple AZs
+          {{ if (.Values.cloudProvider.isMultiAZ | default false) }}
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: affinity
+                      operator: In
+                      values:
+                        - sysdigcloud-scanning-api
+                topologyKey: failure-domain.beta.kubernetes.io/zone
+          {{ end }}
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: affinity
+                      operator: In
+                      values:
+                        - sysdigcloud-scanning-api
+                topologyKey: kubernetes.io/hostname
       imagePullSecrets:
         - name: sysdigcloud-pull-secret
       containers:
