@@ -1,5 +1,16 @@
 #!/bin/ash
+
 set -euo pipefail
+
+if [[ ! -f /manifests/values.yaml ]]; then
+  echo "Please provide a values.yaml in your current working directory."
+  echo -e "See: \\n\
+  https://sysdig.atlassian.net/wiki/spaces/DEVOPS/pages/833978514/Onprem+Configurator  \\n\
+  for guidance"
+  exit 1
+else
+  cp /manifests/values.yaml /sysdig-chart/values.yaml
+fi
 
 SCRIPTS=$(cat /sysdig-chart/values.yaml | yq .scripts | tr -d '"')
 echo ${SCRIPTS}

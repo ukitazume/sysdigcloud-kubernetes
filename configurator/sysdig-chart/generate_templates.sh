@@ -23,7 +23,7 @@ rm -rf /manifests/generated/ /manifests/sysdig-chart/
 echo "step2: creating manifest dirs"
 MANIFESTS=/manifests
 GENERATED_DIR=$MANIFESTS/generated
-mkdir $GENERATED_DIR
+mkdir -p $GENERATED_DIR
 
 echo "step3: creating secret file - if it does not exist"
 SECRET_FILE=secrets-values.yaml
