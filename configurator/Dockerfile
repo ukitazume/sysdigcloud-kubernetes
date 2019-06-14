@@ -18,4 +18,6 @@ RUN apk add python py-pip jq openssl ca-certificates \
       && cp /tmp/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit/oc /usr/bin/oc-bin \
       && rm -rf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz /tmp/openshift* linux-386
 
+COPY sysdig-chart /sysdig-chart
+
 ENTRYPOINT /sysdig-chart/install.sh
