@@ -13,9 +13,9 @@ spec:
     spec:
       containers:
         - name: email-renderer
-          image: quay.io/sysdig/sysdigcloud-backend:2172-email-renderer
+          image: quay.io/sysdig/sysdigcloud-backend:2266-email-renderer
         - name: worker
-          image: quay.io/sysdig/sysdigcloud-backend:2172-allinone-java
+          image: quay.io/sysdig/sysdigcloud-backend:2266-allinone-java
           volumeMounts:
             - name: config
               mountPath: /opt/kubernets_config
