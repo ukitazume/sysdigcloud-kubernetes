@@ -3,7 +3,7 @@ set -euo pipefail
 
 TEMPLATE_DIR=/sysdig-chart
 #apps selection
-APPS=$(cat ${TEMPLATE_DIR}/values.yaml | yq .apps | tr -d '"')
+APPS=$(cat ${TEMPLATE_DIR}/values.yaml | yq -r .apps)
 echo ${APPS}
 SECURE=false
 for app in ${APPS}
@@ -14,7 +14,7 @@ do
 done
 echo "secure enabled: ${SECURE}"
 #size selection
-SIZE=$(cat $TEMPLATE_DIR/values.yaml | yq .size | tr -d '"')
+SIZE=$(cat $TEMPLATE_DIR/values.yaml | yq -r .size)
 echo "size selection: $SIZE"
 
 echo "step1: removing exiting manifests"
@@ -39,10 +39,10 @@ echo "step4: running through helm template engine"
 helm template -f $TEMPLATE_DIR/values.yaml -f $GENERATED_SECRET_FILE --output-dir $MANIFESTS $TEMPLATE_DIR
 
 MANIFESTS_TEMPLATE_BASE=$MANIFESTS/sysdig-chart/templates/
-GENERATE_CERTIFICATE=$(cat $TEMPLATE_DIR/values.yaml | yq .sysdig.certificate.generate)
+GENERATE_CERTIFICATE=$(cat $TEMPLATE_DIR/values.yaml | yq -r .sysdig.certificate.generate)
 GENERATED_CRT=$MANIFESTS/certs/server.crt
 GENERATED_KEY=$MANIFESTS/certs/server.key
-DNS_NAME=$(cat $TEMPLATE_DIR/values.yaml | yq .sysdig.dnsName)
+DNS_NAME=$(cat $TEMPLATE_DIR/values.yaml | yq -r .sysdig.dnsName)
 mkdir $MANIFESTS_TEMPLATE_BASE/common-config/certs
 if [ ! -d $MANIFESTS/certs ]; then
   echo "Making certs manifests dir"
@@ -57,8 +57,8 @@ if [ "$GENERATE_CERTIFICATE" = true ]; then
   fi
   cp $GENERATED_KEY $GENERATED_CRT $MANIFESTS_TEMPLATE_BASE/common-config/certs/
 else
-  CRT_FILE=$(cat $TEMPLATE_DIR/values.yaml | yq .sysdig.certificate.crt | tr -d '"')
-  KEY_FILE=$(cat $TEMPLATE_DIR/values.yaml | yq .sysdig.certificate.key | tr -d '"')
+  CRT_FILE=$(cat $TEMPLATE_DIR/values.yaml | yq -r .sysdig.certificate.crt)
+  KEY_FILE=$(cat $TEMPLATE_DIR/values.yaml | yq -r .sysdig.certificate.key)
   echo "Using provided certificates at crt:$CRT_FILE key:$KEY_FILE"
   if [[ -f $CRT_FILE && -f $KEY_FILE ]]; then
     cp $CRT_FILE $MANIFESTS_TEMPLATE_BASE/common-config/certs/server.crt
