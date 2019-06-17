@@ -17,12 +17,13 @@ quaypullsecret: <Insert QuaySecret>
 storageClassName: <Insert StorageClassName>
 #This drives multi-az awareness, if sysdigcloud is deployed to a multi-az setup
 #this should be updated as adequate
-# cloudProvider:
-#   defaults to an empty string
-#   name: aws
-#   defaults to false
-#   isMultiAZ: true
-#   region: us-east-1
+cloudProvider:
+  # example aws
+  name:
+  # boolean true|false
+  isMultiAZ: false
+  # example us-east-1
+  region: ""
 #supports aws | gke
 storageClassProvisioner: aws
 #supports openshift | kubernetes defaults to kubernetes install
