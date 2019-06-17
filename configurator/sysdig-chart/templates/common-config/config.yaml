@@ -80,11 +80,11 @@ data:
   # This conditional has to be kept here because golang templates do not
   # support nesting if conditionals, it expects an if conditional to close at an
   # end statement.
-  {{ if (and (eq (.Values.cloudProvider.name | default "") "aws") (hasSuffix "1" .Values.cloudProvider.region)) }}
-  {{ $ec2Region := (substr 0 (int (sub (len .Values.cloudProvider.region) 2)) .Values.cloudProvider.region) }}
+  {{ if (and (eq (.Values.cloudProvider.name | default "") "aws") (hasSuffix "1" (.Values.cloudProvider.region | default ""))) }}
+  {{ $ec2Region := (substr 0 (int (sub (len (.Values.cloudProvider.region | default "")) 2)) (.Values.cloudProvider.region | default "")) }}
   cassandra.datacenter.name: {{ $ec2Region }}
   {{ else if (eq (.Values.cloudProvider.name | default "") "aws") }}
-  cassandra.datacenter.name: {{ .Values.cloudProvider.region }}
+  cassandra.datacenter.name: {{ (.Values.cloudProvider.region | default "") }}
   {{ end }}
 
   {{ if (and (eq (.Values.cloudProvider.name | default "") "aws") (.Values.cloudProvider.isMultiAZ | default false)) }}
