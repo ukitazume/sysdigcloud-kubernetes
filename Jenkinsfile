@@ -22,6 +22,7 @@ pipeline {
           script {
             docker.withRegistry("https://${ARTIFACTORY_URL}", registryCredential) {
               dockerImage.push()
+              dockerImage.push('latest')
             }
           }
         }
