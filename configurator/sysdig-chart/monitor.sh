@@ -18,7 +18,7 @@ fi
 broadcast 'g' "Creating common-config"
 kubectl apply -f /manifests/generated/common-config.yaml
 
-DEPLOYMENT=$(cat /sysdig-chart/values.yaml | yq .deployment | tr -d '"')
+DEPLOYMENT=$(yq -r .deployment /sysdig-chart/values.yaml)
 if [[ ${DEPLOYMENT} == "openshift" ]];
 then
   broadcast 'g' "Skippping Ingress deploy for openshift..."

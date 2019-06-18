@@ -1,6 +1,6 @@
 #!/bin/ash
 
-NAMESPACE=$(cat /sysdig-chart/values.yaml | yq .namespace | tr -d '"')
+NAMESPACE=$(yq -r .namespace /sysdig-chart/values.yaml)
 
 #Echo function
 function broadcast() {
