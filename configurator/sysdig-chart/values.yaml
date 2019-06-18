@@ -57,3 +57,6 @@ sysdig:
   openshiftUrl:
   openshiftUsername:
   openshiftPassword:
+  #Provide collector port override
+  #defaults to 6443
+  collectorPort:
