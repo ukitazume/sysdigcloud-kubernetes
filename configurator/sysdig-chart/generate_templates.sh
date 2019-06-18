@@ -94,7 +94,11 @@ if [[ $(openssl x509 -noout -subject -in $SERVER_CERT | sed -e \
 fi
 
 echo "step5a: generate storage"
-kustomize build $MANIFESTS_TEMPLATE_BASE/storage/                                      > $GENERATED_DIR/storage-class.yaml
+if [[ "$(yq -r .storageClassProvisioner ${TEMPLATE_DIR}/values.yaml)" == "hostPath" ]]; then
+  echo "hostPath mode, skipping generating storage configs"
+else
+  kustomize build $MANIFESTS_TEMPLATE_BASE/storage/                                      > $GENERATED_DIR/storage-class.yaml
+fi
 
 echo "step5b: generate commong files"
 kustomize build $MANIFESTS_TEMPLATE_BASE/overlays/common-config/$SIZE                  > $GENERATED_DIR/common-config.yaml

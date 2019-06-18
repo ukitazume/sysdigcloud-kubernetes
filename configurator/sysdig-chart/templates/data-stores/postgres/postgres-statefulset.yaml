@@ -13,15 +13,6 @@ spec:
     matchLabels:
       app: sysdigcloud
       role: postgresql
-  volumeClaimTemplates:
-  - metadata:
-      name: data
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      resources:
-        requests:
-          storage: 60Gi
-      storageClassName: {{ .Values.storageClassName }}
   template:
     metadata:
       labels:
@@ -85,3 +76,20 @@ spec:
         - name: data
           mountPath: /var/lib/postgresql/data/pgdata
           subPath: "postgresql-db"
+{{- if eq .Values.storageClassProvisioner "hostPath" }}
+      volumes:
+        - name: data
+          hostPath:
+            type: DirectoryOrCreate
+            path: /var/lib/postgresql/data/pgdata
+{{- else }}
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 60Gi
+      storageClassName: {{ .Values.storageClassName }}
+{{- end }}

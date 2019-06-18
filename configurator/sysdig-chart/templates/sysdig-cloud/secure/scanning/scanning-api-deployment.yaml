@@ -27,7 +27,7 @@ spec:
       affinity:
         podAntiAffinity:
           ## Strive to spread the pods across multiple AZs
-          {{ if (.Values.cloudProvider.isMultiAZ | default false) }}
+          {{- if (.Values.cloudProvider.isMultiAZ | default false) }}
           preferredDuringSchedulingIgnoredDuringExecution:
             - weight: 100
               podAffinityTerm:
@@ -38,7 +38,7 @@ spec:
                       values:
                         - sysdigcloud-scanning-api
                 topologyKey: failure-domain.beta.kubernetes.io/zone
-          {{ end }}
+          {{- end }}
           preferredDuringSchedulingIgnoredDuringExecution:
             - weight: 100
               podAffinityTerm:

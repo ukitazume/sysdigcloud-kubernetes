@@ -126,12 +126,18 @@ spec:
               subPath: my.cnf
             - name: data
               mountPath: /var/lib/mysql
+      imagePullSecrets:
+        - name: sysdigcloud-pull-secret
       volumes:
         - name: mysql-config
           configMap:
             name: sysdigcloud-mysql-config
-      imagePullSecrets:
-        - name: sysdigcloud-pull-secret
+{{- if eq .Values.storageClassProvisioner "hostPath" }}
+        - name: data
+          hostPath:
+            type: DirectoryOrCreate
+            path: /var/lib/mysql
+{{- else }}
   volumeClaimTemplates:
     - metadata:
         name: data
@@ -141,3 +147,4 @@ spec:
           requests:
             storage: 20Gi
         storageClassName: {{ .Values.storageClassName }}
+{{- end }}

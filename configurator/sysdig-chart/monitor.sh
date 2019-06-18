@@ -4,14 +4,18 @@ set -euo pipefail
 #Important framework functions.
 . /sysdig-chart/framework.sh
 
-STORAGE_CLASS_NAME=$(cat /sysdig-chart/values.yaml | yq .storageClassName | tr -d '"')
-#Create config
-CHECK_STORAGE_CLASS=$(kubectl get storageclass ${STORAGE_CLASS_NAME})
-if [[ $? == 0 ]]; then
-  broadcast 'g' "StorageClass ${STORAGE_CLASS_NAME} exits. Skipping storageClass creation..."
+if [[ "$(yq -r .storageClassProvisioner /sysdig-chart/values.yaml)" == "hostPath" ]]; then
+  broadcast 'g' "hostPath mode, skipping StorageClass"
 else
-  broadcast 'g' "Creating StorageClass"
-  kubectl apply -f /manifests/generated/storage-class.yaml
+  STORAGE_CLASS_NAME=$(yq -r .storageClassName /sysdig-chart/values.yaml)
+  #Create config
+  STORAGE_CLASS="$(kubectl get storageclass ${STORAGE_CLASS_NAME} 2> /dev/null || /bin/true)"
+  if [[ $STORAGE_CLASS != "" ]]; then
+    broadcast 'g' "StorageClass ${STORAGE_CLASS_NAME} exits. Skipping storageClass creation..."
+  else
+    broadcast 'g' "Creating StorageClass"
+    kubectl apply -f /manifests/generated/storage-class.yaml
+  fi
 fi
 
 #Create config
