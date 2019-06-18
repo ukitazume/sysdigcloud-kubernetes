@@ -100,6 +100,7 @@ data:
   cassandra.datacenter.name: "sysdig"
   cassandra.snitch.extract_cmd: "cut -d- -f2"
   {{ else }}
+  cassandra.snitch.hostname.file: ""
   # Optional but required as a group: file containing the worker node name
   cassandra.endpoint.snitch: ""
   # Optional but required as a group: command to extract the zone from the hostname
