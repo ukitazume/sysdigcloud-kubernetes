@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: quay.io/sysdig/sysdigcloud-backend:2266-nginx
+          image: quay.io/sysdig/sysdigcloud-backend:2271-nginx
           volumeMounts:
             - name: ssl
               mountPath: /opt/certs/
@@ -28,16 +28,19 @@ spec:
                   name: sysdigcloud-config
                   key: api.url
         - name: collector
-          image: quay.io/sysdig/sysdigcloud-backend:2266-allinone-java
+          image: quay.io/sysdig/sysdigcloud-backend:2271-allinone-java
           volumeMounts:
             - name: config
               mountPath: /opt/kubernets_config
-            # Uncomment this if you need to import self-signed SSL certs
+            ## Uncomment this if you need to import self-signed SSL certs
             #- name: java-certs
             #  mountPath: /opt/java-certs/
-            # Uncomment this if you want to split sysdgicloud configurations into configs and secrets.
+            ## Uncomment this if you want to split sysdgicloud configurations into configs and secrets.
             #- name: secrets
             #  mountPath: /opt/kubernets_secrets
+            ## If enabling elasticsearch auth, uncomment elasticsearch-certs volume mount
+            # - name: elasticsearch-certs
+            #   mountPath: /opt/kubernets_secrets/elasticsearch_certs
           env:
             - name: ROLES
               value: collector
@@ -68,8 +71,29 @@ spec:
                 configMapKeyRef:
                   name: sysdigcloud-config
                   key: cassandra.datacenter.name
-          # If you're running multiple replicas, it is advisable to configure the limits below. Limiting resources
-          # can help stabilize rolling updates later down the road.
+            - name: ES_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: elasticsearch.hostname
+            ## If enabling elasticsearch auth, uncomment ES_SEARCHGUARD_USER, ES_SEARCHGUARD_ENABLED, and ES_SEARCHGUARD_PASSWORD env vars
+            # - name: ES_SEARCHGUARD_USER
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: sysdigcloud-config
+            #       key: elasticsearch.user
+            # - name: ES_SEARCHGUARD_ENABLED
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: sysdigcloud-config
+            #       key: elasticsearch.searchguard.enabled
+            # - name: ES_SEARCHGUARD_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: sg-admin-secret
+            #       key: password
+          ## If you're running multiple replicas, it is advisable to configure the limits below. Limiting resources
+          ## can help stabilize rolling updates later down the road.
           # resources:
           #   # minimum resources for container
           #   requests:
@@ -105,11 +129,15 @@ spec:
         - name: ssl
           secret:
             secretName: sysdigcloud-ssl-secret
-        # Uncomment this if you need to import self-signed SSL certs
+        ## Uncomment this if you need to import self-signed SSL certs
         #- name: java-certs
         #  secret:
         #    secretName: sysdigcloud-java-certs
-        # Uncomment this if you want to split sysdgicloud configurations into configs and secrets.
+        ## Uncomment this if you want to split sysdgicloud configurations into configs and secrets.
         #- name: secrets
         #  secret:
         #    secretName: <secret_name>
+        ## If enabling elasticsearch auth, uncomment elasticsearch-certs volume
+        # - name: elasticsearch-certs
+        #   secret:
+        #     secretName: ca-certs

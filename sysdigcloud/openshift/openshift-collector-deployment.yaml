@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: quay.io/sysdig/sysdigcloud-backend:2266-nginx
+          image: quay.io/sysdig/sysdigcloud-backend:2271-nginx
           volumeMounts:
             - name: ssl
               mountPath: /opt/certs/
@@ -28,7 +28,7 @@ spec:
                   name: sysdigcloud-config
                   key: api.url
         - name: collector
-          image: quay.io/sysdig/sysdigcloud-backend:2266-allinone-java
+          image: quay.io/sysdig/sysdigcloud-backend:2271-allinone-java
           volumeMounts:
             - name: config
               mountPath: /opt/kubernets_config
