@@ -5,4 +5,4 @@ metadata:
   name: haproxy-tcp-services
   namespace: {{ .Values.namespace }}
 data:
-  "6443": {{ .Values.namespace }}/sysdigcloud-collector:6000:::{{ .Values.namespace }}/sysdigcloud-ssl-secret
+  "{{ .Values.sysdig.collectorPort | default 6443 }}": {{ .Values.namespace }}/sysdigcloud-collector:6000:::{{ .Values.namespace }}/sysdigcloud-ssl-secret
