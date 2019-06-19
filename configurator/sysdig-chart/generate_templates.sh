@@ -69,6 +69,30 @@ else
   fi
 fi
 
+SERVER_CERT=$MANIFESTS_TEMPLATE_BASE/common-config/certs/server.crt
+# credit:
+# https://unix.stackexchange.com/questions/103461/get-common-name-cn-from-ssl-certificate#comment283029_103464
+if [[ $(openssl x509 -noout -subject -in $SERVER_CERT | sed -e \
+  's/^subject.*CN\s*=\s*\([a-zA-Z0-9\.\-]*\).*$/\1/') != "$DNS_NAME" ]]; then
+  echo "Certificate's common name does not match domain ${DNS_NAME}, checking
+  alternate name"
+  IFS=', ' array=$(openssl x509 -noout -ext subjectAltName -in $SERVER_CERT | tail -n1)
+  MATCH="false"
+  for domain in ${array}; do
+  # example line: DNS:foo.bar.baz.com
+    if [[ "$domain" == "DNS:${DNS_NAME}" ]]; then
+      MATCH="true"
+      break
+    fi
+  done
+
+  if [[ $MATCH == "false" ]]; then
+    echo "Certificate's common name or alternate names do not match domain name
+    ${DNS_NAME}"
+    exit 2
+  fi
+fi
+
 echo "step5a: generate storage"
 kustomize build $MANIFESTS_TEMPLATE_BASE/storage/                                      > $GENERATED_DIR/storage-class.yaml
 
