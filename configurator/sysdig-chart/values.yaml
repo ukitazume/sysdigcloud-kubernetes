@@ -53,6 +53,9 @@ sysdig:
   anchoreWorkerReplicaCount:
   scanningApiReplicaCount:
   scanningAlertMgrReplicaCount:
+  #redisHa? set to true for highly available redis
+  #default is false
+  redisHa: false
   #Please provide openshift parameters
   openshiftUrl:
   openshiftUsername:
