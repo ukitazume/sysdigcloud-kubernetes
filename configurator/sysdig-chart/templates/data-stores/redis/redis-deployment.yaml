@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: sysdigcloud-redis
+  namespace: {{ .Values.namespace }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: sysdigcloud
+        role: redis
+    spec:
+      containers:
+        - name: redis
+          image: quay.io/sysdig/redis:4.0.12.1-alpine
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: redis.password
+      imagePullSecrets:
+        - name: sysdigcloud-pull-secret
