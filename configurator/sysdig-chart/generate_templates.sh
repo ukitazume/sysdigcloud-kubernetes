@@ -122,12 +122,20 @@ fi
 if [[ ${SIZE} == "small" ]]; then
   echo "step7e: data-stores redis-single small"
   echo "---" >>$GENERATED_DIR/infra.yaml
-  kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/redis-single                    >> $GENERATED_DIR/infra.yaml
+  kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/redis/$SIZE            >> $GENERATED_DIR/infra.yaml
 else
-  echo "step7e: data-stores redis-ha $SIZE"
-  echo "---" >>$GENERATED_DIR/infra.yaml
-  kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/redis-stateful/$SIZE   >> $GENERATED_DIR/infra.yaml
+  IS_REDIS_HA=$(cat $TEMPLATE_DIR/values.yaml | yq .sysdig.redisHa)
+  if [[ ${IS_REDIS_HA} == false ]]; then
+    echo "step7e: data-stores redis $SIZE"
+    echo "---" >>$GENERATED_DIR/infra.yaml
+    kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/redis/$SIZE          >> $GENERATED_DIR/infra.yaml
+  else
+    echo "step7e: data-stores redis-ha $SIZE"
+    echo "---" >>$GENERATED_DIR/infra.yaml
+    kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/redis-ha/$SIZE       >> $GENERATED_DIR/infra.yaml
+  fi
 fi
+
 
 echo "step 8: Generating monitor"
 echo "step 8a: generate monitor-api yamls"
