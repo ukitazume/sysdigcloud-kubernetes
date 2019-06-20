@@ -140,7 +140,6 @@ else
   fi
 fi
 
-
 echo "step 8: Generating monitor"
 echo "step 8a: generate monitor-api yamls"
 kustomize build $MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/api/$SIZE               > $GENERATED_DIR/api.yaml
