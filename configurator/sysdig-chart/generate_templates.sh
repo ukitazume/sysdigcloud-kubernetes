@@ -128,7 +128,7 @@ if [[ ${SIZE} == "small" ]]; then
   echo "---" >>$GENERATED_DIR/infra.yaml
   kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/redis/$SIZE            >> $GENERATED_DIR/infra.yaml
 else
-  IS_REDIS_HA=$(cat $TEMPLATE_DIR/values.yaml | yq .sysdig.redisHa)
+  IS_REDIS_HA=$(yq .sysdig.redisHa $TEMPLATE_DIR/values.yaml)
   if [[ ${IS_REDIS_HA} == false ]]; then
     echo "step7e: data-stores redis $SIZE"
     echo "---" >>$GENERATED_DIR/infra.yaml

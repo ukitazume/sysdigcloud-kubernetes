@@ -3,6 +3,7 @@ set -euo pipefail
 
 #Important framework functions.
 . /sysdig-chart/framework.sh
+NAMESPACE=$(yq -r .namespace /sysdig-chart/values.yaml)
 
 if [[ "$(yq -r .storageClassProvisioner /sysdig-chart/values.yaml)" == "hostPath" ]]; then
   broadcast 'g' "hostPath mode, skipping StorageClass"
@@ -10,7 +11,7 @@ else
   STORAGE_CLASS_NAME=$(yq -r .storageClassName /sysdig-chart/values.yaml)
   #Create config
   STORAGE_CLASS="$(kubectl get storageclass ${STORAGE_CLASS_NAME} 2> /dev/null || /bin/true)"
-  if [[ $STORAGE_CLASS != "" ]]; then
+  if [[ "$STORAGE_CLASS" != "" ]]; then
     broadcast 'g' "StorageClass ${STORAGE_CLASS_NAME} exits. Skipping storageClass creation..."
   else
     broadcast 'g' "Creating StorageClass"
@@ -32,6 +33,25 @@ else
   wait_for_pods 10
 fi
 
+function checkKubectlExistsYesDeletes(){
+  IS_EXISTS="$(kubectl -n $NAMESPACE get $1 $2 2> /dev/null || /bin/true)"
+  if [[ "$IS_EXISTS" != "" ]]; then
+    kubectl -n $NAMESPACE delete $1 $2
+    broadcast 'r' "Deleting $1 $2 : redisHa=$IS_REDIS_HA config..."
+  fi
+}
+
+#Redis safety check
+IS_REDIS_HA=$(yq .sysdig.redisHa /sysdig-chart/values.yaml)
+if [[ $IS_REDIS_HA == true ]]; then
+  #check Redis is running - if yes uninstall redis
+  checkKubectlExistsYesDeletes deployment sysdigcloud-redis
+else
+  #check if redis ha is running -if yes uninstall redis-ha
+  checkKubectlExistsYesDeletes statefulset redis-primary
+  checkKubectlExistsYesDeletes statefulset redis-secondary
+  checkKubectlExistsYesDeletes statefulset redis-sentinel
+fi
 #Initialize infra pods
 broadcast 'g' "Init infra"
 kubectl apply -f /manifests/generated/infra.yaml
