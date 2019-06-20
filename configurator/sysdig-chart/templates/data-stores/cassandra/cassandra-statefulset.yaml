@@ -11,7 +11,6 @@ metadata:
 spec:
   serviceName: sysdigcloud-cassandra
   podManagementPolicy: Parallel
-  replicas: 3
   selector:
     matchLabels:
       affinity: cassandra
@@ -30,7 +29,7 @@ spec:
       affinity:
         podAntiAffinity:
           ## Strive to spread the pods across multiple AZs
-          {{ if (.Values.cloudProvider.isMultiAZ | default false) }}
+          {{- if (.Values.cloudProvider.isMultiAZ | default false) }}
           preferredDuringSchedulingIgnoredDuringExecution:
             - weight: 100
               podAffinityTerm:
@@ -41,7 +40,7 @@ spec:
                       values:
                         - cassandra
                 topologyKey: failure-domain.beta.kubernetes.io/zone
-          {{ end }}
+          {{- end }}
           preferredDuringSchedulingIgnoredDuringExecution:
             - weight: 100
               podAffinityTerm:
@@ -152,12 +151,3 @@ spec:
       # - name: host-etc-hostname
       #   hostPath:
       #     path: /etc/hostname
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        resources:
-          requests:
-            storage: 20Gi
-        storageClassName: {{ .Values.storageClassName }}

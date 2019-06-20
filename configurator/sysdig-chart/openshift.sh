@@ -2,10 +2,10 @@
 set -uo pipefail
 #set variables
 alias kubectl="oc-kubectl"
-OPENSHIFT_URL=$(cat /sysdig-chart/values.yaml | yq .sysdig.openshiftUrl | tr -d '"')
-OPENSHIFT_USER=$(cat /sysdig-chart/values.yaml | yq .sysdig.openshiftUser | tr -d '"')
-OPENSHIFT_PASSWORD=$(cat /sysdig-chart/values.yaml | yq .sysdig.openshiftPassword | tr -d '"')
-NAMESPACE=$(cat /sysdig-chart/values.yaml | yq .namespace | tr -d '"')
+OPENSHIFT_URL=$(yq -r .sysdig.openshiftUrl /sysdig-chart/values.yaml)
+OPENSHIFT_USER=$(yq -r .sysdig.openshiftUser /sysdig-chart/values.yaml)
+OPENSHIFT_PASSWORD=$(yq -r .sysdig.openshiftPassword /sysdig-chart/values.yaml)
+NAMESPACE=$(yq -r .namespace /sysdig-chart/values.yaml)
 #login
 oc login ${OPENSHIFT_URL} -u ${OPENSHIFT_USER} -p ${OPENSHIFT_PASSWORD}
 OPENSHIFT_PROJECTS=$(oc projects -q)
@@ -28,7 +28,7 @@ fi
 oc adm policy add-scc-to-user anyuid -n ${NAMESPACE} -z default
 oc adm policy add-scc-to-user privileged -n ${NAMESPACE} -z default
 
-DNS_NAME=$(cat /sysdig-chart/values.yaml | yq .sysdig.dnsName | tr -d '"')
+DNS_NAME=$(yq -r .sysdig.dnsName /sysdig-chart/values.yaml)
 
 STATUS_API=$(oc get route sysdigcloud-api)
 if [[ $? == 0 ]]; then

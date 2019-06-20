@@ -24,7 +24,8 @@ cloudProvider:
   isMultiAZ: false
   # example us-east-1
   region: ""
-#supports aws | gke
+#supports aws | gke | hostPath
+#Do not use hostPath in production, currently it is experimental only.
 storageClassProvisioner: aws
 #supports openshift | kubernetes defaults to kubernetes install
 deployment: kubernetes

@@ -1,6 +1,8 @@
+{{- if ne .Values.storageClassProvisioner "hostPath" }}
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - storage-class.yaml
 patches:
   - {{ .Values.storageClassProvisioner }}.yaml
+{{- end }}

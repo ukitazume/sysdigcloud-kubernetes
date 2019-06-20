@@ -12,7 +12,7 @@ else
   cp /manifests/values.yaml /sysdig-chart/values.yaml
 fi
 
-SCRIPTS=$(cat /sysdig-chart/values.yaml | yq .scripts | tr -d '"')
+SCRIPTS=$(yq -r .scripts /sysdig-chart/values.yaml)
 echo ${SCRIPTS}
 
 #set defaults
@@ -36,7 +36,7 @@ then
   /sysdig-chart/generate_templates.sh
 fi
 
-DEPLOYMENT=$(cat /sysdig-chart/values.yaml | yq .deployment | tr -d '"')
+DEPLOYMENT=$(yq -r .deployment /sysdig-chart/values.yaml)
 if [[ ${DEPLOYMENT} == "openshift" ]];
 then
   /sysdig-chart/openshift.sh
