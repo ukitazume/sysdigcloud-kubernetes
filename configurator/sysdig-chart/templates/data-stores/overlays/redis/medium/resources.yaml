@@ -9,8 +9,8 @@ spec:
         - name: redis
           resources:
             limits:
-              cpu: "500m"
-              memory: 1Gi
+              cpu: "1"
+              memory: 2Gi
             requests:
-              cpu: "100m"
-              memory: 100Mi
+              cpu: "200m"
+              memory: 200Mi

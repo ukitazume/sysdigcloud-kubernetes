@@ -9,8 +9,8 @@ spec:
         - name: redis-secondary
           resources:
             limits:
-              cpu: "500m"
-              memory: 4Gi
+              cpu: "1"
+              memory: 8Gi
             requests:
-              cpu: "100m"
-              memory: 1Gi
+              cpu: "200m"
+              memory: 2Gi
