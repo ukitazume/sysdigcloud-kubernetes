@@ -72,26 +72,43 @@ fi
 SERVER_CERT=$MANIFESTS_TEMPLATE_BASE/common-config/certs/server.crt
 # credit:
 # https://unix.stackexchange.com/questions/103461/get-common-name-cn-from-ssl-certificate#comment283029_103464
-if [[ $(openssl x509 -noout -subject -in $SERVER_CERT | sed -e \
-  's/^subject.*CN\s*=\s*\([a-zA-Z0-9\.\-]*\).*$/\1/') != "$DNS_NAME" ]]; then
-  echo "Certificate's common name does not match domain ${DNS_NAME}, checking
-  alternate name"
-  IFS=', ' array=$(openssl x509 -noout -ext subjectAltName -in $SERVER_CERT | tail -n1)
-  MATCH="false"
-  for domain in ${array}; do
-  # example line: DNS:foo.bar.baz.com
-    if [[ "$domain" == "DNS:${DNS_NAME}" ]]; then
-      MATCH="true"
-      break
-    fi
-  done
+COMMON_NAME=$(openssl x509 -noout -subject -in $SERVER_CERT | sed -e \
+  's/^subject.*CN\s*=\s*\([a-zA-Z0-9\.\-]*\).*$/\1/' | tr -d ' ')
 
-  if [[ $MATCH == "false" ]]; then
-    echo "Certificate's common name or alternate names do not match domain name
-    ${DNS_NAME}"
-    exit 2
+set +e #disable exit on error for expr
+if [[ "$DNS_NAME" != "$COMMON_NAME" ]]; then
+  # check that it is a wildcard common name and it matches the domain
+  if expr "$COMMON_NAME" : '.*\*' && \
+    expr "$DNS_NAME" : $(echo "$COMMON_NAME" | sed -e 's/\*/.*/'); then
+    echo "Certificate's common name '${COMMON_NAME}' is a wildcard cert that
+    matches domain name: ${DNS_NAME}"
+  else
+    echo "Certificate's common name '${COMMON_NAME}' does not match domain
+    ${DNS_NAME}, checking alternate name"
+    IFS=', ' array=$(openssl x509 -noout -ext subjectAltName -in $SERVER_CERT | tail -n1)
+    MATCH="false"
+    ALT_DNS_NAME="DNS:${DNS_NAME}"
+    for domain in ${array}; do
+    # example line: DNS:foo.bar.baz.com
+      if [[ "$ALT_DNS_NAME" == "$domain" ]]; then
+        MATCH="true"
+        break
+      fi
+      if expr "$domain" : '.*\*' && \
+        expr "$ALT_DNS_NAME" : $(echo "$domain" | sed -e 's/\*/.*/'); then
+        MATCH="true"
+        break
+      fi
+    done
+
+    if [[ $MATCH == "false" ]]; then
+      echo "Certificate's common name or alternate names do not match domain name
+      ${DNS_NAME}"
+      exit 2
+    fi
   fi
 fi
+set -e #re-enable exit on error
 
 echo "step5a: generate storage"
 if [[ "$(yq -r .storageClassProvisioner ${TEMPLATE_DIR}/values.yaml)" == "hostPath" ]]; then
