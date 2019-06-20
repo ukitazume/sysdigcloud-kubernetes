@@ -34,10 +34,12 @@ else
 fi
 
 function checkKubectlExistsYesDeletes(){
-  IS_EXISTS="$(kubectl -n $NAMESPACE get $1 $2 2> /dev/null || /bin/true)"
+  local k8sResourceType=$1
+  local k8sResourceName=$2
+  IS_EXISTS="$(kubectl -n $NAMESPACE get $k8sResourceType $k8sResourceName 2> /dev/null || /bin/true)"
   if [[ "$IS_EXISTS" != "" ]]; then
-    kubectl -n $NAMESPACE delete $1 $2
-    broadcast 'r' "Deleting $1 $2 : redisHa=$IS_REDIS_HA config..."
+    kubectl -n $NAMESPACE delete $k8sResourceType $k8sResourceName
+    broadcast 'r' "Deleting $k8sResourceType $k8sResourceName : redisHa=$IS_REDIS_HA config..."
   fi
 }
 
