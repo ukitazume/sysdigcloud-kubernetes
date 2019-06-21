@@ -91,19 +91,26 @@ data:
   redis.password: ""
   # If using Redis HA/Statefulsets, see the SYSDIG ONPREM section below about adding jvm options to
   # sysdigcloud.jvm.api.options, sysdigcloud.jvm.worker.options, sysdigcloud.jvm.collector.options
+  #############################################
+  ######### REDIS - EVENTS FORWARDING #########
+  #############################################
+  redis.ef.endpoint: redis-events-forwarding
+  redis.ef.port: "6379"
+  # Optional: Redis password
+  redis.ef.password: ""
   ####################################
   ######### ELASTICSEARCH ############
   ####################################
   # Required: Elasticsearch URL. If Elasticsearch is deployed as a Kubernetes service,
   # this will be the service name. If using an external database, put the proper address
-  elasticsearch.url: http://sysdigcloud-elasticsearch
+  elasticsearch.hostname: sysdigcloud-elasticsearch
   # Optional: Elasticsearch JVM options. For heavy load environments this will override the defaults (e.g. -Xms6G -Xmx6G)
   elasticsearch.jvm.options: ""
-  # Optional: Elasticsearch JVM options. Suggested value "-Xms6G -Xmx6G"
-  elasticsearch.jvm.options: ""
-  #Username required for the Search Guard authentication
+  # Username required for the Search Guard authentication
   elasticsearch.searchguard.enabled: "false"
   elasticsearch.user: "admin"
+  # verifySSL only used if user has their own secure Elasticsearch cluster and would like to toggle hostname verification
+  # elasticsearch.verifySSL: "true"
   ####################################
   ######### SMTP #########
   ####################################
