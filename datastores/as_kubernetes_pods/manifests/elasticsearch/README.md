@@ -24,6 +24,28 @@ The following steps only highlight steps specific to the secure Elasticsearch up
 
         kubectl -n $NAMESPACE create secret generic sg-config-files --from-file=datastores/as_kubernetes_pods/manifests/elasticsearch/sgconfig
 
+5. If you are monitoring the Elasticsearch cluster with `sysdig-agent`, ensure the `sysdig-agent` `configmap` has the following Elasticsearch configuration in the `data.dragent.yaml.app_checks` section:
+
+        data:
+          dragent.yaml: |
+            app_checks:
+              - name: elasticsearch
+                check_module: elastic
+                pattern:
+                  port: 9200
+                  comm: java
+                conf:
+                  url: https://sysdigcloud-elasticsearch:9200
+                  username: readonly
+                  password: <SG_READONLY_PASSWORD from step 3>
+                  ssl_verify: false
+
+    And restart the agent if necessary to apply the new configs.
+
+        kubectl -n $NAMESPACE delete pod -l app=sysdig-agent
+
+    **Note**: You may come across an error stating `Unverified HTTPS request is being made.` in the `sysdig-agent` logs. You may safely ignore this for now.
+
 5. Update Kubernetes configs:
     * For the following files, uncomment the sections that have `## If enabling elasticsearch auth, uncomment <resource(s)>` above it.
       * `datastores/as_kubernetes_pods/manifests/elasticsearch/elasticsearch-statefulset.yaml`
@@ -46,7 +68,7 @@ The following instructions highlight steps specific to the secure Elasticsearch 
 
 This will require downtime, as Elasticsearch must be completely restarted. It is recommended to do a full upgrade to the latest platform version; the `api`, `collector`, and `worker` backend components will need to be updated, which will cause other application components to break if they are not version-compatible.
 
-1. Follow steps 1-4 from [Enabling authentication on a new cluster](#enabling-authentication-on-a-new-cluster)
+1. Follow steps 1-5 from [Enabling authentication on a new cluster](#enabling-authentication-on-a-new-cluster)
 2. Update `sysdigcloud/config.yaml` to have the following properties and values (also ensure the rest of the values are appropriate as this config will be applied in a later step):
 
         data:
@@ -79,7 +101,7 @@ This will require downtime, as Elasticsearch must be completely restarted. It is
 
         kubectl -n $NAMESPACE apply -f sysdigcloud/config.yaml
         kubectl -n $NAMESPACE apply -f datastores/as_kubernetes_pods/manifests/elasticsearch/elasticsearch-service.yaml
-        kubectl -n $NAMESPACE apply -f datastores/as_kubernetes_pods/manifests/elasticsearch/elasticsearch-statefulset.yaml
+        kubectl -n $NAMESPACE replace -f datastores/as_kubernetes_pods/manifests/elasticsearch/elasticsearch-statefulset.yaml
 
     * Note: If you get an error similar to `updates to statefulset spec for fields other than 'replicas', 'template', and 'updateStrategy' are forbidden` check that the `volumeClaimTemplates` in the yaml file matches the existing configuration.
 
@@ -107,7 +129,9 @@ This will require downtime, as Elasticsearch must be completely restarted. It is
 
         kubectl -n $NAMESPACE apply -f sysdigcloud/config.yaml
 
-4. Follow steps 4, 7, and 8 from [Enabling authentication on an existing cluster with standard Sysdig Elasticsearch setup](#enabling-authentication-on-an-existing-cluster-with-standard-sysdig-elasticsearch-setup).
+4. Follow step 5 from [Enabling authentication on a new cluster](#enabling-authentication-on-a-new-cluster).
+
+5. Follow steps 4, 7, and 8 from [Enabling authentication on an existing cluster with standard Sysdig Elasticsearch setup](#enabling-authentication-on-an-existing-cluster-with-standard-sysdig-elasticsearch-setup).
 
 # Search Guard Roles
 
