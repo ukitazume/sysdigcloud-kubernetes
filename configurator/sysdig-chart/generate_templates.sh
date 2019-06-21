@@ -48,7 +48,7 @@ if [ ! -d $MANIFESTS/certs ]; then
   echo "Making certs manifests dir"
   mkdir $MANIFESTS/certs
 fi
-if [ "$GENERATE_CERTIFICATE" = true ]; then
+if [ "$GENERATE_CERTIFICATE" = "true" ]; then
   if [[ -f $GENERATED_KEY && -f $GENERATED_CRT ]]; then
     echo "Certificates are present. Copying the existing certs"
   else
@@ -116,7 +116,7 @@ kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/elasticsearch/$SIZ
 echo "step7c: data-stores mysql $SIZE"
 echo "---" >>$GENERATED_DIR/infra.yaml
 kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/mysql/$SIZE              >> $GENERATED_DIR/infra.yaml
-if [[ ${SECURE} == true ]]; then
+if [[ ${SECURE} == "true" ]]; then
   echo "step7d: data-stores postgres"
   echo "---" >>$GENERATED_DIR/infra.yaml
   kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/postgres/$SIZE         >> $GENERATED_DIR/infra.yaml
@@ -129,7 +129,7 @@ if [[ ${SIZE} == "small" ]]; then
   kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/redis/$SIZE            >> $GENERATED_DIR/infra.yaml
 else
   IS_REDIS_HA=$(yq .sysdig.redisHa $TEMPLATE_DIR/values.yaml)
-  if [[ ${IS_REDIS_HA} == false ]]; then
+  if [[ ${IS_REDIS_HA} == "false" ]]; then
     echo "step7e: data-stores redis $SIZE"
     echo "---" >>$GENERATED_DIR/infra.yaml
     kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/redis/$SIZE          >> $GENERATED_DIR/infra.yaml
@@ -147,7 +147,7 @@ kustomize build $MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/api/$SIZE        
 echo "step 8b: generate monitor-collectorworker yamls"
 kustomize build $MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/collector-worker/$SIZE  > $GENERATED_DIR/collector-worker.yaml
 
-if [[ ${SECURE} == true ]]; then
+if [[ ${SECURE} == "true" ]]; then
   echo "step 9a: generating secure-scanning yaml"
   kustomize build $MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/secure/scanning/$SIZE       > $GENERATED_DIR/scanning.yaml
   echo "step 9b: generating secure-anchore yaml"

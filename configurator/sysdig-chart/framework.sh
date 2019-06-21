@@ -18,6 +18,10 @@ function broadcast() {
      echo -e "${GREEN}$2${NC}"
   elif [ $1 = 'p' ]; then
      echo -e "${PURPLE}$2${NC}"
+  elif [ $1 = 'red' ]; then
+     echo -e "${RED}$2${NC}"
+  elif [ $1 = 'green' ]; then
+     echo -e "${GREEN}$2${NC}"
   fi
   }
 
