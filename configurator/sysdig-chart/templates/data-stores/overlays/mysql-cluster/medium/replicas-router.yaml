@@ -1,6 +1,0 @@
-apiVersion: extensions/v1beta1
-kind: Deployment
-metadata:
-  name: sysdigcloud-mysql-router
-spec:
-  replicas: 3
