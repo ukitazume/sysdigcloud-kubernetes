@@ -133,18 +133,18 @@ data:
   ######### SMTP #########
   ####################################
   # Optional: SMTP server address, needed for Sysdig Cloud to send email notifications
-  smtp.server: ""
+  smtp.server: "{{ .Values.sysdig.smtpServer }}"
   # Optional: SMTP server port
-  smtp.server.port: "25"
+  smtp.server.port: "{{ .Values.sysdig.smtpServerPort | default 25}}"
   # Optional: SMTP user (leave empty if your server doesn't require authentication)
-  smtp.user: ""
+  smtp.user: "{{ .Values.sysdig.smtpUser }}"
   # Optional: SMTP password (leave empty if your server doesn't require authentication)
-  smtp.password: ""
+  smtp.password: "{{ .Values.sysdig.smtpPassword }}"
   # Optional: SMTP Secure Connection options
-  smtp.tls: "false"
-  smtp.ssl: "false"
+  smtp.tls: "{{ .Values.sysdig.smtpProtocolTLS | default false}}"
+  smtp.ssl: "{{ .Values.sysdig.smtpProtocolSSL | default false}}"
   # Optional: From Header used for email notifications
-  smtp.from.address: ""
+  smtp.from.address: "{{ .Values.sysdig.smtpFromAddress }}"
   ####################################
   ######### SYSDIG ONPREM #########
   ####################################

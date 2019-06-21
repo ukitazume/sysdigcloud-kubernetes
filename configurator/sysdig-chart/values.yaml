@@ -54,6 +54,16 @@ sysdig:
   anchoreWorkerReplicaCount:
   scanningApiReplicaCount:
   scanningAlertMgrReplicaCount:
+  #SMTP Configurations
+  smtpServer: ""
+  smtpServerPort: "25"
+  #User,Password can be empty if the server does not require authentication
+  smtpUser: ""
+  smtpPassword: ""
+  smtpProtocolTLS: "false"
+  smtpProtocolSSL: "false"
+  #Optional Email Header
+  smtpFromAddress: ""
   #Please provide openshift parameters
   openshiftUrl:
   openshiftUsername:
