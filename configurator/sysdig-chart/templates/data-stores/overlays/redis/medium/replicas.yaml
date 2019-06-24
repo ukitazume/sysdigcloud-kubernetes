@@ -1,6 +1,0 @@
-apiVersion: extensions/v1beta1
-kind: Deployment
-metadata:
-  name: sysdigcloud-redis
-spec:
-  replicas: 1
