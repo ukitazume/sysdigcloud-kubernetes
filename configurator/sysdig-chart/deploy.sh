@@ -1,8 +1,8 @@
-#!/bin/ash
+#!/bin/bash
 set -euo pipefail
 
 APPS=$(yq -r .apps /sysdig-chart/values.yaml)
-echo ${APPS}
+echo "${APPS}"
 SECURE=false
 for app in ${APPS}
 do

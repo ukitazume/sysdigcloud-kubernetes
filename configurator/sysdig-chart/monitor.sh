@@ -1,4 +1,4 @@
-#!/bin/ash
+#!/bin/bash
 set -euo pipefail
 
 #Important framework functions.
@@ -9,7 +9,7 @@ if [[ "$(yq -r .storageClassProvisioner /sysdig-chart/values.yaml)" == "hostPath
 else
   STORAGE_CLASS_NAME=$(yq -r .storageClassName /sysdig-chart/values.yaml)
   #Create config
-  STORAGE_CLASS="$(kubectl get storageclass ${STORAGE_CLASS_NAME} 2> /dev/null || /bin/true)"
+  STORAGE_CLASS="$(kubectl get storageclass "${STORAGE_CLASS_NAME}" 2> /dev/null || /bin/true)"
   if [[ $STORAGE_CLASS != "" ]]; then
     broadcast 'g' "StorageClass ${STORAGE_CLASS_NAME} exits. Skipping storageClass creation..."
   else

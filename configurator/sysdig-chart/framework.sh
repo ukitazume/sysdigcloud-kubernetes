@@ -1,4 +1,4 @@
-#!/bin/ash
+#!/bin/bash
 
 NAMESPACE=$(yq -r .namespace /sysdig-chart/values.yaml)
 
@@ -9,20 +9,20 @@ function broadcast() {
   GREEN='\033[0;32m'
   PURPLE='\033[0;35m'
   NC='\033[0m'
-  
-  if [ $1 = 'w' ]; then
+
+  if [ "$1" = 'w' ]; then
      echo -e "${WHITE}$2${NC}"
-  elif [ $1 = 'r' ]; then 
+  elif [ "$1" = 'r' ]; then
      echo -e "${RED}$2${NC}"
-  elif [ $1 = 'g' ]; then
+  elif [ "$1" = 'g' ]; then
      echo -e "${GREEN}$2${NC}"
-  elif [ $1 = 'p' ]; then
+  elif [ "$1" = 'p' ]; then
      echo -e "${PURPLE}$2${NC}"
   fi
   }
 
 function is_pod_ready() {
-  [[  "$(kubectl -n ${NAMESPACE} get po $1 -o 'jsonpath={.status.conditions[?(@.type=="Ready")].status}')" == 'True' ]]
+  [[  "$(kubectl -n "${NAMESPACE}" get po "$1" -o 'jsonpath={.status.conditions[?(@.type=="Ready")].status}')" == 'True' ]]
    }
 
 function pods_ready() {
@@ -30,7 +30,7 @@ function pods_ready() {
   [[ "$#" == 0 ]] && return 0
 
   for pod in ${pods};do
-    is_pod_ready ${pod} || return 1
+    is_pod_ready "${pod}" || return 1
   done
 
   return 0
@@ -41,14 +41,14 @@ function wait_for_pods() {
   interval=$1
   broadcast 'g' "Checking for Pods to be Ready  Will check every $interval seconds"
     while true; do
-    pods="$(kubectl -n ${NAMESPACE} get po -o 'jsonpath={.items[*].metadata.name}')"
-    if pods_ready ${pods}; then
+    pods="$(kubectl -n "${NAMESPACE}" get po -o 'jsonpath={.items[*].metadata.name}')"
+    if pods_ready "${pods}"; then
       broadcast 'w' "All Pods Ready.....Continuing"
       return 0
     else
       sleep "$interval"
-      if [[ $(( $attempts % 5 )) == 0 ]]; then
-        if [[ $(( $attempts % 30 )) == 0 ]]; then
+      if [[ $(( "$attempts" % 5 )) == 0 ]]; then
+        if [[ $(( "$attempts" % 30 )) == 0 ]]; then
           broadcast 'r' "We have checked $attempts times. Its talking too long deploy bailing out. Please contact support."
           exit 3
          fi
