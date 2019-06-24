@@ -57,8 +57,8 @@ if [ "$GENERATE_CERTIFICATE" = true ]; then
   fi
   cp $GENERATED_KEY $GENERATED_CRT $MANIFESTS_TEMPLATE_BASE/common-config/certs/
 else
-  CRT_FILE=$(yq -r .sysdig.certificate.crt $TEMPLATE_DIR/values.yaml)
-  KEY_FILE=$(yq -r .sysdig.certificate.key $TEMPLATE_DIR/values.yaml)
+  CRT_FILE="$MANIFESTS/$(yq -r .sysdig.certificate.crt $TEMPLATE_DIR/values.yaml)"
+  KEY_FILE="$MANIFESTS/$(yq -r .sysdig.certificate.key $TEMPLATE_DIR/values.yaml)"
   echo "Using provided certificates at crt:$CRT_FILE key:$KEY_FILE"
   if [[ -f $CRT_FILE && -f $KEY_FILE ]]; then
     cp $CRT_FILE $MANIFESTS_TEMPLATE_BASE/common-config/certs/server.crt
