@@ -123,22 +123,18 @@ if [[ ${SECURE} == "true" ]]; then
 else
   echo "skipping step7d: data-stores postgres - needed only for secure"
 fi
-if [[ ${SIZE} == "small" ]]; then
-  echo "step7e: data-stores redis-single small"
+
+IS_REDIS_HA=$(yq .sysdig.redisHa $TEMPLATE_DIR/values.yaml)
+if [[ ${IS_REDIS_HA} == "false" ]]; then
+  echo "step7e: data-stores redis $SIZE"
   echo "---" >>$GENERATED_DIR/infra.yaml
-  kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/redis/$SIZE            >> $GENERATED_DIR/infra.yaml
+  kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/redis/                          >> $GENERATED_DIR/infra.yaml
 else
-  IS_REDIS_HA=$(yq .sysdig.redisHa $TEMPLATE_DIR/values.yaml)
-  if [[ ${IS_REDIS_HA} == "false" ]]; then
-    echo "step7e: data-stores redis $SIZE"
-    echo "---" >>$GENERATED_DIR/infra.yaml
-    kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/redis/$SIZE          >> $GENERATED_DIR/infra.yaml
-  else
-    echo "step7e: data-stores redis-ha $SIZE"
-    echo "---" >>$GENERATED_DIR/infra.yaml
-    kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/overlays/redis-ha/$SIZE       >> $GENERATED_DIR/infra.yaml
-  fi
+  echo "step7e: data-stores redis-ha $SIZE"
+  echo "---" >>$GENERATED_DIR/infra.yaml
+  kustomize build $MANIFESTS_TEMPLATE_BASE/data-stores/redis-ha/                       >> $GENERATED_DIR/infra.yaml
 fi
+
 
 echo "step 8: Generating monitor"
 echo "step 8a: generate monitor-api yamls"
