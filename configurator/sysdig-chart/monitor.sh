@@ -10,7 +10,7 @@ if [[ "$(yq -r .storageClassProvisioner /sysdig-chart/values.yaml)" == "hostPath
 else
   STORAGE_CLASS_NAME=$(yq -r .storageClassName /sysdig-chart/values.yaml)
   #Create config
-  STORAGE_CLASS="$(kubectl get storageclass $STORAGE_CLASS_NAME 2> /dev/null || /bin/true)"
+  STORAGE_CLASS="$(kubectl get storageclass "$STORAGE_CLASS_NAME" 2> /dev/null || /bin/true)"
   if [[ "$STORAGE_CLASS" != "" ]]; then
     broadcast "green" "StorageClass $STORAGE_CLASS_NAME exits. Skipping storageClass creation..."
   else
@@ -36,16 +36,16 @@ fi
 function delete_resource_if_exists(){
   local resourceType=$1
   local resourceName=$2
-  IS_EXISTS="$(kubectl -n $NAMESPACE get $resourceType $resourceName 2> /dev/null || /bin/true)"
+  IS_EXISTS="$(kubectl -n "$NAMESPACE" get "$resourceType" "$resourceName" 2> /dev/null || /bin/true)"
   if [[ "$IS_EXISTS" != "" ]]; then
-    kubectl -n $NAMESPACE delete $resourceType $resourceName
+    kubectl -n "$NAMESPACE" delete "$resourceType" "$resourceName"
     broadcast "red" "Deleting $resourceType $resourceName : redisHa=$IS_REDIS_HA config..."
   fi
 }
 
 #Redis safety check
 IS_REDIS_HA=$(yq .sysdig.redisHa /sysdig-chart/values.yaml)
-if [[ $IS_REDIS_HA == "true" ]]; then
+if [[ "$IS_REDIS_HA" == "true" ]]; then
   #check Redis is running - if yes uninstall redis
   delete_resource_if_exists deployment sysdigcloud-redis
 else

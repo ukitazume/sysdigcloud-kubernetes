@@ -133,7 +133,7 @@ echo "---" >>$GENERATED_DIR/infra.yaml
 kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/overlays/elasticsearch/$SIZE"      >> $GENERATED_DIR/infra.yaml
 echo "step7c: data-stores mysql $SIZE"
 echo "---" >>$GENERATED_DIR/infra.yaml
-kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/overlays/mysql/$SIZE "             >> $GENERATED_DIR/infra.yaml
+kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/overlays/mysql/$SIZE"             >> $GENERATED_DIR/infra.yaml
 if [[ ${SECURE} == "true" ]]; then
   echo "step7d: data-stores postgres"
   echo "---" >>$GENERATED_DIR/infra.yaml
