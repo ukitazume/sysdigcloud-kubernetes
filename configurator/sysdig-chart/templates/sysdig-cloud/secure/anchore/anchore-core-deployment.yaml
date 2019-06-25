@@ -7,7 +7,7 @@ metadata:
     app: sysdigcloud
     role: anchore-core
   annotations:
-    version: {{ .Values.sysdig.monitorVersion | quote }}
+    version: {{ .Values.sysdig.anchoreVersion | quote }}
 spec:
   # Replicas can be scaled up as needed.
   replicas: 1
