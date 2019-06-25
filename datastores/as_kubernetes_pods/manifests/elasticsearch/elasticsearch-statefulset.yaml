@@ -11,12 +11,6 @@ metadata:
 spec:
   serviceName: sysdigcloud-elasticsearch
   podManagementPolicy: Parallel
-  selector:
-    matchLabels:
-      affinity: elasticsearch
-      app: sysdigcloud
-      component: elasticsearch
-      role: elasticsearch
   # The number of replicas needs to be passed to the pods by ensuring that the value of ELASTICSEARCH_GOSSIP_NODES_NUM
   # matches the number set here.
   replicas: 3
