@@ -8,6 +8,8 @@ metadata:
     app: sysdigcloud
     role: cassandra
 spec:
+  updateStrategy:
+    type: OnDelete
   serviceName: sysdigcloud-cassandra
   podManagementPolicy: Parallel
   replicas: 3

@@ -9,6 +9,8 @@ metadata:
     component: elasticsearch
     role: elasticsearch
 spec:
+  updateStrategy:
+    type: OnDelete
   serviceName: sysdigcloud-elasticsearch
   podManagementPolicy: Parallel
   selector:
