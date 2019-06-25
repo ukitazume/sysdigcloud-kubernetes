@@ -1,4 +1,4 @@
-#!/bin/ash
+#!/bin/bash
 
 set -euo pipefail
 . /sysdig-chart/framework.sh
@@ -14,7 +14,7 @@ else
 fi
 
 SCRIPTS=$(yq -r .scripts /sysdig-chart/values.yaml)
-echo ${SCRIPTS}
+echo "${SCRIPTS}"
 
 #set defaults
 GENERATE=false

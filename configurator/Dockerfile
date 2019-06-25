@@ -1,6 +1,6 @@
 FROM alpine:3.9.4
 
-RUN apk add python py-pip jq openssl ca-certificates \
+RUN apk add bash python py-pip jq openssl ca-certificates \
       && pip install yq \
       && wget https://storage.googleapis.com/kubernetes-helm/helm-v2.14.0-linux-386.tar.gz \
       && tar xvf helm-v2.14.0-linux-386.tar.gz -C /tmp \
