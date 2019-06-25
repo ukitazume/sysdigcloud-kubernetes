@@ -29,9 +29,11 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            cpu: "100m"
+            cpu: 300m
+            memory: 10Mi
           limits:
-            cpu: 1
+            cpu: 50m
+            memory: 2Mi
         env:
         - name: SENTINEL
           value: redis-primary
