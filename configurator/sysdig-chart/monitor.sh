@@ -10,9 +10,9 @@ if [[ "$(yq -r .storageClassProvisioner /sysdig-chart/values.yaml)" == "hostPath
 else
   STORAGE_CLASS_NAME=$(yq -r .storageClassName /sysdig-chart/values.yaml)
   #Create config
-  STORAGE_CLASS="$(kubectl get storageclass ${STORAGE_CLASS_NAME} 2> /dev/null || /bin/true)"
+  STORAGE_CLASS="$(kubectl get storageclass $STORAGE_CLASS_NAME 2> /dev/null || /bin/true)"
   if [[ "$STORAGE_CLASS" != "" ]]; then
-    broadcast "green" "StorageClass ${STORAGE_CLASS_NAME} exits. Skipping storageClass creation..."
+    broadcast "green" "StorageClass $STORAGE_CLASS_NAME exits. Skipping storageClass creation..."
   else
     broadcast "green" "Creating StorageClass"
     kubectl apply -f /manifests/generated/storage-class.yaml
