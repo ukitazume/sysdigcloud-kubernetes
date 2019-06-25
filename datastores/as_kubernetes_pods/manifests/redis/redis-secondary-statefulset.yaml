@@ -27,10 +27,6 @@ spec:
         - name: redis-secondary
           image: quay.io/sysdig/redis:4.0.12.4-ha
           imagePullPolicy: Always
-          resources:
-            requests:
-              cpu: 100m
-              memory: 1Gi
           env:
             - name: REDIS_PASSWORD
               valueFrom:
@@ -41,11 +37,11 @@ spec:
               value: "true"
           resources:
             limits:
-              cpu: 500m
-              memory: 100Mi
+              cpu: 2
+              memory: 2Gi
             requests:
               cpu: 100m
-              memory: 50Mi
+              memory: 100Mi
           ports:
             - containerPort: 6379
               name: redis-secondary
