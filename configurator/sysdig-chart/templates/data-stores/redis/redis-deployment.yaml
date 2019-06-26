@@ -14,10 +14,10 @@ spec:
         - name: redis
           image: quay.io/sysdig/redis:4.0.12.1-alpine
           resources:
-            requests:
+            limits:
               cpu: 2
               memory: 2Gi
-            limits:
+            requests:
               cpu: 100m
               memory: 100Mi
           env:
