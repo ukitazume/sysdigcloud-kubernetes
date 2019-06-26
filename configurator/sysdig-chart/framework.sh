@@ -10,14 +10,18 @@ function broadcast() {
   PURPLE='\033[0;35m'
   NC='\033[0m'
 
-  if [ "$1" = 'w' ]; then
+  if [[ "$1" = "w" ]]; then
      echo -e "${WHITE}$2${NC}"
-  elif [ "$1" = 'r' ]; then
+  elif [[ "$1" = "r" ]]; then
      echo -e "${RED}$2${NC}"
-  elif [ "$1" = 'g' ]; then
+  elif [[ "$1" = "g" ]]; then
      echo -e "${GREEN}$2${NC}"
-  elif [ "$1" = 'p' ]; then
+  elif [[ "$1" = "p" ]]; then
      echo -e "${PURPLE}$2${NC}"
+  elif [[ "$1" = "red" ]]; then
+     echo -e "${RED}$2${NC}"
+  elif [[ "$1" = "green" ]]; then
+     echo -e "${GREEN}$2${NC}"
   fi
   }
 

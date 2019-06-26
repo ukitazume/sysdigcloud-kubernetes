@@ -1,9 +1,10 @@
 #!/bin/bash
 
 set -euo pipefail
+. /sysdig-chart/framework.sh
 
 if [[ ! -f /manifests/values.yaml ]]; then
-  echo "Please provide a values.yaml in your current working directory."
+  broadcast "red" "Please provide a values.yaml in your current working directory."
   echo -e "See: \\n\
   https://sysdig.atlassian.net/wiki/spaces/DEVOPS/pages/833978514/Onprem+Configurator  \\n\
   for guidance"
@@ -30,9 +31,9 @@ do
  fi
 done
 
-if [[ ${GENERATE} == true ]];
+if [[ ${GENERATE} == "true" ]];
 then
-  echo "Generating templates..."
+  broadcast "green" "Generating templates..."
   /sysdig-chart/generate_templates.sh
 fi
 
@@ -42,7 +43,7 @@ then
   /sysdig-chart/openshift.sh
 fi
 
-if [[ ${DEPLOY} == true ]];
+if [[ ${DEPLOY} == "true" ]];
 then
   /sysdig-chart/deploy.sh
 fi

@@ -58,6 +58,8 @@ sysdig:
   anchoreWorkerReplicaCount:
   scanningApiReplicaCount:
   scanningAlertMgrReplicaCount:
+  #set to true for highly available redis
+  redisHa: false
   #SMTP Configurations
   smtpServer: ""
   smtpServerPort: "25"
