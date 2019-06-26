@@ -25,7 +25,7 @@ command='tar czf - /logs/ /opt/draios/ /var/log/sysdigcloud/ /var/log/cassandra/
 for pod in ${SYSDIGCLOUD_PODS}; do
     echo "Getting support logs for ${pod}"
     mkdir -p ${LOG_DIR}/${pod}
-    kubectl ${KUBE_OPTS} get pod ${pod} -o json > ${LOG_DIR}/${pod}/kubectl-describe.json
+    kubectl ${KUBE_OPTS} get pod ${pod} -o yaml > ${LOG_DIR}/${pod}/kubectl-describe.yaml
     containers=$(kubectl ${KUBE_OPTS} get pod ${pod} -o json | jq -r '.spec.containers[].name')
     for container in ${containers}; do
         kubectl ${KUBE_OPTS} logs ${pod} -c ${container} > ${LOG_DIR}/${pod}/${container}-kubectl-logs.txt
@@ -42,7 +42,7 @@ for object in svc deployment sts pvc daemonset ingress replicaset; do
     items=$(kubectl ${KUBE_OPTS} get ${object} | awk '{ print $1 }' | grep -v NAME)
     mkdir -p ${LOG_DIR}/${object}
     for item in ${items}; do
-        kubectl ${KUBE_OPTS} get ${object} ${item} -o json > ${LOG_DIR}/${object}/${item}-kubectl.json
+        kubectl ${KUBE_OPTS} get ${object} ${item} -o yaml > ${LOG_DIR}/${object}/${item}-kubectl.yaml
     done
 done
 
