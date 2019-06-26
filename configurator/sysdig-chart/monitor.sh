@@ -10,7 +10,7 @@ else
   STORAGE_CLASS_NAME=$(yq -r .storageClassName /sysdig-chart/values.yaml)
   #Create config
   STORAGE_CLASS="$(kubectl get storageclass "${STORAGE_CLASS_NAME}" 2> /dev/null || /bin/true)"
-  if [[ $STORAGE_CLASS != "" ]]; then
+  if [[ "$STORAGE_CLASS" != "" ]]; then
     broadcast 'g' "StorageClass ${STORAGE_CLASS_NAME} exits. Skipping storageClass creation..."
   else
     broadcast 'g' "Creating StorageClass"
@@ -23,7 +23,7 @@ broadcast 'g' "Creating common-config"
 kubectl apply -f /manifests/generated/common-config.yaml
 
 DEPLOYMENT=$(yq -r .deployment /sysdig-chart/values.yaml)
-if [[ ${DEPLOYMENT} == "openshift" ]];
+if [[ "${DEPLOYMENT}" == "openshift" ]];
 then
   broadcast 'g' "Skippping Ingress deploy for openshift..."
 else
