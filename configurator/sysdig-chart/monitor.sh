@@ -24,7 +24,7 @@ broadcast "green" "Creating common-config"
 kubectl apply -f /manifests/generated/common-config.yaml
 
 DEPLOYMENT=$(yq -r .deployment /sysdig-chart/values.yaml)
-if [[ ${DEPLOYMENT} == "openshift" ]];
+if [[ "${DEPLOYMENT}" == "openshift" ]];
 then
   broadcast "green" "Skippping Ingress deploy for openshift..."
 else

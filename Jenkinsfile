@@ -68,7 +68,7 @@ pipeline {
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
           script {
-            dockerImage = docker.build("${ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}", './configurator/')
+            dockerImage = docker.build("${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}", './configurator/')
           }
         }
       }
@@ -80,7 +80,7 @@ pipeline {
       steps {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
           script {
-            docker.withRegistry("https://${ARTIFACTORY_URL}", registryCredential) {
+            docker.withRegistry("https://${env.ARTIFACTORY_URL}", registryCredential) {
               dockerImage.push()
               dockerImage.push('latest')
             }
@@ -90,7 +90,7 @@ pipeline {
       post {
         success {
           script {
-            slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}")
+            slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}")
           }
         }
       }
@@ -101,7 +101,7 @@ pipeline {
       }
       steps {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
-          sh "docker rmi ${ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}"
+          sh "docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}"
         }
       }
     }
