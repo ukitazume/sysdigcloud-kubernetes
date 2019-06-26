@@ -37,10 +37,10 @@ spec:
         resources:
           limits:
             cpu: 300m
-            memory: 10Mi
+            memory: 20Mi
           requests:
             cpu: 50m
-            memory: 2Mi
+            memory: 5Mi
         ports:
         - containerPort: 26379
           name: redis-sentinel
