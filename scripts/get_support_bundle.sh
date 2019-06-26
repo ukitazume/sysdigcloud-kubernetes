@@ -29,6 +29,11 @@ for pod in ${SYSDIGCLOUD_PODS}; do
     containers=$(kubectl ${KUBE_OPTS} get pod ${pod} -o json | jq -r '.spec.containers[].name')
     for container in ${containers}; do
         kubectl ${KUBE_OPTS} logs ${pod} -c ${container} > ${LOG_DIR}/${pod}/${container}-kubectl-logs.txt
+        restarts=$(kubectl ${KUBE_OPTS}  get pod ${pod} --no-headers | awk '{print $4}')
+        if [ $restarts -ne "0" ]; then
+            echo "Getting support logs for previous container in ${pod}"
+            kubectl ${KUBE_OPTS} logs ${pod} --previous -c ${container} > ${LOG_DIR}/${pod}/kubectl-logs-previous.txt
+        fi
         kubectl ${KUBE_OPTS} exec ${pod} -c ${container} -- bash -c "${command}" > ${LOG_DIR}/${pod}/${container}-support-files.tgz || true
     done
 done
