@@ -1,4 +1,8 @@
 #!/bin/bash
+
+DIR="$(cd "$(dirname "$0")"; pwd -P)"
+source "$DIR/shared-values.sh"
+
 set -euo pipefail
 . /sysdig-chart/framework.sh
 
@@ -13,10 +17,9 @@ do
 done
 
 broadcast "green" "Deploying Monitor..."
-/sysdig-chart/monitor.sh
-if [[ ${SECURE} == true ]];
-then
+"$TEMPLATE_DIR/monitor.sh"
+if [[ ${SECURE} == true ]]; then
   broadcast "green" "Deploying Secure..."
-  /sysdig-chart/secure.sh
+  "$TEMPLATE_DIR/secure.sh"
 fi
 

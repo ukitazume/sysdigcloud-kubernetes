@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: elasticsearch
+  namespace: {{ .Values.namespace }}
+data:
+  ELASTICSEARCH_SERVICE: sysdigcloud-elasticsearch
+  ELASTICSEARCH_CLUSTER_NAME: sysdigcloud
+  ES_JAVA_OPTS: "{{ .Values.elasticsearch.jvmOptions }}"
+  SEARCHGUARD_ENABLED: "{{ .Values.elasticsearch.searchguard.enabled }}"
+  ELASTICSEARCH_USER: "{{ .Values.elasticsearch.searchguard.adminUser }}"

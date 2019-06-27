@@ -74,10 +74,12 @@ spec:
               mountPath: /var/log/sysdigcloud
             - name: config
               mountPath: /opt/kubernets_config
-            # Uncomment this if you need to import self-signed SSL certs
+            - name: elasticsearch-certs
+              mountPath: /opt/kubernets_secrets/elasticsearch_certs
+            ## Uncomment this if you need to import self-signed SSL certs
             #- name: java-certs
             #  mountPath: /opt/java-certs/
-            # Uncomment this if you want to split sysdgicloud configurations into configs and secrets.
+            ## Uncomment this if you want to split sysdgicloud configurations into configs and secrets.
             #- name: secrets
             #  mountPath: /opt/kubernets_secrets
           env:
@@ -105,6 +107,26 @@ spec:
                 configMapKeyRef:
                   name: sysdigcloud-config
                   key: cassandra.datacenter.name
+            - name: ES_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: elasticsearch.hostname
+            - name: ES_SEARCHGUARD_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: elasticsearch.user
+            - name: ES_SEARCHGUARD_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: elasticsearch.searchguard.enabled
+            - name: ES_SEARCHGUARD_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: elasticsearch-searchguard
+                  key: SG_PASSWORD
           # If you're running multiple replicas, it is advisable to configure the limits below. Limiting resources
           # can help stabilize rolling updates later down the road.
           # resources:
@@ -137,11 +159,14 @@ spec:
         - name: ssl
           secret:
             secretName: sysdigcloud-ssl-secret
-        # Uncomment this if you need to import self-signed SSL certs
+        - name: elasticsearch-certs
+          secret:
+            secretName: ca-certs
+        ## Uncomment this if you need to import self-signed SSL certs
         #- name: java-certs
         #  secret:
         #    secretName: sysdigcloud-java-certs
-        # Uncomment this if you want to split sysdgicloud configurations into configs and secrets.
+        ## Uncomment this if you want to split sysdgicloud configurations into configs and secrets.
         #- name: secrets
         #  secret:
         #    secretName: <secret_name>

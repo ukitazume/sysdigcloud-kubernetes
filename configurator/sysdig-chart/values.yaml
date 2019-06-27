@@ -12,14 +12,14 @@ size: medium
 #Set k8s namespace for sysdigcloud
 namespace: sysdigcloud
 #Set Quay.Io secrets
-quaypullsecret: <Insert QuaySecret>
+quaypullsecret: <change-me>
 #StorageClass config
-storageClassName: <Insert StorageClassName>
+storageClassName: <change-me>
 #This drives multi-az awareness, if sysdigcloud is deployed to a multi-az setup
 #this should be updated as adequate
 cloudProvider:
   # example aws
-  name:
+  name: 
   # boolean true|false
   isMultiAZ: false
   # example us-east-1
@@ -33,9 +33,9 @@ deployment: kubernetes
 sysdig:
   agentCount: 10
   #Set Sysdig license
-  license: <Insert SysdigLicense>
-  dnsName: <Insert DNS Name>
-  monitorVersion: 2304
+  license: <change-me>
+  dnsName: <change-me>
+  monitorVersion: 2271
   anchoreVersion: v0.3.4.1
   #Advanced settings
   #autogenerate certificate by default - generate to
@@ -77,3 +77,5 @@ sysdig:
   #Override for default collector port
   #defaults to 6443
   collectorPort:
+elasticsearch:
+  jvmOptions: ""

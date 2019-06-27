@@ -1,6 +1,7 @@
 #!/bin/bash
 
-NAMESPACE=$(yq -r .namespace /sysdig-chart/values.yaml)
+DIR="$(cd "$(dirname "$0")"; pwd -P)"
+source "$DIR/shared-values.sh"
 
 #Echo function
 function broadcast() {
@@ -26,7 +27,7 @@ function broadcast() {
   }
 
 function is_pod_ready() {
-  [[  "$(kubectl -n "${NAMESPACE}" get po "$1" -o 'jsonpath={.status.conditions[?(@.type=="Ready")].status}')" == 'True' ]]
+  [[  "$(kubectl -n "${K8S_NAMESPACE}" get po "$1" -o 'jsonpath={.status.conditions[?(@.type=="Ready")].status}')" == 'True' ]]
    }
 
 function pods_ready() {
@@ -45,7 +46,7 @@ function wait_for_pods() {
   interval=$1
   broadcast 'g' "Checking for Pods to be Ready  Will check every $interval seconds"
     while true; do
-    pods="$(kubectl -n "${NAMESPACE}" get po -o 'jsonpath={.items[*].metadata.name}')"
+    pods="$(kubectl -n "${K8S_NAMESPACE}" get po -o 'jsonpath={.items[*].metadata.name}')"
     if pods_ready "${pods}"; then
       broadcast 'w' "All Pods Ready.....Continuing"
       return 0

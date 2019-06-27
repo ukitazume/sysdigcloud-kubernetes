@@ -1,14 +1,17 @@
 #!/bin/bash
+
+DIR="$(cd "$(dirname "$0")"; pwd -P)"
+source "$DIR/shared-values.sh"
+
 set -euo pipefail
 
 #Important framework functions.
-. /sysdig-chart/framework.sh
-NAMESPACE=$(yq -r .namespace /sysdig-chart/values.yaml)
+. "$TEMPLATE_DIR/framework.sh"
 
-if [[ "$(yq -r .storageClassProvisioner /sysdig-chart/values.yaml)" == "hostPath" ]]; then
-  broadcast "green" "hostPath mode, skipping StorageClass"
+if [[ "$(yq -r .storageClassProvisioner $TEMPLATE_DIR/values.yaml)" == "hostPath" ]]; then
+  broadcast 'green' "hostPath mode, skipping StorageClass"
 else
-  STORAGE_CLASS_NAME=$(yq -r .storageClassName /sysdig-chart/values.yaml)
+  STORAGE_CLASS_NAME=$(yq -r .storageClassName "$TEMPLATE_DIR/values.yaml")
   #Create config
   STORAGE_CLASS="$(kubectl get storageclass "$STORAGE_CLASS_NAME" 2> /dev/null || /bin/true)"
   if [[ "$STORAGE_CLASS" != "" ]]; then
@@ -23,7 +26,15 @@ fi
 broadcast "green" "Creating common-config"
 kubectl apply -f /manifests/generated/common-config.yaml
 
-DEPLOYMENT=$(yq -r .deployment /sysdig-chart/values.yaml)
+SECRET_NAME="ca-certs"
+if kubectl -n "$K8S_NAMESPACE" get secret ${SECRET_NAME}; then
+  echo "secret 'ca-certs' already exists. Skipping elasticsearch secret creation"
+else
+  echo "installing elasticsearch tls certs"
+  kubectl -n "$K8S_NAMESPACE" create secret generic ${SECRET_NAME} --from-file=/tools/out/
+fi
+
+DEPLOYMENT=$(yq -r .deployment "$TEMPLATE_DIR/values.yaml")
 if [[ "${DEPLOYMENT}" == "openshift" ]];
 then
   broadcast "green" "Skippping Ingress deploy for openshift..."
@@ -36,9 +47,9 @@ fi
 function delete_resource_if_exists(){
   local resourceType=$1
   local resourceName=$2
-  IS_EXISTS="$(kubectl -n "$NAMESPACE" get "$resourceType" "$resourceName" 2> /dev/null || /bin/true)"
+  IS_EXISTS="$(kubectl -n "$K8S_NAMESPACE" get "$resourceType" "$resourceName" 2> /dev/null || /bin/true)"
   if [[ "$IS_EXISTS" != "" ]]; then
-    kubectl -n "$NAMESPACE" delete "$resourceType" "$resourceName"
+    kubectl -n "$K8S_NAMESPACE" delete "$resourceType" "$resourceName"
     broadcast "red" "Deleting $resourceType $resourceName : redisHa=$IS_REDIS_HA config..."
   fi
 }

@@ -124,11 +124,12 @@ data:
   ####################################
   ######### ELASTICSEARCH #########
   ####################################
-  # Required: Elasticsearch URL. If Elasticsearch is deployed as a Kubernetes service,
-  # this will be the service name. If using an external database, put the proper address
-  elasticsearch.url: http://sysdigcloud-elasticsearch
+  elasticsearch.hostname: sysdigcloud-elasticsearch
   # Optional: Elasticsearch JVM options. For heavy load environments this will override the defaults
   elasticsearch.jvm.options: ""
+  elasticsearch.searchguard.enabled: "{{ .Values.elasticsearch.searchguard.enabled }}"
+  elasticsearch.user: "{{ .Values.elasticsearch.searchguard.adminUser }}"
+  elasticsearch.verifySSL: "{{ .Values.elasticsearch.searchguard.verifySSL }}"
   ####################################
   ######### SMTP #########
   ####################################

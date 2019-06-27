@@ -1,0 +1,6 @@
+# Elasticsearch auth and TLS encryption
+elasticsearch:
+  searchguard:
+    enabled: true
+    adminUser: admin
+    verifySSL: false

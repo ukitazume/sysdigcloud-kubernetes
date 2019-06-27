@@ -1,0 +1,18 @@
+ca:
+   root:
+      dn: CN=root.ca.sysdig-onprem.com,OU=CA,O=Sysdig Ops,DC=sysdig-onprem,DC=com
+      keysize: 2048
+      pkPassword: none
+      validityDays: 3650
+      file: root-ca.pem
+defaults:
+      validityDays: 3650
+      pkPassword: none
+      nodeOid: "1.2.3.4.5.5"
+      httpsEnabled: true
+clients:
+  - name: spock
+    dn: CN=spock.sysdig-onprem.com,OU=Ops,O=Sysdig Ops,DC=sysdig-onprem,DC=com
+  - name: kirk
+    dn: CN=kirk.sysdig-onprem.com,OU=Ops,O=Sysdig Ops,DC=sysdig-onprem,DC=com
+    admin: true

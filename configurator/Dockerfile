@@ -1,4 +1,4 @@
-FROM alpine:3.9.4
+FROM openjdk:13-jdk-alpine
 
 RUN apk add bash python py-pip jq openssl ca-certificates \
       && pip install yq \
@@ -16,7 +16,9 @@ RUN apk add bash python py-pip jq openssl ca-certificates \
       && chmod +x /usr/bin/oc /usr/bin/oc-kubectl \
       && cp /tmp/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit/kubectl /usr/bin/oc-kubectl-bin \
       && cp /tmp/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit/oc /usr/bin/oc-bin \
-      && rm -rf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz /tmp/openshift* linux-386
+      && rm -rf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz /tmp/openshift* linux-386 \
+      && wget https://search.maven.org/remotecontent?filepath=com/floragunn/search-guard-tlstool/1.6/search-guard-tlstool-1.6.tar.gz && tar xzvf search-guard-tlstool-1.6.tar.gz \
+      && rm search-guard-tlstool-1.6.tar.gz
 
 COPY sysdig-chart /sysdig-chart
 

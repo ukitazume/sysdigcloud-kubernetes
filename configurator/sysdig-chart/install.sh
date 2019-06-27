@@ -1,5 +1,8 @@
 #!/bin/bash
 
+DIR="$(cd "$(dirname "$0")"; pwd -P)"
+source "$DIR/shared-values.sh"
+
 set -euo pipefail
 . /sysdig-chart/framework.sh
 
@@ -13,7 +16,7 @@ else
   cp /manifests/values.yaml /sysdig-chart/values.yaml
 fi
 
-SCRIPTS=$(yq -r .scripts /sysdig-chart/values.yaml)
+SCRIPTS=$(yq -r .scripts "$TEMPLATE_DIR/values.yaml")
 echo "${SCRIPTS}"
 
 #set defaults
@@ -34,16 +37,16 @@ done
 if [[ ${GENERATE} == "true" ]];
 then
   broadcast "green" "Generating templates..."
-  /sysdig-chart/generate_templates.sh
+  "$TEMPLATE_DIR/generate_templates.sh"
 fi
 
-DEPLOYMENT=$(yq -r .deployment /sysdig-chart/values.yaml)
+DEPLOYMENT=$(yq -r .deployment "$TEMPLATE_DIR/values.yaml")
 if [[ ${DEPLOYMENT} == "openshift" ]];
 then
-  /sysdig-chart/openshift.sh
+  "$TEMPLATE_DIR/openshift.sh"
 fi
 
 if [[ ${DEPLOY} == "true" ]];
 then
-  /sysdig-chart/deploy.sh
+  "$TEMPLATE_DIR/deploy.sh"
 fi

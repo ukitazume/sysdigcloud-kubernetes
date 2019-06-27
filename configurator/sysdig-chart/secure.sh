@@ -1,8 +1,12 @@
 #!/bin/bash
+
+DIR="$(cd "$(dirname "$0")"; pwd -P)"
+source "$DIR/shared-values.sh"
+
 set -euo pipefail
 
 #Important framework functions.
-. /sysdig-chart/framework.sh
+. "$TEMPLATE_DIR/framework.sh"
 
 broadcast "green" "Deploying AnchoreCore"
 kubectl apply -f /manifests/generated/anchore-core.yaml
