@@ -8,7 +8,7 @@ set -euo pipefail
 #Important framework functions.
 . "$TEMPLATE_DIR/framework.sh"
 
-if [[ "$(yq -r .storageClassProvisioner $TEMPLATE_DIR/values.yaml)" == "hostPath" ]]; then
+if [[ "$(yq -r .storageClassProvisioner "$TEMPLATE_DIR/values.yaml")" == "hostPath" ]]; then
   broadcast 'green' "hostPath mode, skipping StorageClass"
 else
   STORAGE_CLASS_NAME=$(yq -r .storageClassName "$TEMPLATE_DIR/values.yaml")

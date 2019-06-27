@@ -56,7 +56,7 @@ pipeline {
       steps {
         script {
           sh "docker run --rm -v " +
-          "${env.WORKSPACE}/configurator/sysdig-chart:/sysdig-chart koalaman/shellcheck -- " +
+          "${env.WORKSPACE}/configurator/sysdig-chart:/sysdig-chart koalaman/shellcheck --exclude=SC2164,SC1090 -- " +
           scripts("${env.WORKSPACE}/configurator/sysdig-chart/*.sh", "/sysdig-chart")
         }
       }

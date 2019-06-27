@@ -136,7 +136,7 @@ echo "step5b: generate commong files"
 kustomize build "$MANIFESTS_TEMPLATE_BASE/overlays/common-config/$SIZE"                  > $GENERATED_DIR/common-config.yaml
 
 echo "step 6: generate ingress yaml"
-kustomize build $MANIFESTS_TEMPLATE_BASE/sysdig-cloud/ingress_controller                 > $GENERATED_DIR/ingress.yaml
+kustomize build "$MANIFESTS_TEMPLATE_BASE/sysdig-cloud/ingress_controller"               > $GENERATED_DIR/ingress.yaml
 
 echo "step7:  Generating data-stores"
 echo "step7a: data-stores cassandra"
@@ -148,7 +148,7 @@ kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/overlays/elasticsearch/$SI
 
 echo "step7c: data-stores mysql $SIZE"
 echo "---" >>$GENERATED_DIR/infra.yaml
-kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/overlays/mysql/$SIZE"             >> $GENERATED_DIR/infra.yaml
+kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/overlays/mysql/$SIZE"              >> $GENERATED_DIR/infra.yaml
 if [[ ${SECURE} == "true" ]]; then
   echo "step7d: data-stores postgres"
   echo "---" >>$GENERATED_DIR/infra.yaml
