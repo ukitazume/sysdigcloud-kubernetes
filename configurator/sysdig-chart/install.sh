@@ -7,8 +7,8 @@ set -euo pipefail
 . /sysdig-chart/framework.sh
 
 if [[ ! -f /manifests/values.yaml ]]; then
-  broadcast "red" "Please provide a values.yaml in your current working directory."
-  echo -e "See: \\n\
+  log error "Please provide a values.yaml in your current working directory."
+  log info "See: \\n\
   https://sysdig.atlassian.net/wiki/spaces/DEVOPS/pages/833978514/Onprem+Configurator  \\n\
   for guidance"
   exit 1
@@ -17,7 +17,7 @@ else
 fi
 
 SCRIPTS=$(yq -r .scripts "$TEMPLATE_DIR/values.yaml")
-echo "${SCRIPTS}"
+log info "${SCRIPTS}"
 
 #set defaults
 GENERATE=false
@@ -36,7 +36,7 @@ done
 
 if [[ ${GENERATE} == "true" ]];
 then
-  broadcast "green" "Generating templates..."
+  log notice "Generating templates..."
   "$TEMPLATE_DIR/generate_templates.sh"
 fi
 

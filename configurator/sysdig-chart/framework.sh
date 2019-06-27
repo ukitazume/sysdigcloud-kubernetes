@@ -3,28 +3,28 @@
 DIR="$(cd "$(dirname "$0")"; pwd -P)"
 source "$DIR/shared-values.sh"
 
-#Echo function
-function broadcast() {
-  WHITE='\033[1;37m'
-  RED='\033[0;31m'
-  GREEN='\033[0;32m'
-  PURPLE='\033[0;35m'
-  NC='\033[0m'
+function log() {
+  local info='\033[1;37m'  # white
+  local error='\033[0;31m' # red
+  local notice='\033[0;32m' # green
+  local level="$1"
+  local message="$2"
+  local nocolor='\033[0m'
 
-  if [[ "$1" = "w" ]]; then
-     echo -e "${WHITE}$2${NC}"
-  elif [[ "$1" = "r" ]]; then
-     echo -e "${RED}$2${NC}"
-  elif [[ "$1" = "g" ]]; then
-     echo -e "${GREEN}$2${NC}"
-  elif [[ "$1" = "p" ]]; then
-     echo -e "${PURPLE}$2${NC}"
-  elif [[ "$1" = "red" ]]; then
-     echo -e "${RED}$2${NC}"
-  elif [[ "$1" = "green" ]]; then
-     echo -e "${GREEN}$2${NC}"
-  fi
-  }
+  case $level in
+    info)
+      echo -e "${info}${message}${nocolor}"
+      ;;
+    error)
+      echo -e "${error}${message}${nocolor}"
+      ;;
+    notice)
+      echo -e "${notice}${message}${nocolor}"
+      ;;
+    *)
+      echo -e "${info}${message}${nocolor}"
+  esac
+}
 
 function is_pod_ready() {
   [[  "$(kubectl -n "${K8S_NAMESPACE}" get po "$1" -o 'jsonpath={.status.conditions[?(@.type=="Ready")].status}')" == 'True' ]]
@@ -44,20 +44,20 @@ function pods_ready() {
 function wait_for_pods() {
   attempts=1
   interval=$1
-  broadcast 'g' "Checking for Pods to be Ready  Will check every $interval seconds"
+  log notice "Checking for Pods to be Ready  Will check every $interval seconds"
     while true; do
     pods="$(kubectl -n "${K8S_NAMESPACE}" get po -o 'jsonpath={.items[*].metadata.name}')"
     if pods_ready "${pods}"; then
-      broadcast 'w' "All Pods Ready.....Continuing"
+      log info "All Pods Ready.....Continuing"
       return 0
     else
       sleep "$interval"
       if [[ $(( "$attempts" % 5 )) == 0 ]]; then
         if [[ $(( "$attempts" % 30 )) == 0 ]]; then
-          broadcast 'r' "We have checked $attempts times. Its talking too long deploy bailing out. Please contact support."
+          log error "We have checked $attempts times. Its talking too long deploy bailing out. Please contact support."
           exit 3
          fi
-        broadcast 'r' "We have checked $attempts times"
+        log error "We have checked $attempts times"
       fi
       attempts=$((attempts + 1))
     fi

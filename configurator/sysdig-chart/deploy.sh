@@ -7,7 +7,7 @@ set -euo pipefail
 . /sysdig-chart/framework.sh
 
 APPS=$(yq -r .apps /sysdig-chart/values.yaml)
-echo "${APPS}"
+log info "${APPS}"
 SECURE=false
 for app in ${APPS}
 do
@@ -16,10 +16,11 @@ do
  fi
 done
 
-broadcast "green" "Deploying Monitor..."
+log notice "Deploying Monitor..."
 "$TEMPLATE_DIR/monitor.sh"
-if [[ ${SECURE} == true ]]; then
-  broadcast "green" "Deploying Secure..."
+if [[ ${SECURE} == true ]];
+then
+  log notice "Deploying Secure..."
   "$TEMPLATE_DIR/secure.sh"
 fi
 

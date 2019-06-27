@@ -8,14 +8,14 @@ set -euo pipefail
 #Important framework functions.
 . "$TEMPLATE_DIR/framework.sh"
 
-broadcast "green" "Deploying AnchoreCore"
+log notice "Deploying AnchoreCore"
 kubectl apply -f /manifests/generated/anchore-core.yaml
 wait_for_pods 10
 
-broadcast "green" "Deploying AncoreWorker"
+log notice "Deploying AncoreWorker"
 kubectl apply -f /manifests/generated/anchore-worker.yaml
 wait_for_pods 10
 
-broadcast "green" "Deploying Scanning"
+log notice "Deploying Scanning"
 kubectl apply -f /manifests/generated/scanning.yaml
 wait_for_pods 10
