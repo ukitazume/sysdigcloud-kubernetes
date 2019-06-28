@@ -1,13 +1,5 @@
 import groovy.json.JsonOutput
 
-def scripts(hostPath, containerPath) {
-  // shelling out to ls is a hack because we do not have https://jenkins.io/doc/pipeline/steps/pipeline-utility-steps/#findfiles-find-files-in-the-workspace
-  sh(script: "ls ${hostPath}", returnStdout: true)
-  .trim().split("(\\s|\\r|\\n)+").collect { file ->
-    "${containerPath}/${file.split('/').last()}"
-  }.join(" ")
-}
-
 def slackSendNotification(color = '', messageType = '', nonGenericMessage = false) {
   if (color != '' && messageType != '') {
     // slackSend
@@ -55,63 +47,71 @@ pipeline {
     stage('ShellCheck') {
       steps {
         script {
-          sh "docker run --rm -v " +
-          "${env.WORKSPACE}/configurator/sysdig-chart:/sysdig-chart koalaman/shellcheck --exclude=SC2164,SC1090 -- " +
-          scripts("${env.WORKSPACE}/configurator/sysdig-chart/*.sh", "/sysdig-chart")
+          sh "cd configurator && make shellcheck"
         }
       }
     }
-    stage('Build image') {
+    stage('Test') {
+      steps{
+        withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
+          script {
+              sh(
+                "cd configurator && " +
+                "IMAGE_NAME=${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER} make test"
+              )
+          }
+        }
+      }
+      post {
+        cleanup {
+          withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
+            script {
+              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}")
+            }
+          }
+        }
+      }
+    }
+    stage('Push') {
       when {
         branch 'Templating_k8s_configurations'
       }
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
           script {
-            dockerImage = docker.build("${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}", './configurator/')
-          }
-        }
-      }
-    }
-    stage('Push image') {
-      when {
-        branch 'Templating_k8s_configurations'
-      }
-      steps {
-        withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
-          script {
-            docker.withRegistry("https://${env.ARTIFACTORY_URL}", registryCredential) {
-              dockerImage.push()
-              dockerImage.push('latest')
-            }
+              dockerImage = docker.build("${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}", './configurator/')
+              sh("docker run --rm --entrypoint /sysdig-chart/test.sh ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}")
+              docker.withRegistry("https://${env.ARTIFACTORY_URL}", registryCredential) {
+                dockerImage.push()
+                dockerImage.push('latest')
+              }
           }
         }
       }
       post {
         success {
-          script {
-            slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}")
+        withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
+            script {
+              slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}")
+            }
+          }
+        }
+        cleanup {
+        withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
+            script {
+              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}")
+            }
           }
         }
       }
     }
-    stage('Cleanup') {
-      when {
-        branch 'Templating_k8s_configurations'
-      }
-      steps {
-        withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
-          sh "docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}"
-        }
-      }
-    }
   }
-
   post {
     failure {
       script {
         slackSendNotification("${env.SLACK_COLOR_DANGER}", "FAILED")
-      } }
+      }
+    }
     success {
       script {
         slackSendNotification("${env.SLACK_COLOR_GOOD}", "SUCCESS")
