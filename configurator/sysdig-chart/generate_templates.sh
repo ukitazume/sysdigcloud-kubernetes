@@ -137,18 +137,18 @@ kustomize build "$MANIFESTS_TEMPLATE_BASE/sysdig-cloud/ingress_controller"      
 
 log info "step7:  Generating data-stores"
 log info "step7a: data-stores cassandra"
-log info "---" >>$GENERATED_DIR/infra.yaml
+echo "---" >>$GENERATED_DIR/infra.yaml
 kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/overlays/cassandra/$SIZE"          >> $GENERATED_DIR/infra.yaml
 log info "step7b: data-stores elasticsearch"
-log info "---" >>$GENERATED_DIR/infra.yaml
+echo "---" >>$GENERATED_DIR/infra.yaml
 kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/overlays/elasticsearch/$SIZE"      >> $GENERATED_DIR/infra.yaml
 
 log info "step7c: data-stores mysql $SIZE"
-log info "---" >>$GENERATED_DIR/infra.yaml
+echo "---" >>$GENERATED_DIR/infra.yaml
 kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/overlays/mysql/$SIZE"              >> $GENERATED_DIR/infra.yaml
 if [[ ${SECURE} == "true" ]]; then
   log info "step7d: data-stores postgres"
-  log info "---" >>$GENERATED_DIR/infra.yaml
+  echo "---" >>$GENERATED_DIR/infra.yaml
   kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/overlays/postgres/$SIZE"         >> $GENERATED_DIR/infra.yaml
 else
   log info "skipping step7d: data-stores postgres - needed only for secure"
@@ -157,11 +157,11 @@ fi
 IS_REDIS_HA=$(yq .sysdig.redisHa "$TEMPLATE_DIR/values.yaml")
 if [[ ${IS_REDIS_HA} == "false" ]]; then
   log info "step7e: data-stores redis $SIZE"
-  log info "---" >>$GENERATED_DIR/infra.yaml
+  echo "---" >>$GENERATED_DIR/infra.yaml
   kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/redis/"                            >> $GENERATED_DIR/infra.yaml
 else
   log info "step7e: data-stores redis-ha $SIZE"
-  log info "---" >>$GENERATED_DIR/infra.yaml
+  echo "---" >>$GENERATED_DIR/infra.yaml
   kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/redis-ha/"                         >> $GENERATED_DIR/infra.yaml
 fi
 
