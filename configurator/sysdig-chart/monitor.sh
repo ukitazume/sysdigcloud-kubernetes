@@ -28,9 +28,9 @@ kubectl apply -f /manifests/generated/common-config.yaml
 
 SECRET_NAME="ca-certs"
 if kubectl -n "$K8S_NAMESPACE" get secret ${SECRET_NAME}; then
-  echo "secret 'ca-certs' already exists. Skipping elasticsearch secret creation"
+  log info "secret '${SECRET_NAME}' already exists. Skipping elasticsearch secret creation"
 else
-  echo "installing elasticsearch tls certs"
+  log info "installing elasticsearch tls certs"
   kubectl -n "$K8S_NAMESPACE" create secret generic ${SECRET_NAME} --from-file=/tools/out/
 fi
 

@@ -39,15 +39,12 @@ else
     helm template -x "templates/$SECRET_FILE" "$TEMPLATE_DIR/secret-generator" > "$GENERATED_SECRET_FILE"
 fi
 
-SECRET_NAME="ca-certs"
 log info "step3.5: creating elasticsearch certs for Searchguard"
-if kubectl -n "$K8S_NAMESPACE" get secret "$SECRET_NAME"; then
-  log info "Secret 'ca-certs' already exists. Skipping elasticsearch tls cert creation"
-else
+if [[ -z "$(ls -A "${MANIFESTS}/elasticsearch-tls-certs")" ]]; then
   log info "Generating certs for Searchguard..."
   (cd /tools/
     ./sgtlstool.sh -c "$TEMPLATE_DIR/elasticsearch-tlsconfig.yaml" -ca -crt
-    cp -r out "${MANIFESTS}/elasticsearch-tls-certs")
+    mv out "${MANIFESTS}/elasticsearch-tls-certs")
 fi
 
 log info "step4: running through helm template engine"
