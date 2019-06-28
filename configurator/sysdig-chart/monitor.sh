@@ -31,7 +31,7 @@ if kubectl -n "$K8S_NAMESPACE" get secret ${SECRET_NAME}; then
   log info "secret '${SECRET_NAME}' already exists. Skipping elasticsearch secret creation"
 else
   log info "installing elasticsearch tls certs"
-  kubectl -n "$K8S_NAMESPACE" create secret generic ${SECRET_NAME} --from-file=/tools/out/
+  kubectl -n "$K8S_NAMESPACE" create secret generic ${SECRET_NAME} --from-file="${MANIFESTS}/elasticsearch-tls-certs"
 fi
 
 DEPLOYMENT=$(yq -r .deployment "$TEMPLATE_DIR/values.yaml")

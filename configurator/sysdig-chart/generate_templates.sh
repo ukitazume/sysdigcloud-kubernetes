@@ -25,7 +25,6 @@ log info "step1: removing exiting manifests"
 rm -rf /manifests/generated/ "/manifests/$TEMPLATE_DIR"
 
 log info "step2: creating manifest dirs"
-MANIFESTS=/manifests
 GENERATED_DIR=$MANIFESTS/generated
 mkdir -p $GENERATED_DIR
 
