@@ -4,7 +4,7 @@ DIR="$(cd "$(dirname "$0")"; pwd -P)"
 source "$DIR/shared-values.sh"
 
 set -euo pipefail
-. /sysdig-chart/framework.sh
+. "/sysdig-chart/framework.sh"
 
 APPS=$(yq -r .apps /sysdig-chart/values.yaml)
 log info "${APPS}"

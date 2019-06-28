@@ -26,7 +26,7 @@ rm -rf /manifests/generated/ "/manifests/$TEMPLATE_DIR"
 
 log info "step2: creating manifest dirs"
 GENERATED_DIR=$MANIFESTS/generated
-mkdir -p $GENERATED_DIR
+mkdir -p "$GENERATED_DIR"
 
 log info "step3: creating secret file - if it does not exist"
 SECRET_FILE="secrets-values.yaml"
@@ -55,18 +55,18 @@ GENERATED_CRT=$MANIFESTS/certs/server.crt
 GENERATED_KEY=$MANIFESTS/certs/server.key
 DNS_NAME=$(yq -r .sysdig.dnsName "$TEMPLATE_DIR/values.yaml")
 mkdir "$MANIFESTS_TEMPLATE_BASE/common-config/certs"
-if [ ! -d $MANIFESTS/certs ]; then
+if [ ! -d "$MANIFESTS/certs" ]; then
   log info "Making certs manifests dir"
-  mkdir $MANIFESTS/certs
+  mkdir "$MANIFESTS/certs"
 fi
 if [ "$GENERATE_CERTIFICATE" = "true" ]; then
   if [[ -f $GENERATED_KEY && -f $GENERATED_CRT ]]; then
     log info "Certificates are present. Copying the existing certs"
   else
     log info "Generating new certificate"
-    openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 -subj "/C=US/ST=CA/L=SanFrancisco/O=ICT/CN=$DNS_NAME" -keyout $GENERATED_KEY -out $GENERATED_CRT
+    openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 -subj "/C=US/ST=CA/L=SanFrancisco/O=ICT/CN=$DNS_NAME" -keyout "$GENERATED_KEY" -out "$GENERATED_CRT"
   fi
-  cp $GENERATED_KEY $GENERATED_CRT "$MANIFESTS_TEMPLATE_BASE/common-config/certs/"
+  cp "$GENERATED_KEY" "$GENERATED_CRT" "$MANIFESTS_TEMPLATE_BASE/common-config/certs/"
 else
   CRT_FILE="$MANIFESTS/$(yq -r .sysdig.certificate.crt "$TEMPLATE_DIR/values.yaml")"
   KEY_FILE="$MANIFESTS/$(yq -r .sysdig.certificate.key "$TEMPLATE_DIR/values.yaml")"
@@ -125,30 +125,30 @@ log info "step5a: generate storage"
 if [[ "$(yq -r .storageClassProvisioner "${TEMPLATE_DIR}/values.yaml")" == "hostPath" ]]; then
   log info "hostPath mode, skipping generating storage configs"
 else
-  kustomize build "$MANIFESTS_TEMPLATE_BASE/storage/"                                    > $GENERATED_DIR/storage-class.yaml
+  kustomize build "$MANIFESTS_TEMPLATE_BASE/storage/"                                    > "$GENERATED_DIR/storage-class.yaml"
 fi
 
 log info "step5b: generate commong files"
-kustomize build "$MANIFESTS_TEMPLATE_BASE/overlays/common-config/$SIZE"                  > $GENERATED_DIR/common-config.yaml
+kustomize build "$MANIFESTS_TEMPLATE_BASE/overlays/common-config/$SIZE"                  > "$GENERATED_DIR/common-config.yaml"
 
 log info "step 6: generate ingress yaml"
-kustomize build "$MANIFESTS_TEMPLATE_BASE/sysdig-cloud/ingress_controller"               > $GENERATED_DIR/ingress.yaml
+kustomize build "$MANIFESTS_TEMPLATE_BASE/sysdig-cloud/ingress_controller"               > "$GENERATED_DIR/ingress.yaml"
 
 log info "step7:  Generating data-stores"
 log info "step7a: data-stores cassandra"
-echo "---" >>$GENERATED_DIR/infra.yaml
-kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/overlays/cassandra/$SIZE"          >> $GENERATED_DIR/infra.yaml
+echo "---" >> "$GENERATED_DIR/infra.yaml"
+kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/overlays/cassandra/$SIZE"          >> "$GENERATED_DIR/infra.yaml"
 log info "step7b: data-stores elasticsearch"
-echo "---" >>$GENERATED_DIR/infra.yaml
-kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/overlays/elasticsearch/$SIZE"      >> $GENERATED_DIR/infra.yaml
+echo "---" >> "$GENERATED_DIR/infra.yaml"
+kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/overlays/elasticsearch/$SIZE"      >> "$GENERATED_DIR/infra.yaml"
 
 log info "step7c: data-stores mysql $SIZE"
-echo "---" >>$GENERATED_DIR/infra.yaml
-kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/overlays/mysql/$SIZE"              >> $GENERATED_DIR/infra.yaml
+echo "---" >> "$GENERATED_DIR/infra.yaml"
+kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/overlays/mysql/$SIZE"              >> "$GENERATED_DIR/infra.yaml"
 if [[ ${SECURE} == "true" ]]; then
   log info "step7d: data-stores postgres"
-  echo "---" >>$GENERATED_DIR/infra.yaml
-  kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/overlays/postgres/$SIZE"         >> $GENERATED_DIR/infra.yaml
+  echo "---" >> "$GENERATED_DIR/infra.yaml"
+  kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/overlays/postgres/$SIZE"         >> "$GENERATED_DIR/infra.yaml"
 else
   log info "skipping step7d: data-stores postgres - needed only for secure"
 fi
@@ -156,28 +156,28 @@ fi
 IS_REDIS_HA=$(yq .sysdig.redisHa "$TEMPLATE_DIR/values.yaml")
 if [[ ${IS_REDIS_HA} == "false" ]]; then
   log info "step7e: data-stores redis $SIZE"
-  echo "---" >>$GENERATED_DIR/infra.yaml
-  kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/redis/"                            >> $GENERATED_DIR/infra.yaml
+  echo "---" >> "$GENERATED_DIR/infra.yaml"
+  kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/redis/"                            >> "$GENERATED_DIR/infra.yaml"
 else
   log info "step7e: data-stores redis-ha $SIZE"
-  echo "---" >>$GENERATED_DIR/infra.yaml
-  kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/redis-ha/"                         >> $GENERATED_DIR/infra.yaml
+  echo "---" >> "$GENERATED_DIR/infra.yaml"
+  kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/redis-ha/"                         >> "$GENERATED_DIR/infra.yaml"
 fi
 
 
 log info "step 8: Generating monitor"
 log info "step 8a: generate monitor-api yamls"
-kustomize build "$MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/api/$SIZE"               > $GENERATED_DIR/api.yaml
+kustomize build "$MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/api/$SIZE"               > "$GENERATED_DIR/api.yaml"
 
 log info "step 8b: generate monitor-collectorworker yamls"
-kustomize build "$MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/collector-worker/$SIZE"  > $GENERATED_DIR/collector-worker.yaml
+kustomize build "$MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/collector-worker/$SIZE"  > "$GENERATED_DIR/collector-worker.yaml"
 
 if [[ ${SECURE} == "true" ]]; then
   log info "step 9a: generating secure-scanning yaml"
-  kustomize build "$MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/secure/scanning/$SIZE"       > $GENERATED_DIR/scanning.yaml
+  kustomize build "$MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/secure/scanning/$SIZE"       > "$GENERATED_DIR/scanning.yaml"
   log info "step 9b: generating secure-anchore yaml"
-  kustomize build "$MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/secure/anchore/$SIZE"        > $GENERATED_DIR/anchore-core.yaml
-  kustomize build "$MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/secure/anchore/worker/$SIZE" > $GENERATED_DIR/anchore-worker.yaml
+  kustomize build "$MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/secure/anchore/$SIZE"        > "$GENERATED_DIR/anchore-core.yaml"
+  kustomize build "$MANIFESTS_TEMPLATE_BASE/sysdig-cloud/overlays/secure/anchore/worker/$SIZE" > "$GENERATED_DIR/anchore-worker.yaml"
 else
   log info "skipping step 9: genrating secure yaml - needed only for secure"
 fi

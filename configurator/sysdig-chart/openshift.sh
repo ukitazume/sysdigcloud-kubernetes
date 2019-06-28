@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -uo pipefail
-. /sysdig-chart/framework.sh
+. "/sysdig-chart/framework.sh"
 
 #set variables
 alias kubectl="oc-kubectl"

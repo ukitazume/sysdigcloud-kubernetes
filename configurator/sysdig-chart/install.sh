@@ -4,7 +4,7 @@ DIR="$(cd "$(dirname "$0")"; pwd -P)"
 source "$DIR/shared-values.sh"
 
 set -euo pipefail
-. /sysdig-chart/framework.sh
+. "/sysdig-chart/framework.sh"
 
 if [[ ! -f /manifests/values.yaml ]]; then
   log error "Please provide a values.yaml in your current working directory."
