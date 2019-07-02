@@ -16,6 +16,17 @@ data:
     internal_ssl_verify: false
     metrics:
       enabled: false
+    webhooks:
+      enabled: True
+      ssl_verify: False
+      webhook_user: ${ANCHORE_ADMIN_USER}
+      webhook_pass: ${ANCHORE_ADMIN_PASSWORD}
+      analysis_update:
+        url: 'http://sysdigcloud-scanning-alertmgr/api/scanning/v1/anchore-notifications/analysis_update/<userId>'
+      vuln_update:
+        url: 'http://sysdigcloud-scanning-alertmgr/api/scanning/v1/anchore-notifications/vuln_update/<userId>'
+      policy_eval:
+        url: 'http://sysdigcloud-scanning-alertmgr/api/scanning/v1/anchore-notifications/policy_eval/<userId>'
     feeds:
       selective_sync:
         enabled: True
