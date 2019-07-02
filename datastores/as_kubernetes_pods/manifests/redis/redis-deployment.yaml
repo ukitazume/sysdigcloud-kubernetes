@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: redis
-          image: quay.io/sysdig/redis:4.0.12.4
+          image: quay.io/sysdig/redis:4.0.12.5
           resources:
             limits:
               cpu: 2

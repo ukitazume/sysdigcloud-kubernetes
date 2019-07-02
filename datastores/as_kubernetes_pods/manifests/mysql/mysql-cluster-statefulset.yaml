@@ -54,7 +54,7 @@ spec:
             topologyKey: "kubernetes.io/hostname"
       containers:
         - name: mysql
-          image: quay.io/sysdig/mysql-server:8.0.13.7
+          image: quay.io/sysdig/mysql-server:8.0.16.2
           command:
             - /bin/bash
             - -ecx
@@ -133,7 +133,7 @@ spec:
               name: data
               subPath: "mysql"
         - name: mysql-agent
-          image: quay.io/sysdig/mysql-agent:0.1.1.4
+          image: quay.io/sysdig/mysql-agent:0.1.1.5
           args:
             - --v=4
             - --no-kube-client
