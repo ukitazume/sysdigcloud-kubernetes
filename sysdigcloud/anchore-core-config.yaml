@@ -74,7 +74,7 @@ data:
           policy_eval: 21600
           vulnerability_scan: 18000
           service_watcher: 15
-
+        max_request_threads: 70
         event_log:
           notification:
             enabled: false
