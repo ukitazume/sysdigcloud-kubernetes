@@ -7,8 +7,8 @@ metadata:
     role: anchore-worker
 data:
   config.yaml: |
-    service_dir: /anchore_service_config
-    tmp_dir: /analysis_scratch
+    service_dir: /home/anchore/config
+    tmp_dir: /home/anchore/analysis_scratch
     allow_awsecr_iam_auto: false
     cleanup_images: true
     log_level: INFO
