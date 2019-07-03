@@ -23,7 +23,7 @@ spec:
         - name: sysdigcloud-pull-secret
       containers:
       - name: postgresql
-        image: quay.io/sysdig/postgres:10.6-alpine.1
+        image: quay.io/sysdig/postgres:{{ .Values.sysdig.postgresVersion }}
         resources: {}
         env:
         - name: POSTGRES_USER

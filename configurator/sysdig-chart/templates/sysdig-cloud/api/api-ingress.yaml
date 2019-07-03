@@ -16,8 +16,7 @@ metadata:
   namespace: {{ .Values.namespace }}
 spec:
   rules:
-    - host: {{ .Values.sysdig.dnsName }}
-      http:
+    - http:
         paths:
           - backend:
               serviceName: sysdigcloud-api
