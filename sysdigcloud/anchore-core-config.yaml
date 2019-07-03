@@ -7,7 +7,7 @@ metadata:
     role: anchore-core
 data:
   config.yaml: |
-    service_dir: /anchore_service_config
+    service_dir: /home/anchore/config
     tmp_dir: "/tmp"
     allow_awsecr_iam_auto: false
     cleanup_images: true
@@ -16,6 +16,17 @@ data:
     internal_ssl_verify: false
     metrics:
       enabled: false
+    webhooks:
+      enabled: True
+      ssl_verify: False
+      webhook_user: ${ANCHORE_ADMIN_USER}
+      webhook_pass: ${ANCHORE_ADMIN_PASSWORD}
+      analysis_update:
+        url: 'http://sysdigcloud-scanning-alertmgr/api/scanning/v1/anchore-notifications/analysis_update/<userId>'
+      vuln_update:
+        url: 'http://sysdigcloud-scanning-alertmgr/api/scanning/v1/anchore-notifications/vuln_update/<userId>'
+      policy_eval:
+        url: 'http://sysdigcloud-scanning-alertmgr/api/scanning/v1/anchore-notifications/policy_eval/<userId>'
     feeds:
       selective_sync:
         enabled: True
@@ -27,7 +38,7 @@ data:
     default_admin_email: 'admin@myemail.com'
     credentials:
       database:
-        db_connect: "postgresql+pg8000://${ANCHORE_DB_USER}:${ANCHORE_DB_PASSWORD}@${ANCHORE_DB_ENDPOINT}/${ANCHORE_DB}"
+        db_connect: "postgresql://${ANCHORE_DB_USER}:${ANCHORE_DB_PASSWORD}@${ANCHORE_DB_ENDPOINT}/${ANCHORE_DB}"
         db_connect_args:
           timeout: 120
           ssl: false
@@ -60,9 +71,10 @@ data:
           image_watcher: 3600
           notifications: 30
           policy_bundle_sync: 300
-          policy_eval: 3600
+          policy_eval: 21600
+          vulnerability_scan: 18000
           service_watcher: 15
-
+        max_request_threads: 70
         event_log:
           notification:
             enabled: false
