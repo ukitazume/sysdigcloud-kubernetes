@@ -58,7 +58,7 @@ pipeline {
           script {
               sh(
                 "cd configurator && " +
-                "IMAGE_NAME=${env.ARTIFACTORY_URL}/configurator:${env.BRANCH_NAME}.${env.BUILD_NUMBER} make test"
+                "IMAGE_NAME=${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER} make test"
               )
           }
         }
@@ -67,7 +67,7 @@ pipeline {
         cleanup {
           withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.BRANCH_NAME}.${env.BUILD_NUMBER}")
+              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER} || /bin/true")
             }
           }
         }
@@ -111,14 +111,14 @@ pipeline {
         success {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${env.ARTIFACTORY_URL}/configurator:${env.BRANCH_NAME}.${env.BUILD_NUMBER}")
+              slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}")
             }
           }
         }
         cleanup {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.BRANCH_NAME}.${env.BUILD_NUMBER}")
+              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER} || /bin/true")
             }
           }
         }
@@ -143,14 +143,14 @@ pipeline {
         success {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${env.ARTIFACTORY_URL}/configurator:${env.BRANCH_NAME}.${env.BUILD_NUMBER}")
+              slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}")
             }
           }
         }
         cleanup {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.BRANCH_NAME}.${env.BUILD_NUMBER}")
+              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER} || /bin/true")
             }
           }
         }
