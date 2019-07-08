@@ -19,11 +19,11 @@ storageClassName: <change-me>
 #this should be updated as adequate
 cloudProvider:
   # example aws
-  name: 
+  name:
   # boolean true|false
   isMultiAZ: false
   # example us-east-1
-  region: ""
+  region:
 #supports aws | gke | hostPath
 #Do not use hostPath in production, currently it is experimental only.
 storageClassProvisioner: aws
@@ -38,7 +38,7 @@ sysdig:
   agentCount: 10
   #Set Sysdig license
   license: <change-me>
-  dnsName: <change-me>
+  dnsName: not-a-valid.domain.com
   monitorVersion: 2271
   anchoreVersion: v0.3.4.1
   #Advanced settings
@@ -65,15 +65,15 @@ sysdig:
   #set to true for highly available redis
   redisHa: false
   #SMTP Configurations
-  smtpServer: ""
-  smtpServerPort: "25"
+  smtpServer: 
+  smtpServerPort: 25
   #User,Password can be empty if the server does not require authentication
-  smtpUser: ""
-  smtpPassword: ""
-  smtpProtocolTLS: "false"
-  smtpProtocolSSL: "false"
+  smtpUser: 
+  smtpPassword: 
+  smtpProtocolTLS: false
+  smtpProtocolSSL: false
   #Optional Email Header
-  smtpFromAddress: ""
+  smtpFromAddress: 
   #Please provide openshift parameters
   openshiftUrl:
   openshiftUsername:
