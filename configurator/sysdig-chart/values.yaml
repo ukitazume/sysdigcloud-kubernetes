@@ -39,13 +39,13 @@ sysdig:
   #Set Sysdig license
   license: <change-me>
   dnsName: <change-me>
-  monitorVersion: 2271
+  monitorVersion: 2304
   anchoreVersion: v0.3.4.1
-  cassandraVersion: 2.1.21.12
-  elasticsearchVersion: 5.6.16.2
-  mysqlVersion: 5.6.43.5
-  postgresVersion: 10.6.7
-  redisVersion: 4.0.12.4
+  cassandraVersion: 2.1.21.13
+  elasticsearchVersion: 5.6.16.4
+  mysqlVersion: 5.6.44.0
+  postgresVersion: 10.6.10
+  redisVersion: 4.0.12.5
   haproxyVersion: v0.7-beta.7
   #Advanced settings
   #autogenerate certificate by default - generate to
