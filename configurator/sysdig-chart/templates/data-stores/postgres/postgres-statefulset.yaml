@@ -23,7 +23,7 @@ spec:
         - name: sysdigcloud-pull-secret
       containers:
       - name: postgresql
-        image: quay.io/sysdig/postgres:{{ .Values.sysdig.postgresVersion }}
+        image: {{ .Values.airgapped_registry_name | default "quay.io" }}/sysdig/postgres:{{ .Values.sysdig.postgresVersion }}
         resources: {}
         env:
         - name: POSTGRES_USER

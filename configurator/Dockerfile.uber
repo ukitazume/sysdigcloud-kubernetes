@@ -1,0 +1,3 @@
+FROM debian:buster-slim
+
+COPY sysdig_configurator.tar.gz /sysdig_configurator.tar.gz

@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: redis
-          image: quay.io/sysdig/redis:{{ .Values.sysdig.redisVersion }}
+          image: {{ .Values.airgapped_registry_name | default "quay.io" }}/sysdig/redis:{{ .Values.sysdig.redisVersion }}
           resources:
             limits:
               cpu: 2

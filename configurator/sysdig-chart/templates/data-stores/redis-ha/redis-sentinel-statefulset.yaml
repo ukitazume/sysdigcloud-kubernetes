@@ -25,7 +25,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: redis-sentinel
-        image: quay.io/sysdig/redis:{{ .Values.sysdig.redisVersion }}-ha
+        image: {{ .Values.airgapped_registry_name | default "quay.io" }}/sysdig/redis:{{ .Values.sysdig.redisVersion }}-ha
         imagePullPolicy: Always
         resources:
           limits:

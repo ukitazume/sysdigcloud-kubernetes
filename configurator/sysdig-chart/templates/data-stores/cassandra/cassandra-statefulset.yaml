@@ -54,7 +54,7 @@ spec:
                         - cassandra
                 topologyKey: kubernetes.io/hostname
       containers:
-        - image: quay.io/sysdig/cassandra:{{ .Values.sysdig.cassandraVersion }}
+        - image: {{ .Values.airgapped_registry_name | default "quay.io" }}/sysdig/cassandra:{{ .Values.sysdig.cassandraVersion }}
           name: cassandra
           env:
             - name: CASSANDRA_SERVICE

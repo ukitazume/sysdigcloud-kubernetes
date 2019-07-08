@@ -3,7 +3,10 @@ import groovy.json.JsonOutput
 def slackSendNotification(color = '', messageType = '', nonGenericMessage = false) {
   if (color != '' && messageType != '') {
     // slackSend
-    withCredentials([[$class: 'StringBinding', credentialsId: 'SLACK_INTEGRATION_TOKEN', variable: 'SLACK_INTEGRATION_TOKEN']]) {
+    withCredentials([
+      [$class: 'StringBinding', credentialsId: 'SLACK_INTEGRATION_TOKEN', variable: 'SLACK_INTEGRATION_TOKEN'],
+      string(credentialsId: 'devops-slack-channel', variable: 'SLACK_CHANNEL')
+    ]) {
       if (nonGenericMessage) {
         message = messageType
       } else {
@@ -40,8 +43,6 @@ pipeline {
   }
   environment {
     registryCredential = 'jenkins-artifactory'
-    dockerImage = ''
-    SLACK_CHANNEL = '#dev-infra-updates'
   }
   stages {
     stage('ShellCheck') {
@@ -57,7 +58,7 @@ pipeline {
           script {
               sh(
                 "cd configurator && " +
-                "IMAGE_NAME=${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER} make test"
+                "IMAGE_NAME=${env.ARTIFACTORY_URL}/configurator:${env.BRANCH_NAME}.${env.BUILD_NUMBER} make test"
               )
           }
         }
@@ -66,8 +67,28 @@ pipeline {
         cleanup {
           withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}")
+              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.BRANCH_NAME}.${env.BUILD_NUMBER}")
             }
+          }
+        }
+      }
+    }
+    stage('Test uber_tar') {
+      steps{
+        script {
+          docker.withRegistry("https://quay.io", "QUAY") {
+            sh(
+              "cd configurator && " +
+              "make test_uber_tar"
+            )
+          }
+        }
+      }
+      post {
+        cleanup {
+          script {
+            sh "cd configurator && make clean"
+            sh "docker rmi -f \$(docker images -qa) || /bin/true"
           }
         }
       }
@@ -79,11 +100,9 @@ pipeline {
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
           script {
-              dockerImage = docker.build("${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}", './configurator/')
-              sh("docker run --rm --entrypoint /sysdig-chart/test.sh ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}")
+              dockerImage = "${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}"
               docker.withRegistry("https://${env.ARTIFACTORY_URL}", registryCredential) {
-                dockerImage.push()
-                dockerImage.push('latest')
+                sh("cd configurator && IMAGE_NAME=${dockerImage} make push")
               }
           }
         }
@@ -92,14 +111,46 @@ pipeline {
         success {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}")
+              slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${env.ARTIFACTORY_URL}/configurator:${env.BRANCH_NAME}.${env.BUILD_NUMBER}")
             }
           }
         }
         cleanup {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}")
+              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.BRANCH_NAME}.${env.BUILD_NUMBER}")
+            }
+          }
+        }
+      }
+    }
+    stage('Push uber_image') {
+      when {
+        branch 'Templating_k8s_configurations'
+      }
+      steps{
+        withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
+          script {
+              dockerImage = "${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}"
+              uberImage = "${env.ARTIFACTORY_URL}/configurator_uber:${env.BUILD_NUMBER}"
+              docker.withRegistry("https://${env.ARTIFACTORY_URL}", registryCredential) {
+                sh("cd configurator && IMAGE_NAME=${dockerImage} UBER_IMAGE_NAME=${uberImage} make push_uber_tar")
+              }
+          }
+        }
+      }
+      post {
+        success {
+        withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
+            script {
+              slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${env.ARTIFACTORY_URL}/configurator:${env.BRANCH_NAME}.${env.BUILD_NUMBER}")
+            }
+          }
+        }
+        cleanup {
+        withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
+            script {
+              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.BRANCH_NAME}.${env.BUILD_NUMBER}")
             }
           }
         }

@@ -60,7 +60,7 @@ spec:
                 topologyKey: kubernetes.io/hostname
       containers:
         - name: elasticsearch
-          image: quay.io/sysdig/elasticsearch:{{ .Values.sysdig.elasticsearchVersion }}
+          image: {{ .Values.airgapped_registry_name | default "quay.io" }}/sysdig/elasticsearch:{{ .Values.sysdig.elasticsearchVersion }}
           securityContext:
             privileged: true
           envFrom:

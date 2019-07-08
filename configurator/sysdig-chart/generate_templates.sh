@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Allow files generated in container be modifiable by host user
+umask 000
+
 DIR="$(cd "$(dirname "$0")"; pwd -P)"
 source "$DIR/shared-values.sh"
 
