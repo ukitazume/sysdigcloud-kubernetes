@@ -42,6 +42,7 @@ sysdig:
   mysqlVersion: 5.6.44.0
   postgresVersion: 10.6.10
   redisVersion: 4.0.12.5
+  redisHaVersion: 4.0.12.5-ha
   haproxyVersion: v0.7-beta.7
   #Advanced settings
   #autogenerate certificate by default - generate to
