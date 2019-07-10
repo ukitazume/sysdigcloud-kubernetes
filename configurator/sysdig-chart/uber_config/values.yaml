@@ -39,7 +39,7 @@ sysdig:
   #Set Sysdig license
   license: <change-me>
   dnsName: not-a-valid.domain.com
-  monitorVersion: 2271
+  monitorVersion: 2304
   anchoreVersion: v0.3.4.1
   cassandraVersion: 2.1.21.13
   elasticsearchVersion: 5.6.16.4
