@@ -1304,7 +1304,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/cassandra:2.1.21.12",
+            "image": "quay.io/sysdig/cassandra:2.1.21.13",
             "lifecycle": {
               "preStop": {
                 "exec": {
@@ -1515,7 +1515,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/elasticsearch:5.6.16.2",
+            "image": "quay.io/sysdig/elasticsearch:5.6.16.4",
             "name": "elasticsearch",
             "readinessProbe": {
               "exec": {
@@ -1727,7 +1727,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/mysql:5.6.43.2",
+            "image": "quay.io/sysdig/mysql:5.6.44.0",
             "name": "mysql",
             "resources": {
               "requests": {
@@ -1889,7 +1889,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/postgres:10.6-alpine.1",
+            "image": "quay.io/sysdig/postgres:10.6.10",
             "livenessProbe": {
               "exec": {
                 "command": [
@@ -2083,7 +2083,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/redis:4.0.12.1-alpine-ha",
+            "image": "quay.io/sysdig/redis:4.0.12.5-ha",
             "imagePullPolicy": "Always",
             "name": "redis-primary",
             "ports": [
@@ -2180,7 +2180,7 @@
                 "value": "true"
               }
             ],
-            "image": "quay.io/sysdig/redis:4.0.12.1-alpine-ha",
+            "image": "quay.io/sysdig/redis:4.0.12.5-ha",
             "imagePullPolicy": "Always",
             "name": "redis-secondary",
             "ports": [
@@ -2276,7 +2276,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/redis:4.0.12.1-alpine-ha",
+            "image": "quay.io/sysdig/redis:4.0.12.5-ha",
             "imagePullPolicy": "Always",
             "name": "redis-sentinel",
             "ports": [
