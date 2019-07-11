@@ -2164,7 +2164,6 @@
         "containers": [
           {
             "args": [
-              "--reload-strategy=multibinder",
               "--default-backend-service=$(POD_NAMESPACE)/ingress-default-backend",
               "--allow-cross-namespace",
               "--configmap=$(POD_NAMESPACE)/haproxy-ingress",
