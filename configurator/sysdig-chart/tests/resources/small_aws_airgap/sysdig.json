@@ -2462,6 +2462,9 @@
 }
 {
   "apiVersion": "v1",
+  "data": {
+    "syslog-endpoint": "127.0.0.1:514"
+  },
   "kind": "ConfigMap",
   "metadata": {
     "name": "haproxy-ingress",

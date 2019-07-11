@@ -4,3 +4,5 @@ kind: ConfigMap
 metadata:
   name: haproxy-ingress
   namespace: {{ .Values.namespace }}
+data:
+  syslog-endpoint: 127.0.0.1:514
