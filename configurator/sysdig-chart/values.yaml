@@ -42,7 +42,7 @@ sysdig:
   monitorVersion: 2363
   anchoreVersion: v0.3.4.1
   cassandraVersion: 2.1.21.13
-  elasticsearchVersion: 5.6.16.4
+  elasticsearchVersion: 5.6.16.5
   mysqlVersion: 5.6.44.0
   postgresVersion: 10.6.10
   redisVersion: 4.0.12.5
