@@ -303,7 +303,7 @@
     "template": {
       "metadata": {
         "annotations": {
-          "version": "2304"
+          "version": "2363"
         },
         "labels": {
           "app": "sysdigcloud",
@@ -343,7 +343,7 @@
         },
         "containers": [
           {
-            "image": "quay.io/sysdig/sysdigcloud-backend:2304-email-renderer",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2363-email-renderer",
             "name": "email-renderer"
           },
           {
@@ -362,7 +362,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/sysdigcloud-backend:2304-nginx",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2363-nginx",
             "imagePullPolicy": "IfNotPresent",
             "name": "nginx",
             "volumeMounts": [
@@ -459,7 +459,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/sysdigcloud-backend:2304-allinone-java",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2363-allinone-java",
             "imagePullPolicy": "IfNotPresent",
             "lifecycle": {
               "preStop": {
@@ -583,7 +583,7 @@
     "template": {
       "metadata": {
         "annotations": {
-          "version": "2304"
+          "version": "2363"
         },
         "labels": {
           "app": "sysdigcloud",
@@ -638,7 +638,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/sysdigcloud-backend:2304-nginx",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2363-nginx",
             "name": "nginx",
             "volumeMounts": [
               {
@@ -743,7 +743,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/sysdigcloud-backend:2304-allinone-java",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2363-allinone-java",
             "lifecycle": {
               "preStop": {
                 "exec": {
@@ -833,7 +833,7 @@
     "template": {
       "metadata": {
         "annotations": {
-          "version": "2304"
+          "version": "2363"
         },
         "labels": {
           "app": "sysdigcloud",
@@ -843,7 +843,7 @@
       "spec": {
         "containers": [
           {
-            "image": "quay.io/sysdig/sysdigcloud-backend:2304-email-renderer",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2363-email-renderer",
             "name": "email-renderer"
           },
           {
@@ -929,7 +929,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/sysdigcloud-backend:2304-allinone-java",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2363-allinone-java",
             "lifecycle": {
               "preStop": {
                 "exec": {
@@ -1504,7 +1504,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/elasticsearch:5.6.16.4",
+            "image": "quay.io/sysdig/elasticsearch:5.6.16.5",
             "name": "elasticsearch",
             "readinessProbe": {
               "exec": {
@@ -2576,7 +2576,7 @@
   "kind": "Deployment",
   "metadata": {
     "annotations": {
-      "version": "2304"
+      "version": "2363"
     },
     "labels": {
       "app": "sysdigcloud",
@@ -2796,7 +2796,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/scanning:2304",
+            "image": "quay.io/sysdig/scanning:2363",
             "imagePullPolicy": "IfNotPresent",
             "name": "scanning-alertmgr",
             "resources": {
@@ -2825,7 +2825,7 @@
   "kind": "Deployment",
   "metadata": {
     "annotations": {
-      "version": "2304"
+      "version": "2363"
     },
     "labels": {
       "affinity": "sysdigcloud-scanning-api",
@@ -3034,7 +3034,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/scanning:2304",
+            "image": "quay.io/sysdig/scanning:2363",
             "imagePullPolicy": "IfNotPresent",
             "name": "scanning-api",
             "resources": {
