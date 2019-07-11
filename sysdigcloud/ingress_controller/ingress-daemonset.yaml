@@ -19,6 +19,18 @@ spec:
       hostNetwork: true
       serviceAccountName: ingress-controller
       containers:
+        # When we upgrade to an ingress controller with HAProxy 1.9 we should
+        # remove this and use HAProxy's logging to stdout functionality
+        - image: "quay.io/sysdig/rsyslog:8.34.0-r0-20180708T0208-git-cb867ef"
+          imagePullPolicy: Always
+          name: rsyslog-server
+          resources:
+            limits:
+              cpu: 150m
+              memory: 30Mi
+            requests:
+              cpu: 50m
+              memory: 10Mi
         - name: haproxy-ingress
           image: quay.io/sysdig/haproxy-ingress:v0.7-beta.7
           args:
