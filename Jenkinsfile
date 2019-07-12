@@ -132,7 +132,7 @@ pipeline {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
           script {
               dockerImage = "${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}"
-              uberImage = "${env.ARTIFACTORY_URL}/configurator_uber:${env.BUILD_NUMBER}"
+              uberImage = "${env.ARTIFACTORY_URL}/configurator:uber-${env.BUILD_NUMBER}"
               docker.withRegistry("https://${env.ARTIFACTORY_URL}", registryCredential) {
                 sh("cd configurator && IMAGE_NAME=${dockerImage} UBER_IMAGE_NAME=${uberImage} make push_uber_tar")
               }

@@ -168,7 +168,7 @@ docker pull quay.io/sysdig/uber_configurator:0.0.0-alpha
 ```
 - Extract the tarball:
 ```bash
-docker create --name uber_image quay.io/sysdig/uber_configurator:0.0.0-alpha
+docker create --name uber_image quay.io/sysdig/configurator:uber-0.0.0-alpha
 docker cp uber_image:/sysdig_configurator.tar.gz .
 docker rm uber_image
 ```
