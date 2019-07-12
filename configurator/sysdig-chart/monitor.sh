@@ -8,7 +8,8 @@ set -euo pipefail
 #Important framework functions.
 source "$TEMPLATE_DIR/framework.sh"
 
-if [[ "$(yq -r .storageClassProvisioner "$TEMPLATE_DIR/values.yaml")" == "hostPath" ]]; then
+STORAGE_CLASS_PROVISIONER=$(yq -r .storageClassProvisioner "$TEMPLATE_DIR/values.yaml")
+if [[ "$STORAGE_CLASS_PROVISIONER" == "hostPath" ]]; then
   log notice "hostPath mode, skipping StorageClass"
 else
   STORAGE_CLASS_NAME=$(yq -r .storageClassName "$TEMPLATE_DIR/values.yaml")
@@ -25,6 +26,11 @@ fi
 #Create config
 log notice "Creating common-config"
 kubectl apply -f /manifests/generated/common-config.yaml
+
+if [[ "$STORAGE_CLASS_PROVISIONER" == "local" ]]; then
+  log notice "Creating local-volume-provisioner"
+  kubectl apply -f /manifests/generated/local-volume-provisioner.yaml
+fi
 
 SECRET_NAME="ca-certs"
 if kubectl -n "$K8S_NAMESPACE" get secret ${SECRET_NAME}; then

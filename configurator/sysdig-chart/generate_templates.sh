@@ -125,13 +125,17 @@ fi
 set -e #re-enable exit on error
 
 log info "step5a: generate storage"
-if [[ "$(yq -r .storageClassProvisioner "${TEMPLATE_DIR}/values.yaml")" == "hostPath" ]]; then
+STORAGE_CLASS_PROVISIONER=$(yq -r .storageClassProvisioner "$TEMPLATE_DIR/values.yaml")
+if [[ "$STORAGE_CLASS_PROVISIONER" == "hostPath" ]]; then
   log info "hostPath mode, skipping generating storage configs"
 else
   kustomize build "$MANIFESTS_TEMPLATE_BASE/storage/"                                    > "$GENERATED_DIR/storage-class.yaml"
+  if [[ "$STORAGE_CLASS_PROVISIONER" == "local" ]]; then
+    cp "$MANIFESTS_TEMPLATE_BASE/sysdig-cloud/local-volume-provisioner/local-volume-provisioner.yaml" "$GENERATED_DIR/local-volume-provisioner.yaml"
+  fi
 fi
 
-log info "step5b: generate commong files"
+log info "step5b: generate common files"
 kustomize build "$MANIFESTS_TEMPLATE_BASE/overlays/common-config/$SIZE"                  > "$GENERATED_DIR/common-config.yaml"
 
 log info "step 6: generate ingress yaml"

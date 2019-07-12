@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Allow files generated in container be modifiable by host user
+umask 000
+
 set -euo pipefail
 . /sysdig-chart/framework.sh
 
@@ -33,12 +36,14 @@ function concat_config() {
   tmp_file=$(mktemp)
   yq -r 'select(.kind != "Secret")' "$destination_file" > "$tmp_file"
   sanitize "$tmp_file"
+  chmod 666 "$tmp_file"
   mv "$tmp_file" "$destination_file"
 }
 
 function run_tests() {
   for directory in /sysdig-chart/tests/resources/*/; do
     if [[ -d "$directory" ]]; then
+      log notice "Running tests for $directory"
       rm -rf /manifests/*
       cp "$directory/values.yaml" /sysdig-chart/values.yaml
       /sysdig-chart/generate_templates.sh

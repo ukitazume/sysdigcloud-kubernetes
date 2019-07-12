@@ -303,7 +303,7 @@
     "template": {
       "metadata": {
         "annotations": {
-          "version": "2363"
+          "version": "2304"
         },
         "labels": {
           "app": "sysdigcloud",
@@ -343,7 +343,7 @@
         },
         "containers": [
           {
-            "image": "quay.io/sysdig/sysdigcloud-backend:2363-email-renderer",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2304-email-renderer",
             "name": "email-renderer"
           },
           {
@@ -362,7 +362,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/sysdigcloud-backend:2363-nginx",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2304-nginx",
             "imagePullPolicy": "IfNotPresent",
             "name": "nginx",
             "volumeMounts": [
@@ -459,7 +459,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/sysdigcloud-backend:2363-allinone-java",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2304-allinone-java",
             "imagePullPolicy": "IfNotPresent",
             "lifecycle": {
               "preStop": {
@@ -583,7 +583,7 @@
     "template": {
       "metadata": {
         "annotations": {
-          "version": "2363"
+          "version": "2304"
         },
         "labels": {
           "app": "sysdigcloud",
@@ -638,7 +638,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/sysdigcloud-backend:2363-nginx",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2304-nginx",
             "name": "nginx",
             "volumeMounts": [
               {
@@ -743,7 +743,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/sysdigcloud-backend:2363-allinone-java",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2304-allinone-java",
             "lifecycle": {
               "preStop": {
                 "exec": {
@@ -833,7 +833,7 @@
     "template": {
       "metadata": {
         "annotations": {
-          "version": "2363"
+          "version": "2304"
         },
         "labels": {
           "app": "sysdigcloud",
@@ -843,7 +843,7 @@
       "spec": {
         "containers": [
           {
-            "image": "quay.io/sysdig/sysdigcloud-backend:2363-email-renderer",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2304-email-renderer",
             "name": "email-renderer"
           },
           {
@@ -929,7 +929,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/sysdigcloud-backend:2363-allinone-java",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2304-allinone-java",
             "lifecycle": {
               "preStop": {
                 "exec": {
@@ -2592,6 +2592,309 @@
   }
 }
 {
+  "apiVersion": "extensions/v1beta1",
+  "kind": "DaemonSet",
+  "metadata": {
+    "labels": {
+      "run": "haproxy-ingress"
+    },
+    "name": "haproxy-ingress",
+    "namespace": "sysdigcloud"
+  },
+  "spec": {
+    "selector": {
+      "matchLabels": {
+        "run": "haproxy-ingress"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "run": "haproxy-ingress"
+        }
+      },
+      "spec": {
+        "containers": [
+          {
+            "image": "quay.io/sysdig/rsyslog:8.34.0-r0-20180708T0208-git-cb867ef",
+            "imagePullPolicy": "Always",
+            "name": "rsyslog-server",
+            "resources": {
+              "limits": {
+                "cpu": "150m",
+                "memory": "30Mi"
+              },
+              "requests": {
+                "cpu": "50m",
+                "memory": "10Mi"
+              }
+            }
+          },
+          {
+            "args": [
+              "--default-backend-service=$(POD_NAMESPACE)/ingress-default-backend",
+              "--allow-cross-namespace",
+              "--configmap=$(POD_NAMESPACE)/haproxy-ingress",
+              "--tcp-services-configmap=$(POD_NAMESPACE)/haproxy-tcp-services",
+              "--default-ssl-certificate=$(POD_NAMESPACE)/sysdigcloud-ssl-secret"
+            ],
+            "env": [
+              {
+                "name": "POD_NAME",
+                "valueFrom": {
+                  "fieldRef": {
+                    "fieldPath": "metadata.name"
+                  }
+                }
+              },
+              {
+                "name": "POD_NAMESPACE",
+                "valueFrom": {
+                  "fieldRef": {
+                    "fieldPath": "metadata.namespace"
+                  }
+                }
+              }
+            ],
+            "image": "quay.io/sysdig/haproxy-ingress:v0.7-beta.7",
+            "livenessProbe": {
+              "failureThreshold": 3,
+              "httpGet": {
+                "path": "/healthz",
+                "port": 10253
+              },
+              "periodSeconds": 10,
+              "successThreshold": 1,
+              "timeoutSeconds": 1
+            },
+            "name": "haproxy-ingress",
+            "ports": [
+              {
+                "containerPort": 10253,
+                "hostPort": 10253,
+                "name": "healthcheck",
+                "protocol": "TCP"
+              },
+              {
+                "containerPort": 80,
+                "hostPort": 80,
+                "name": "http",
+                "protocol": "TCP"
+              },
+              {
+                "containerPort": 443,
+                "hostPort": 443,
+                "name": "https",
+                "protocol": "TCP"
+              },
+              {
+                "containerPort": 6443,
+                "hostPort": 6443,
+                "name": "tlscollector",
+                "protocol": "TCP"
+              }
+            ],
+            "readinessProbe": {
+              "failureThreshold": 3,
+              "httpGet": {
+                "path": "/healthz",
+                "port": 10253,
+                "scheme": "HTTP"
+              },
+              "periodSeconds": 10,
+              "successThreshold": 1,
+              "timeoutSeconds": 1
+            }
+          }
+        ],
+        "hostNetwork": true,
+        "imagePullSecrets": [
+          {
+            "name": "sysdigcloud-pull-secret"
+          }
+        ],
+        "serviceAccountName": "ingress-controller"
+      }
+    },
+    "updateStrategy": {
+      "type": "RollingUpdate"
+    }
+  }
+}
+null
+{
+  "apiVersion": "v1",
+  "kind": "ConfigMap",
+  "metadata": {
+    "name": "local-provisioner-config",
+    "namespace": "sysdigcloud"
+  },
+  "data": {
+    "storageClassMap": "sysdig:\n   hostDir: /sysdig\n   mountDir: /sysdig\n   volumeMode: Filesystem\n   fsType: ext4\n"
+  }
+}
+{
+  "apiVersion": "apps/v1",
+  "kind": "DaemonSet",
+  "metadata": {
+    "name": "local-volume-provisioner",
+    "namespace": "sysdigcloud",
+    "labels": {
+      "app": "local-volume-provisioner"
+    }
+  },
+  "spec": {
+    "selector": {
+      "matchLabels": {
+        "app": "local-volume-provisioner"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "local-volume-provisioner"
+        }
+      },
+      "spec": {
+        "serviceAccountName": "local-storage-admin",
+        "containers": [
+          {
+            "image": "quay.io/external_storage/local-volume-provisioner:v2.3.2",
+            "name": "provisioner",
+            "securityContext": {
+              "privileged": true
+            },
+            "env": [
+              {
+                "name": "MY_NODE_NAME",
+                "valueFrom": {
+                  "fieldRef": {
+                    "fieldPath": "spec.nodeName"
+                  }
+                }
+              },
+              {
+                "name": "MY_NAMESPACE",
+                "valueFrom": {
+                  "fieldRef": {
+                    "fieldPath": "metadata.namespace"
+                  }
+                }
+              },
+              {
+                "name": "JOB_CONTAINER_IMAGE",
+                "value": "quay.io/external_storage/local-volume-provisioner:v2.3.2"
+              }
+            ],
+            "volumeMounts": [
+              {
+                "mountPath": "/etc/provisioner/config",
+                "name": "provisioner-config",
+                "readOnly": true
+              },
+              {
+                "mountPath": "/dev",
+                "name": "provisioner-dev"
+              },
+              {
+                "mountPath": "/sysdig",
+                "name": "sysdig",
+                "mountPropagation": "HostToContainer"
+              }
+            ]
+          }
+        ],
+        "volumes": [
+          {
+            "name": "provisioner-config",
+            "configMap": {
+              "name": "local-provisioner-config"
+            }
+          },
+          {
+            "name": "provisioner-dev",
+            "hostPath": {
+              "path": "/dev"
+            }
+          },
+          {
+            "name": "sysdig",
+            "hostPath": {
+              "path": "/sysdig"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+{
+  "apiVersion": "v1",
+  "kind": "ServiceAccount",
+  "metadata": {
+    "name": "local-storage-admin",
+    "namespace": "sysdigcloud"
+  }
+}
+{
+  "apiVersion": "rbac.authorization.k8s.io/v1",
+  "kind": "ClusterRoleBinding",
+  "metadata": {
+    "name": "local-storage-provisioner-pv-binding"
+  },
+  "subjects": [
+    {
+      "kind": "ServiceAccount",
+      "name": "local-storage-admin",
+      "namespace": "sysdigcloud"
+    }
+  ],
+  "roleRef": {
+    "kind": "ClusterRole",
+    "name": "system:persistent-volume-provisioner",
+    "apiGroup": "rbac.authorization.k8s.io"
+  }
+}
+{
+  "apiVersion": "rbac.authorization.k8s.io/v1",
+  "kind": "ClusterRole",
+  "metadata": {
+    "name": "local-storage-provisioner-node-clusterrole"
+  },
+  "rules": [
+    {
+      "apiGroups": [
+        ""
+      ],
+      "resources": [
+        "nodes"
+      ],
+      "verbs": [
+        "get"
+      ]
+    }
+  ]
+}
+{
+  "apiVersion": "rbac.authorization.k8s.io/v1",
+  "kind": "ClusterRoleBinding",
+  "metadata": {
+    "name": "local-storage-provisioner-node-binding"
+  },
+  "subjects": [
+    {
+      "kind": "ServiceAccount",
+      "name": "local-storage-admin",
+      "namespace": "sysdigcloud"
+    }
+  ],
+  "roleRef": {
+    "kind": "ClusterRole",
+    "name": "local-storage-provisioner-node-clusterrole",
+    "apiGroup": "rbac.authorization.k8s.io"
+  }
+}
+{
   "apiVersion": "v1",
   "kind": "Service",
   "metadata": {
@@ -2621,7 +2924,7 @@
   "kind": "Deployment",
   "metadata": {
     "annotations": {
-      "version": "2363"
+      "version": "2304"
     },
     "labels": {
       "app": "sysdigcloud",
@@ -2841,7 +3144,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/scanning:2363",
+            "image": "quay.io/sysdig/scanning:2304",
             "imagePullPolicy": "IfNotPresent",
             "name": "scanning-alertmgr",
             "resources": {
@@ -2870,7 +3173,7 @@
   "kind": "Deployment",
   "metadata": {
     "annotations": {
-      "version": "2363"
+      "version": "2304"
     },
     "labels": {
       "affinity": "sysdigcloud-scanning-api",
@@ -3079,7 +3382,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/scanning:2363",
+            "image": "quay.io/sysdig/scanning:2304",
             "imagePullPolicy": "IfNotPresent",
             "name": "scanning-api",
             "resources": {
@@ -3142,10 +3445,7 @@
       }
     ]
   },
-  "parameters": {
-    "type": "gp2"
-  },
-  "provisioner": "kubernetes.io/aws-ebs",
+  "provisioner": "kubernetes.io/no-provisioner",
   "reclaimPolicy": "Retain",
-  "volumeBindingMode": "Immediate"
+  "volumeBindingMode": "WaitForFirstConsumer"
 }

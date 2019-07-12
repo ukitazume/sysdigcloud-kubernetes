@@ -8,7 +8,7 @@ apps: monitor secure
 #Size of the cluster. Takes [ small | medium | large ]
 #This defines CPU & Memory & Disk & Replicas
 #Replicas can be overwritten for medium , large in advanced   config section
-size: medium
+size: small
 #Set k8s namespace for sysdigcloud
 namespace: sysdigcloud
 #Set Quay.Io secrets
@@ -21,12 +21,12 @@ cloudProvider:
   # example aws
   name: aws
   # boolean true|false
-  isMultiAZ: true
+  isMultiAZ: false
   # example us-east-1
-  region: us-east-1
+  region: 
 #supports aws | gke | hostPath | local
 #Do not use hostPath in production, currently it is experimental only.
-storageClassProvisioner: aws
+storageClassProvisioner: local
 #supports openshift | kubernetes defaults to kubernetes install
 deployment: kubernetes
 #Sysdig application config
@@ -35,7 +35,7 @@ sysdig:
   #Set Sysdig license
   license: foobar
   dnsName: foo.bar.com
-  monitorVersion: 2363
+  monitorVersion: 2304
   anchoreVersion: v0.3.4.1
   cassandraVersion: 2.1.21.13
   elasticsearchVersion: 5.6.16.5

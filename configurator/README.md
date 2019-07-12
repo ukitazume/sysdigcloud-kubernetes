@@ -185,3 +185,51 @@ https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/Templating_k8s_c
 - Modify the values.yaml
 - Copy the tar file to the directory
 - Run the tar file `bash sysdig_configurator.tar.gz`
+
+### Local Storage
+
+When `local` storage is selected, configurator uses
+https://github.com/kubernetes-sigs/sig-storage-local-static-provisioner to
+manage creation of persistent volumes. Requirement for this to work is that
+volumes are created and mounted under the directory `/sysdig`, e.g:
+
+```bash
+tree /sysdig/
+/sysdig/
+├── vol1
+├── vol2
+└── vol3
+```
+
+on every node in the cluster. Below is an example of creating such volumes
+using a [`loop device`](https://en.wikipedia.org/wiki/Loop_device):
+
+```bash
+parallel-ssh -t 0 --inline-stdout -l admin -x "-o StrictHostKeyChecking=no \
+  -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null -t" -h \
+  <(kubectl get nodes --selector='!node-role.kubernetes.io/master' -o json | \
+  jq -r '.items[].status.addresses[] | select (.type == \
+  "ExternalIP").address') \
+  "sudo bash -c ' \
+    for i in \$(seq 1 3); do \
+      mkdir -p /sysdig/vol\${i}; \
+      dd if=/dev/zero of=/vol\${i} bs=1024 count=35000000; \
+      mkfs.ext4 /vol\${i}; \
+      mount /vol\${i} /sysdig/vol\${i}; \
+    done \
+  '"
+```
+
+The above creates 3 35G volumes per Kubernetes node. _Use the above as a last
+resort and prefer creating raw volumes_. Volume requirements for a default
+setup are as below:
+
+Cluster size | Minimum Volume Size | Minimum number of volumes|
+|-----|----|---|
+small | 35G | 4|
+medium | 110G | 8|
+large | 320G | 14|
+
+Minimum number of volumes is determined by `cassandraReplicaCount` +
+`elasticSearchReplicaCount` + 2. If those are configured, ensure the number of
+created volumes is greater than or equal to the new sum.

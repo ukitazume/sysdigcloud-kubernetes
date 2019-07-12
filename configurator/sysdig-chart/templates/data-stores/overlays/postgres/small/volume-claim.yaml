@@ -19,6 +19,6 @@ spec:
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            storage: 60Gi
+            storage: 30Gi
         storageClassName: {{ .Values.storageClassName }}
 {{- end }}
