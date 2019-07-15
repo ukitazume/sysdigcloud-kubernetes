@@ -109,7 +109,7 @@ pipeline {
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
           script {
-              nonRCTag = env.TAG_NAME.replaceAll(/rc\d+/, '')
+              nonRCTag = env.TAG_NAME.replaceAll(/-rc\d+/, '')
               dockerRCImage = "${env.ARTIFACTORY_URL}/configurator:${env.TAG_NAME}"
               dockerNonRCImage = "${env.ARTIFACTORY_URL}/configurator:${nonRCTag}"
               docker.withRegistry("https://${env.ARTIFACTORY_URL}", registryCredential) {
@@ -146,7 +146,7 @@ pipeline {
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
           script {
-              nonRCTag = env.TAG_NAME.replaceAll(/rc\d+/, '')
+              nonRCTag = env.TAG_NAME.replaceAll(/-rc\d+/, '')
               dockerImage = "${env.ARTIFACTORY_URL}/configurator:${env.TAG_NAME}"
               uberImage = "${env.ARTIFACTORY_URL}/configurator:uber-${env.TAG_NAME}"
               uberNonRCImage = "${env.ARTIFACTORY_URL}/configurator:uber-${nonRCTag}"
