@@ -3,6 +3,17 @@
 # Allow files generated in container be modifiable by host user
 umask 000
 
+
+while getopts ":f:" opt; do
+  case $opt in
+    f) VALUES_OVERRIDE="$OPTARG"
+    ;;
+    \?) echo "Invalid option -$OPTARG" >&2
+    ;;
+  esac
+done
+
+
 DIR="$(cd "$(dirname "$0")"; pwd -P)"
 source "$DIR/shared-values.sh"
 
@@ -50,13 +61,24 @@ if [[ -z "$(ls -A "${MANIFESTS}/elasticsearch-tls-certs")" ]]; then
 fi
 
 log info "step4: running through helm template engine"
-helm template -f "$TEMPLATE_DIR/values.yaml" -f "$TEMPLATE_DIR/defaultValues.yaml" -f "$GENERATED_SECRET_FILE" --output-dir "$MANIFESTS" "$TEMPLATE_DIR"
+if [[ "$VALUES_OVERRIDE" == "" ]]; then
+  helm template -f "$TEMPLATE_DIR/defaultValues.yaml" -f "$TEMPLATE_DIR/values.yaml"  -f "$GENERATED_SECRET_FILE" --output-dir "$MANIFESTS" "$TEMPLATE_DIR"
+else
+  helm template -f "$TEMPLATE_DIR/defaultValues.yaml" -f "$TEMPLATE_DIR/values.yaml"  -f "$GENERATED_SECRET_FILE" -f "$VALUES_OVERRIDE" --output-dir "$MANIFESTS" "$TEMPLATE_DIR"
+fi
 
 MANIFESTS_TEMPLATE_BASE="$MANIFESTS/$TEMPLATE_DIR/templates"
 GENERATE_CERTIFICATE=$(yq -r .sysdig.certificate.generate "$TEMPLATE_DIR/values.yaml")
 GENERATED_CRT=$MANIFESTS/certs/server.crt
 GENERATED_KEY=$MANIFESTS/certs/server.key
-DNS_NAME=$(yq -r .sysdig.dnsName "$TEMPLATE_DIR/values.yaml")
+if [[ "$VALUES_OVERRIDE" == "" ]]; then
+  DNS_NAME=$(yq -r .sysdig.dnsName "$TEMPLATE_DIR/values.yaml")
+else
+  DNS_NAME=$(yq -r .sysdig.dnsName "$VALUES_OVERRIDE")
+  if [[ "$DNS_NAME" == "" ]]; then
+    DNS_NAME=$(yq -r .sysdig.dnsName "$TEMPLATE_DIR/values.yaml")
+  fi
+fi
 mkdir "$MANIFESTS_TEMPLATE_BASE/common-config/certs"
 if [ ! -d "$MANIFESTS/certs" ]; then
   log info "Making certs manifests dir"
