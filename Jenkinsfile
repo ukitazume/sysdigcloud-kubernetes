@@ -47,7 +47,7 @@ pipeline {
   stages {
     stage('ShellCheck') {
       when {
-        not { tag "^v\\d+\\.\\d+\\.\\d+\$" }
+        not { tag pattern: "^v\\d+\\.\\d+\\.\\d+\$", comparator: "REGEXP" }
       }
       steps {
         script {
@@ -57,7 +57,7 @@ pipeline {
     }
     stage('Test') {
       when {
-        not { tag "^v\\d+\\.\\d+\\.\\d+\$" }
+        not { tag pattern: "^v\\d+\\.\\d+\\.\\d+\$", comparator: "REGEXP" }
       }
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
@@ -81,7 +81,7 @@ pipeline {
     }
     stage('Test uber_tar') {
       when {
-        not { tag "^v\\d+\\.\\d+\\.\\d+\$" }
+        not { tag pattern: "^v\\d+\\.\\d+\\.\\d+\$", comparator: "REGEXP" }
       }
       steps{
         script {
@@ -104,7 +104,7 @@ pipeline {
     }
     stage('Push internal image') {
       when {
-        tag "^v\\d+\\.\\d+\\.\\d+-rc\\d+\$"
+        tag pattern: "^v\\d+\\.\\d+\\.\\d+-rc\\d+\$", comparator: "REGEXP"
       }
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
@@ -141,7 +141,7 @@ pipeline {
     }
     stage('Push internal uber_image') {
       when {
-        tag "^v\\d+\\.\\d+\\.\\d+-rc\\d+\$"
+        tag pattern: "^v\\d+\\.\\d+\\.\\d+-rc\\d+\$", comparator: "REGEXP"
       }
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
@@ -179,7 +179,7 @@ pipeline {
     }
     stage('Promote image to quay') {
       when {
-        tag "^v\\d+\\.\\d+\\.\\d+\$"
+        tag pattern: "^v\\d+\\.\\d+\\.\\d+\$", comparator: "REGEXP"
       }
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
@@ -216,7 +216,7 @@ pipeline {
     }
     stage('Promote uber_image to quay') {
       when {
-        tag "^v\\d+\\.\\d+\\.\\d+\$"
+        tag pattern: "^v\\d+\\.\\d+\\.\\d+\$", comparator: "REGEXP"
       }
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
