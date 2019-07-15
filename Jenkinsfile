@@ -46,6 +46,9 @@ pipeline {
   }
   stages {
     stage('ShellCheck') {
+      when {
+        not { tag "^\\d+\\.\\d+\\d+\$" }
+      }
       steps {
         script {
           sh "cd configurator && make shellcheck"
@@ -53,6 +56,9 @@ pipeline {
       }
     }
     stage('Test') {
+      when {
+        not { tag "^\\d+\\.\\d+\\d+\$" }
+      }
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
           script {
@@ -74,6 +80,9 @@ pipeline {
       }
     }
     stage('Test uber_tar') {
+      when {
+        not { tag "^\\d+\\.\\d+\\d+\$" }
+      }
       steps{
         script {
           docker.withRegistry("https://quay.io", "QUAY") {
@@ -168,7 +177,7 @@ pipeline {
         }
       }
     }
-    stage('Push external image') {
+    stage('Promote image to quay') {
       when {
         tag "^\\d+\\.\\d+\\d+\$"
       }
@@ -205,7 +214,7 @@ pipeline {
         }
       }
     }
-    stage('Push external uber_image') {
+    stage('Promote uber_image to quay') {
       when {
         tag "^\\d+\\.\\d+\\.\\d+\$"
       }
