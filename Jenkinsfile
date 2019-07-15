@@ -111,7 +111,7 @@ pipeline {
           script {
               nonRCTag = env.TAG_NAME.replaceAll(/rc\d+/, '')
               dockerRCImage = "${env.ARTIFACTORY_URL}/configurator:${env.TAG_NAME}"
-              dockerNonRCImage = "${env.ARTIFACTORY_URL}/configurator:${env.TAG_NAME}"
+              dockerNonRCImage = "${env.ARTIFACTORY_URL}/configurator:${nonRCTag}"
               docker.withRegistry("https://${env.ARTIFACTORY_URL}", registryCredential) {
                 sh(
                   "cd configurator && IMAGE_NAME=${dockerRCImage} make push && " +
