@@ -164,7 +164,7 @@ pipeline {
         success {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}")
+              slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${env.ARTIFACTORY_URL}/configurator:uber-${env.BUILD_NUMBER}")
             }
           }
         }
@@ -172,6 +172,7 @@ pipeline {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
               sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.TAG_NAME} || /bin/true")
+              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:uber-${env.TAG_NAME} || /bin/true")
             }
           }
         }
@@ -184,15 +185,14 @@ pipeline {
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
           script {
-              nonRCTag = env.TAG_NAME.replaceAll(/-rc\d+/, '')
               dockerImage = "${env.ARTIFACTORY_URL}/configurator:${env.TAG_NAME}"
               docker.withRegistry("https://${env.ARTIFACTORY_URL}", registryCredential) {
                 sh("docker pull ${dockerImage}")
               }
               docker.withRegistry("https://quay.io", "QUAY") {
                 sh(
-                  "docker tag ${dockerImage} quay.io/sysdig/configurator:${nonRCTag} && " +
-                  "docker push quay.io/sysdig/configurator:${nonRCTag}"
+                  "docker tag ${dockerImage} quay.io/sysdig/configurator:${env.TAG_NAME} && " +
+                  "docker push quay.io/sysdig/configurator:${env.TAG_NAME}"
                 )
               }
           }
@@ -200,10 +200,8 @@ pipeline {
       }
       post {
         success {
-        withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
-            script {
-              slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}")
-            }
+          script {
+            slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: quay.io/sysdig/configurator:${env.BUILD_NUMBER}")
           }
         }
         cleanup {
@@ -222,20 +220,21 @@ pipeline {
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
           script {
-              dockerImage = "${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}"
-              uberImage = "${env.ARTIFACTORY_URL}/configurator:uber-${env.BUILD_NUMBER}"
+              uberImage = "${env.ARTIFACTORY_URL}/configurator:uber-${env.TAG_NAME}"
               docker.withRegistry("https://${env.ARTIFACTORY_URL}", registryCredential) {
-                sh("cd configurator && IMAGE_NAME=${dockerImage} UBER_IMAGE_NAME=${uberImage} make push_uber_tar")
+                sh("docker pull ${uberImage}")
+              }
+              docker.withRegistry("https://quay.io", "QUAY") {
+                "docker tag ${uberImage} quay.io/sysdig/configurator:uber-${env.TAG} && " +
+                "docker push quay.io/sysdig/configurator:${env.TAG_NAME}"
               }
           }
         }
       }
       post {
         success {
-        withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
-            script {
-              slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER}")
-            }
+          script {
+            slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: quay.io/sysdig/configurator:${env.TAG_NAME}")
           }
         }
         cleanup {
