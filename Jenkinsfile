@@ -73,7 +73,7 @@ pipeline {
         cleanup {
           withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER} || /bin/true")
+              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.TAG_NAME} || /bin/true")
             }
           }
         }
@@ -133,7 +133,7 @@ pipeline {
         cleanup {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER} || /bin/true")
+              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.TAG_NAME} || /bin/true")
             }
           }
         }
@@ -171,7 +171,7 @@ pipeline {
         cleanup {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER} || /bin/true")
+              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.TAG_NAME} || /bin/true")
             }
           }
         }
@@ -184,6 +184,7 @@ pipeline {
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
           script {
+              nonRCTag = env.TAG_NAME.replaceAll(/-rc\d+/, '')
               dockerImage = "${env.ARTIFACTORY_URL}/configurator:${env.TAG_NAME}"
               docker.withRegistry("https://${env.ARTIFACTORY_URL}", registryCredential) {
                 sh("docker pull ${dockerImage}")
@@ -208,7 +209,7 @@ pipeline {
         cleanup {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER} || /bin/true")
+              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.TAG_NAME} || /bin/true")
             }
           }
         }
@@ -240,7 +241,7 @@ pipeline {
         cleanup {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER} || /bin/true")
+              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.TAG_NAME} || /bin/true")
             }
           }
         }
