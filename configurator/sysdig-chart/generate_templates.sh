@@ -3,7 +3,8 @@
 # Allow files generated in container be modifiable by host user
 umask 000
 
-
+#defaults to no overrides
+VALUES_OVERRIDE=""
 while getopts ":f:" opt; do
   case $opt in
     f) VALUES_OVERRIDE="$OPTARG"
@@ -20,8 +21,17 @@ source "$DIR/shared-values.sh"
 set -euo pipefail
 source "${TEMPLATE_DIR}/framework.sh"
 
+function readYaml() {
+  local valueToRead=$1
+  if [[ "$VALUES_OVERRIDE" == "" ]]; then
+    yq -r "$valueToRead" "${TEMPLATE_DIR}/values.yaml"
+  else
+    yq -r -s ".[0] * .[1] | $valueToRead" "${TEMPLATE_DIR}/values.yaml" "$VALUES_OVERRIDE"
+  fi
+}
+
 #apps selection
-APPS=$(yq -r .apps "${TEMPLATE_DIR}/values.yaml")
+APPS=$(readYaml .apps)
 log info "${APPS}"
 SECURE=false
 for app in ${APPS}
@@ -32,7 +42,7 @@ do
 done
 log info "secure enabled: ${SECURE}"
 #size selection
-SIZE=$(yq -r .size "$TEMPLATE_DIR/values.yaml")
+SIZE=$(readYaml .size)
 log info "size selection: $SIZE"
 
 log info "step1: removing exiting manifests"
@@ -62,23 +72,17 @@ fi
 
 log info "step4: running through helm template engine"
 if [[ "$VALUES_OVERRIDE" == "" ]]; then
-  helm template -f "$TEMPLATE_DIR/defaultValues.yaml" -f "$TEMPLATE_DIR/values.yaml"  -f "$GENERATED_SECRET_FILE" --output-dir "$MANIFESTS" "$TEMPLATE_DIR"
+  helm template -f "$TEMPLATE_DIR/defaultValues.yaml" -f "$GENERATED_SECRET_FILE" -f "$TEMPLATE_DIR/values.yaml" --output-dir "$MANIFESTS" "$TEMPLATE_DIR"
 else
-  helm template -f "$TEMPLATE_DIR/defaultValues.yaml" -f "$TEMPLATE_DIR/values.yaml"  -f "$GENERATED_SECRET_FILE" -f "$VALUES_OVERRIDE" --output-dir "$MANIFESTS" "$TEMPLATE_DIR"
+  helm template -f "$TEMPLATE_DIR/defaultValues.yaml" -f "$GENERATED_SECRET_FILE" -f "$TEMPLATE_DIR/values.yaml" -f "$VALUES_OVERRIDE" --output-dir "$MANIFESTS" "$TEMPLATE_DIR"
 fi
 
 MANIFESTS_TEMPLATE_BASE="$MANIFESTS/$TEMPLATE_DIR/templates"
-GENERATE_CERTIFICATE=$(yq -r .sysdig.certificate.generate "$TEMPLATE_DIR/values.yaml")
+GENERATE_CERTIFICATE=$(readYaml .sysdig.certificate.generate)
 GENERATED_CRT=$MANIFESTS/certs/server.crt
 GENERATED_KEY=$MANIFESTS/certs/server.key
-if [[ "$VALUES_OVERRIDE" == "" ]]; then
-  DNS_NAME=$(yq -r .sysdig.dnsName "$TEMPLATE_DIR/values.yaml")
-else
-  DNS_NAME=$(yq -r .sysdig.dnsName "$VALUES_OVERRIDE")
-  if [[ "$DNS_NAME" == "" ]]; then
-    DNS_NAME=$(yq -r .sysdig.dnsName "$TEMPLATE_DIR/values.yaml")
-  fi
-fi
+DNS_NAME=$(readYaml .sysdig.dnsName)
+
 mkdir "$MANIFESTS_TEMPLATE_BASE/common-config/certs"
 if [ ! -d "$MANIFESTS/certs" ]; then
   log info "Making certs manifests dir"
@@ -93,8 +97,8 @@ if [ "$GENERATE_CERTIFICATE" = "true" ]; then
   fi
   cp "$GENERATED_KEY" "$GENERATED_CRT" "$MANIFESTS_TEMPLATE_BASE/common-config/certs/"
 else
-  CRT_FILE="$MANIFESTS/$(yq -r .sysdig.certificate.crt "$TEMPLATE_DIR/values.yaml")"
-  KEY_FILE="$MANIFESTS/$(yq -r .sysdig.certificate.key "$TEMPLATE_DIR/values.yaml")"
+  CRT_FILE="$MANIFESTS/$(readYaml .sysdig.certificate.crt)"
+  KEY_FILE="$MANIFESTS/$(readYaml .sysdig.certificate.key)"
   log info "Using provided certificates at crt:$CRT_FILE key:$KEY_FILE"
   if [[ -f $CRT_FILE && -f $KEY_FILE ]]; then
     cp "$CRT_FILE" "$MANIFESTS_TEMPLATE_BASE/common-config/certs/server.crt"
@@ -147,7 +151,7 @@ fi
 set -e #re-enable exit on error
 
 log info "step5a: generate storage"
-STORAGE_CLASS_PROVISIONER=$(yq -r .storageClassProvisioner "$TEMPLATE_DIR/values.yaml")
+STORAGE_CLASS_PROVISIONER=$(readYaml .storageClassProvisioner)
 if [[ "$STORAGE_CLASS_PROVISIONER" == "hostPath" ]]; then
   log info "hostPath mode, skipping generating storage configs"
 else
@@ -182,7 +186,7 @@ else
   log info "skipping step7d: data-stores postgres - needed only for secure"
 fi
 
-IS_REDIS_HA=$(yq .sysdig.redisHa "$TEMPLATE_DIR/values.yaml")
+IS_REDIS_HA=$(readYaml .sysdig.redisHa)
 if [[ ${IS_REDIS_HA} == "false" ]]; then
   log info "step7e: data-stores redis $SIZE"
   echo "---" >> "$GENERATED_DIR/infra.yaml"

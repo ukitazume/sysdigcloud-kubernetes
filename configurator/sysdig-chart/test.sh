@@ -78,6 +78,7 @@ function config_gen() {
   for directory in /sysdig-chart/tests/resources/*/; do
     if [[ -d "$directory" ]]; then
       rm -rf /manifests/*
+      log notice "Running config_gen for $directory"
       /sysdig-chart/generate_templates.sh -f "$directory/values.yaml"
       concat_config /manifests/generated/ "$directory/sysdig.json"
     fi
