@@ -45,6 +45,75 @@ The rationale for the workflow is it helps the code reviewers to see the
 effect(s) of the changes introduced, it also helps exercise the config
 generation workflow.
 
+## Releasing
+
+### Release Candidates
+
+Every workday morning (Pacific Time), the release personnel tags a release
+candidate with the below:
+
+- Run the below command
+
+```bash
+CURRENT_CONFIGURATOR_RC_VERSION=$(cat configurator/rc_version)
+if [[ ! -z $(git log $CURRENT_CONFIGURATOR_RC_VERSION..) ]]; then
+  RC_VERSION=${CURRENT_CONFIGURATOR_RC_VERSION#*rc}
+  NEXT_VERSION=${CURRENT_CONFIGURATOR_RC_VERSION%-rc*}
+  NEXT_RC_VERSION=$((1 + $RC_VERSION))
+  NEXT_CONFIGURATOR_RC_VERSION="$NEXT_VERSION-$RC_VERSION"
+  git tag $NEXT_CONFIGURATOR_RC_VERSION -F <(git log --oneline \
+  $CURRENT_CONFIGURATOR_RC_VERSION..)
+  git push --tags
+  git checkout -b "${NEXT_CONFIGURATOR_RC_VERSION}_upgrade"
+  echo -n $NEXT_CONFIGURATOR_RC_VERSION > rc_version
+  git commit -am "Tagged $NEXT_CONFIGURATOR_RC_VERSION"
+  git push
+fi
+```
+
+- Open a PR with the upgrade branch.
+- Go to the jenkins UI and click the build button for the tag they just pushed
+(once we move to the new Jenkins this will no longer be needed).
+
+### Full Release
+
+This should happen on a Wednesday after the Release Candidate build for the
+day has completed. The release personnel should do the below:
+
+- Checkout to the last release candidate tag:
+```
+git checkout $(cat configurator/rc_version)
+```
+- Read the diff of changes from the last release
+```bash
+git log $(cat configurator/version)..
+```
+- Do a deploy with basic configuration with the rc tag pushed to the internal
+docker registry and verify it works.
+- Create a new release tag.
+```bash
+git tag $NEW_TAG
+git push --tags
+```
+- Update every part of the README.md(this file) that indicates a version to
+indicate the latest release tag.
+- Update the internal wiki instructions pointing at the latest release.
+- Update version file to the current release, e.g:
+```bash
+echo -n $NEW_TAG > configurator/version
+```
+- Reset RC version file to next RC tag, e.g if the current release tag is
+`0.0.1`, the content of the RC version file should be `0.0.2-rc0`, e.g:
+```bash
+echo -n $NEXT_TAG-rc0 > configurator/rc_version
+```
+- Commit the changes
+```bash
+git commit -am "Tagged $NEXT_TAG"
+```
+- Go to the jenkins UI and click the build button for the pushed tag (once we
+move to the new Jenkins this will no longer be needed).
+
 ## Usage
 
 ### Non-Airgap deployment
@@ -64,17 +133,29 @@ so you do not have to worry about authenticated access to quay.io.
 
 #### Workflow
 
+- Login to quay.io
+  - Retrieve quay username and password from quaypullsecret, e.g:
+  ```bash
+  AUTH=$(echo <REPLACE_WITH_quaypullsecret> | base64 -d | jq -r '.auths."quay.io".auth'| base64 -d)
+  QUAY_USERNAME=${AUTH%:*}
+  QUAY_PASSWORD=${AUTH#*:}
+  ```
+  - Use QUAY_USERNAME and QUAY_PASSWORD retrieved from previous step to login
+  to quay
+  ```bash
+  docker login -u "$QUAY_USERNAME" -p "$QUAY_PASSWORD" quay.io
+  ```
 - Copy [sysdig-chart/values.yaml](sysdig-chart/values.yaml) to your
 working directory, you can do:
 ```bash
 wget \
-https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/Templating_k8s_configurations/configurator/sysdig-chart/values.yaml
+https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/v0.0.0/configurator/sysdig-chart/values.yaml
 ```
 - Modify the values.yaml
 - Run
 ```bash
 docker run -v ~/.kube:/root/.kube -v $(PWD):/manifests \
-  quay.io/sysdig/configurator:0.0.0-alpha
+  quay.io/sysdig/configurator:0.0.0
 ```
 
 ### Airgap installation with installation machine multi-homed
@@ -112,7 +193,7 @@ registry details updated
 working directory, you can do:
 ```bash
 wget \
-https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/Templating_k8s_configurations/configurator/sysdig-chart/values.yaml
+https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/v0.0.0/configurator/sysdig-chart/values.yaml
 ```
 - Modify the values.yaml
 - Run
@@ -120,7 +201,7 @@ https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/Templating_k8s_c
 docker run -v ~/.kube:/root/.kube -v $(PWD):/manifests \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v ~/.docker:/root/docker \
-  quay.io/sysdig/configurator:0.0.0-alpha
+  quay.io/sysdig/configurator:0.0.0
 ```
 
 ### Full Airgap installation
@@ -164,11 +245,11 @@ registry details updated
   ```
 - Pull image containing self-extracting tar:
 ```bash
-docker pull quay.io/sysdig/uber_configurator:0.0.0-alpha
+docker pull quay.io/sysdig/configurator:uber-0.0.0
 ```
 - Extract the tarball:
 ```bash
-docker create --name uber_image quay.io/sysdig/uber_configurator:0.0.0-alpha
+docker create --name uber_image quay.io/sysdig/configurator:uber-0.0.0
 docker cp uber_image:/sysdig_configurator.tar.gz .
 docker rm uber_image
 ```
@@ -180,7 +261,7 @@ docker rm uber_image
 working directory, you can do:
 ```bash
 wget \
-https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/Templating_k8s_configurations/configurator/sysdig-chart/values.yaml
+https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/v0.0.0/configurator/sysdig-chart/values.yaml
 ```
 - Modify the values.yaml
 - Copy the tar file to the directory

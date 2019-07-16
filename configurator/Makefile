@@ -1,5 +1,5 @@
 IMAGE_NAME ?= configurator
-UBER_IMAGE_NAME ?= uber_configurator
+UBER_IMAGE_NAME ?= configurator:uber
 MANIFESTS = "$(PWD)/tmp"
 UBER_TAR = "$(MANIFESTS)/uber_archive.tar.gz"
 LOCAL_SCRIPTS := $(shell find $(SOURCEDIR) -name '*.sh' -exec basename {} \;)
