@@ -50,7 +50,7 @@ The following steps only highlight steps specific to the secure Elasticsearch up
     * For the following files, uncomment the sections that have `## If enabling elasticsearch auth, uncomment <resource(s)>` above it.
       * `datastores/as_kubernetes_pods/manifests/elasticsearch/elasticsearch-statefulset.yaml`
       * `sysdigcloud/api-deployment.yaml`
-      * `sysdigcloud/collector-deployment.yaml`
+      * `sysdigcloud/collector-deployment.yaml` (for openshift use: `sysdigcloud/openshift/openshift-collector-deployment.yaml`)
       * `sysdigcloud/worker-deployment.yaml`
     * In `sysdigcloud/config.yaml`, set `elasticsearch.searchguard.enabled: "true"`
 
