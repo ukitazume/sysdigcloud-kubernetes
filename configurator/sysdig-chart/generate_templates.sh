@@ -22,7 +22,7 @@ set -euo pipefail
 source "${TEMPLATE_DIR}/framework.sh"
 
 #apps selection
-APPS=$(readYaml .apps)
+APPS=$(readYaml .apps "$VALUES_OVERRIDE")
 log info "${APPS}"
 SECURE=false
 for app in ${APPS}
@@ -33,7 +33,7 @@ do
 done
 log info "secure enabled: ${SECURE}"
 #size selection
-SIZE=$(readYaml .size)
+SIZE=$(readYaml .size "$VALUES_OVERRIDE")
 log info "size selection: $SIZE"
 
 log info "step1: removing exiting manifests"
@@ -69,10 +69,10 @@ else
 fi
 
 MANIFESTS_TEMPLATE_BASE="$MANIFESTS/$TEMPLATE_DIR/templates"
-GENERATE_CERTIFICATE=$(readYaml .sysdig.certificate.generate)
+GENERATE_CERTIFICATE=$(readYaml .sysdig.certificate.generate "$VALUES_OVERRIDE")
 GENERATED_CRT=$MANIFESTS/certs/server.crt
 GENERATED_KEY=$MANIFESTS/certs/server.key
-DNS_NAME=$(readYaml .sysdig.dnsName)
+DNS_NAME=$(readYaml .sysdig.dnsName "$VALUES_OVERRIDE")
 
 mkdir "$MANIFESTS_TEMPLATE_BASE/common-config/certs"
 if [ ! -d "$MANIFESTS/certs" ]; then
@@ -88,8 +88,8 @@ if [ "$GENERATE_CERTIFICATE" = "true" ]; then
   fi
   cp "$GENERATED_KEY" "$GENERATED_CRT" "$MANIFESTS_TEMPLATE_BASE/common-config/certs/"
 else
-  CRT_FILE="$MANIFESTS/$(readYaml .sysdig.certificate.crt)"
-  KEY_FILE="$MANIFESTS/$(readYaml .sysdig.certificate.key)"
+  CRT_FILE="$MANIFESTS/$(readYaml .sysdig.certificate.crt "$VALUES_OVERRIDE")"
+  KEY_FILE="$MANIFESTS/$(readYaml .sysdig.certificate.key "$VALUES_OVERRIDE")"
   log info "Using provided certificates at crt:$CRT_FILE key:$KEY_FILE"
   if [[ -f $CRT_FILE && -f $KEY_FILE ]]; then
     cp "$CRT_FILE" "$MANIFESTS_TEMPLATE_BASE/common-config/certs/server.crt"
@@ -142,7 +142,7 @@ fi
 set -e #re-enable exit on error
 
 log info "step5a: generate storage"
-STORAGE_CLASS_PROVISIONER=$(readYaml .storageClassProvisioner)
+STORAGE_CLASS_PROVISIONER=$(readYaml .storageClassProvisioner "$VALUES_OVERRIDE")
 if [[ "$STORAGE_CLASS_PROVISIONER" == "hostPath" ]]; then
   log info "hostPath mode, skipping generating storage configs"
 else
@@ -177,7 +177,7 @@ else
   log info "skipping step7d: data-stores postgres - needed only for secure"
 fi
 
-IS_REDIS_HA=$(readYaml .sysdig.redisHa)
+IS_REDIS_HA=$(readYaml .sysdig.redisHa "$VALUES_OVERRIDE")
 if [[ ${IS_REDIS_HA} == "true" ]]; then
   log info "step7e: data-stores redis $SIZE"
   echo "---" >> "$GENERATED_DIR/infra.yaml"
