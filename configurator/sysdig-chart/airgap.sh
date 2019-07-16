@@ -37,9 +37,8 @@ function push_images() {
 }
 
 function create_uber_tar() {
-  cp "$TEMPLATE_DIR/uber_config/values.yaml" "$TEMPLATE_DIR"
 
-  "${TEMPLATE_DIR}/generate_templates.sh"
+  eval "${TEMPLATE_DIR}/generate_templates.sh" -f "$TEMPLATE_DIR/uber_config/values.yaml"
   rm -f sysdig_configurator.tar.gz
   local configurator_image
   local tmp_dir
