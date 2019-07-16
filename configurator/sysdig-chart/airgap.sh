@@ -16,9 +16,9 @@ if [[ ! -S /var/run/docker.sock ]]; then
   exit 1
 fi
 
-DOCKER_REGISTRY=$(yq -r .airgapped_registry_name /sysdig-chart/values.yaml)
-DOCKER_USERNAME=$(yq -r .airgapped_registry_username /sysdig-chart/values.yaml)
-DOCKER_PASSWORD=$(yq -r .airgapped_registry_password /sysdig-chart/values.yaml)
+DOCKER_REGISTRY=$(readYaml .airgapped_registry_name)
+DOCKER_USERNAME=$(readYaml .airgapped_registry_username)
+DOCKER_PASSWORD=$(readYaml .airgapped_registry_password)
 
 # This function assumes the images have been extracted
 # from the uber tar and are available locally.

@@ -21,15 +21,6 @@ source "$DIR/shared-values.sh"
 set -euo pipefail
 source "${TEMPLATE_DIR}/framework.sh"
 
-function readYaml() {
-  local valueToRead=$1
-  if [[ "$VALUES_OVERRIDE" == "" ]]; then
-    yq -r "$valueToRead" "${TEMPLATE_DIR}/values.yaml"
-  else
-    yq -r -s ".[0] * .[1] | $valueToRead" "${TEMPLATE_DIR}/values.yaml" "$VALUES_OVERRIDE"
-  fi
-}
-
 #apps selection
 APPS=$(readYaml .apps)
 log info "${APPS}"

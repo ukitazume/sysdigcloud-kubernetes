@@ -6,7 +6,7 @@ source "$DIR/shared-values.sh"
 set -euo pipefail
 . "/sysdig-chart/framework.sh"
 
-APPS=$(yq -r .apps /sysdig-chart/values.yaml)
+APPS=$(readYaml .apps)
 log info "${APPS}"
 SECURE=false
 for app in ${APPS}

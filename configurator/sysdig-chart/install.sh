@@ -16,14 +16,14 @@ else
   cp /manifests/values.yaml /sysdig-chart/values.yaml
 fi
 
-SCRIPTS=$(yq -r .scripts "$TEMPLATE_DIR/values.yaml")
+SCRIPTS=$(readYaml .scripts)
 log info "${SCRIPTS}"
 
 #set defaults
 GENERATE=false
 DEPLOY=false
 
-AIRGAPPED=$(yq -r .airgapped_registry_name /sysdig-chart/values.yaml)
+AIRGAPPED=$(readYaml .airgapped_registry_name)
 
 for script in ${SCRIPTS}; do
  if [[ ${script} == "generate" ]]; then
@@ -46,7 +46,7 @@ if [[ "$AIRGAPPED" != "null" ]]; then
   "$TEMPLATE_DIR/airgap.sh"
 fi
 
-DEPLOYMENT=$(yq -r .deployment "$TEMPLATE_DIR/values.yaml")
+DEPLOYMENT=$(readYaml .deployment "$TEMPLATE_DIR/values.yaml")
 if [[ ${DEPLOYMENT} == "openshift" ]]; then
   "$TEMPLATE_DIR/openshift.sh"
 fi

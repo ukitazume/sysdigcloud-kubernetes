@@ -1,14 +1,17 @@
 #!/bin/bash
 
+DIR="$(cd "$(dirname "$0")"; pwd -P)"
+source "$DIR/shared-values.sh"
+
 set -uo pipefail
 . "/sysdig-chart/framework.sh"
 
 #set variables
 alias kubectl="oc-kubectl"
-OPENSHIFT_URL=$(yq -r .sysdig.openshiftUrl /sysdig-chart/values.yaml)
-OPENSHIFT_USER=$(yq -r .sysdig.openshiftUser /sysdig-chart/values.yaml)
-OPENSHIFT_PASSWORD=$(yq -r .sysdig.openshiftPassword /sysdig-chart/values.yaml)
-NAMESPACE=$(yq -r .namespace /sysdig-chart/values.yaml)
+OPENSHIFT_URL=$(readYaml .sysdig.openshiftUrl)
+OPENSHIFT_USER=$(readYaml .sysdig.openshiftUser)
+OPENSHIFT_PASSWORD=$(readYaml .sysdig.openshiftPassword)
+NAMESPACE=$(readYaml .namespace)
 #login
 oc login "${OPENSHIFT_URL}" -u "${OPENSHIFT_USER}" -p "${OPENSHIFT_PASSWORD}"
 OPENSHIFT_PROJECTS=$(oc projects -q)
@@ -31,7 +34,7 @@ fi
 oc adm policy add-scc-to-user anyuid -n "${NAMESPACE}" -z default
 oc adm policy add-scc-to-user privileged -n "${NAMESPACE}" -z default
 
-DNS_NAME=$(yq -r .sysdig.dnsName /sysdig-chart/values.yaml)
+DNS_NAME=$(readYaml .sysdig.dnsName)
 
 if oc get route sysdigcloud-api; then
   log info "Route sysdigcloud-api exists."
