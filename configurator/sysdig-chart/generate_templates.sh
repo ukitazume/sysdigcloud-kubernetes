@@ -187,14 +187,14 @@ else
 fi
 
 IS_REDIS_HA=$(readYaml .sysdig.redisHa)
-if [[ ${IS_REDIS_HA} == "false" ]]; then
+if [[ ${IS_REDIS_HA} == "true" ]]; then
   log info "step7e: data-stores redis $SIZE"
   echo "---" >> "$GENERATED_DIR/infra.yaml"
-  kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/redis/"                            >> "$GENERATED_DIR/infra.yaml"
+  kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/redis-ha/"                       >> "$GENERATED_DIR/infra.yaml"
 else
   log info "step7e: data-stores redis-ha $SIZE"
   echo "---" >> "$GENERATED_DIR/infra.yaml"
-  kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/redis-ha/"                         >> "$GENERATED_DIR/infra.yaml"
+  kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/redis/"                          >> "$GENERATED_DIR/infra.yaml"
 fi
 
 
