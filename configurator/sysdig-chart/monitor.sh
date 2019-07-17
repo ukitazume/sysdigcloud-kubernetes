@@ -8,11 +8,11 @@ set -euo pipefail
 #Important framework functions.
 source "$TEMPLATE_DIR/framework.sh"
 
-STORAGE_CLASS_PROVISIONER=$(readYaml .storageClassProvisioner)
+STORAGE_CLASS_PROVISIONER=$(readConfigFromValuesYaml .storageClassProvisioner)
 if [[ "$STORAGE_CLASS_PROVISIONER" == "hostPath" ]]; then
   log notice "hostPath mode, skipping StorageClass"
 else
-  STORAGE_CLASS_NAME=$(readYaml .storageClassName)
+  STORAGE_CLASS_NAME=$(readConfigFromValuesYaml .storageClassName)
   #Create config
   STORAGE_CLASS="$(kubectl get storageclass "$STORAGE_CLASS_NAME" 2> /dev/null || /bin/true)"
   if [[ "$STORAGE_CLASS" != "" ]]; then
@@ -40,7 +40,7 @@ else
   kubectl -n "$K8S_NAMESPACE" create secret generic ${SECRET_NAME} --from-file="${MANIFESTS}/elasticsearch-tls-certs"
 fi
 
-DEPLOYMENT=$(readYaml .deployment)
+DEPLOYMENT=$(readConfigFromValuesYaml .deployment)
 if [[ "${DEPLOYMENT}" == "openshift" ]];
 then
   log notice "Skippping Ingress deploy for openshift..."
@@ -61,7 +61,7 @@ function delete_resource_if_exists(){
 }
 
 #Redis safety check
-IS_REDIS_HA=$(readYaml .sysdig.redisHa)
+IS_REDIS_HA=$(readConfigFromValuesYaml .sysdig.redisHa)
 if [[ "$IS_REDIS_HA" == "true" ]]; then
   #check Redis is running - if yes uninstall redis
   delete_resource_if_exists deployment sysdigcloud-redis

@@ -16,9 +16,9 @@ if [[ ! -S /var/run/docker.sock ]]; then
   exit 1
 fi
 
-DOCKER_REGISTRY=$(readYaml .airgapped_registry_name)
-DOCKER_USERNAME=$(readYaml .airgapped_registry_username)
-DOCKER_PASSWORD=$(readYaml .airgapped_registry_password)
+DOCKER_REGISTRY=$(readConfigFromValuesYaml .airgapped_registry_name)
+DOCKER_USERNAME=$(readConfigFromValuesYaml .airgapped_registry_username)
+DOCKER_PASSWORD=$(readConfigFromValuesYaml .airgapped_registry_password)
 
 # This function assumes the images have been extracted
 # from the uber tar and are available locally.

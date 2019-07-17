@@ -8,10 +8,10 @@ set -uo pipefail
 
 #set variables
 alias kubectl="oc-kubectl"
-OPENSHIFT_URL=$(readYaml .sysdig.openshiftUrl)
-OPENSHIFT_USER=$(readYaml .sysdig.openshiftUser)
-OPENSHIFT_PASSWORD=$(readYaml .sysdig.openshiftPassword)
-NAMESPACE=$(readYaml .namespace)
+OPENSHIFT_URL=$(readConfigFromValuesYaml .sysdig.openshiftUrl)
+OPENSHIFT_USER=$(readConfigFromValuesYaml .sysdig.openshiftUser)
+OPENSHIFT_PASSWORD=$(readConfigFromValuesYaml .sysdig.openshiftPassword)
+NAMESPACE=$(readConfigFromValuesYaml .namespace)
 #login
 oc login "${OPENSHIFT_URL}" -u "${OPENSHIFT_USER}" -p "${OPENSHIFT_PASSWORD}"
 OPENSHIFT_PROJECTS=$(oc projects -q)
@@ -34,7 +34,7 @@ fi
 oc adm policy add-scc-to-user anyuid -n "${NAMESPACE}" -z default
 oc adm policy add-scc-to-user privileged -n "${NAMESPACE}" -z default
 
-DNS_NAME=$(readYaml .sysdig.dnsName)
+DNS_NAME=$(readConfigFromValuesYaml .sysdig.dnsName)
 
 if oc get route sysdigcloud-api; then
   log info "Route sysdigcloud-api exists."

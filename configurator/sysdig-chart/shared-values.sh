@@ -2,7 +2,7 @@
 
 export TEMPLATE_DIR="/sysdig-chart"
 
-function readYaml() {
+function readConfigFromValuesYaml() {
   local valueToRead=$1
   local valueOverride=""
 
@@ -17,7 +17,7 @@ function readYaml() {
   fi
 }
 
-K8S_NAMESPACE="$(readYaml .namespace)"
+K8S_NAMESPACE="$(readConfigFromValuesYaml .namespace)"
 export  K8S_NAMESPACE
 
 export MANIFESTS="/manifests"
