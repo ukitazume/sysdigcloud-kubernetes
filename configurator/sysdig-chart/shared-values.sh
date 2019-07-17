@@ -4,11 +4,7 @@ export TEMPLATE_DIR="/sysdig-chart"
 
 function readConfigFromValuesYaml() {
   local valueToRead=$1
-  local valueOverride=""
-
-  if [[ $# -eq 2 ]]; then
-    valueOverride=$2
-  fi
+  local valueOverride=${2:-''}
 
   if [[ "$valueOverride" == "" ]]; then
     yq -r "$valueToRead" "${TEMPLATE_DIR}/values.yaml"
