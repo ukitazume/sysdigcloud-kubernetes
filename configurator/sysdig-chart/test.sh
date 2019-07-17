@@ -45,8 +45,7 @@ function run_tests() {
     if [[ -d "$directory" ]]; then
       log notice "Running tests for $directory"
       rm -rf /manifests/*
-      cp "$directory/values.yaml" /sysdig-chart/values.yaml
-      /sysdig-chart/generate_templates.sh
+      /sysdig-chart/generate_templates.sh -f "$directory/values.yaml"
       TMP_FILE=$(mktemp)
       concat_config /manifests/generated/ "$TMP_FILE"
       if ! diff -w "$directory/sysdig.json" "$TMP_FILE"; then
@@ -65,8 +64,7 @@ function run_uber_tar_tests() {
 
   NO_RUN=true "$uber_tar"
 
-  cp /sysdig-chart/uber_config/values.yaml /sysdig-chart
-  /sysdig-chart/generate_templates.sh
+  /sysdig-chart/generate_templates.sh -f /sysdig-chart/uber_config/values.yaml
 
   for image in $(yq -r '.spec.template.spec | {containers: .containers[]?}.containers.image' /manifests/generated/*.yaml); do
     if [[ -z "$(docker images image)" ]]; then
@@ -80,8 +78,8 @@ function config_gen() {
   for directory in /sysdig-chart/tests/resources/*/; do
     if [[ -d "$directory" ]]; then
       rm -rf /manifests/*
-      cp "$directory/values.yaml" /sysdig-chart/values.yaml
-      /sysdig-chart/generate_templates.sh
+      log notice "Running config_gen for $directory"
+      /sysdig-chart/generate_templates.sh -f "$directory/values.yaml"
       concat_config /manifests/generated/ "$directory/sysdig.json"
     fi
   done

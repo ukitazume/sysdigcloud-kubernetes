@@ -16,9 +16,9 @@ if [[ ! -S /var/run/docker.sock ]]; then
   exit 1
 fi
 
-DOCKER_REGISTRY=$(yq -r .airgapped_registry_name /sysdig-chart/values.yaml)
-DOCKER_USERNAME=$(yq -r .airgapped_registry_username /sysdig-chart/values.yaml)
-DOCKER_PASSWORD=$(yq -r .airgapped_registry_password /sysdig-chart/values.yaml)
+DOCKER_REGISTRY=$(readConfigFromValuesYaml .airgapped_registry_name)
+DOCKER_USERNAME=$(readConfigFromValuesYaml .airgapped_registry_username)
+DOCKER_PASSWORD=$(readConfigFromValuesYaml .airgapped_registry_password)
 
 # This function assumes the images have been extracted
 # from the uber tar and are available locally.
@@ -37,9 +37,8 @@ function push_images() {
 }
 
 function create_uber_tar() {
-  cp "$TEMPLATE_DIR/uber_config/values.yaml" "$TEMPLATE_DIR"
 
-  "${TEMPLATE_DIR}/generate_templates.sh"
+  "${TEMPLATE_DIR}"/generate_templates.sh -f "${TEMPLATE_DIR}"/uber_config/values.yaml
   rm -f sysdig_configurator.tar.gz
   local configurator_image
   local tmp_dir

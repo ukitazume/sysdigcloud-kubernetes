@@ -303,7 +303,7 @@
     "template": {
       "metadata": {
         "annotations": {
-          "version": "2304"
+          "version": "2363"
         },
         "labels": {
           "app": "sysdigcloud",
@@ -343,7 +343,7 @@
         },
         "containers": [
           {
-            "image": "quay.io/sysdig/sysdigcloud-backend:2304-email-renderer",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2363-email-renderer",
             "name": "email-renderer"
           },
           {
@@ -362,7 +362,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/sysdigcloud-backend:2304-nginx",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2363-nginx",
             "imagePullPolicy": "IfNotPresent",
             "name": "nginx",
             "volumeMounts": [
@@ -459,7 +459,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/sysdigcloud-backend:2304-allinone-java",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2363-allinone-java",
             "imagePullPolicy": "IfNotPresent",
             "lifecycle": {
               "preStop": {
@@ -583,7 +583,7 @@
     "template": {
       "metadata": {
         "annotations": {
-          "version": "2304"
+          "version": "2363"
         },
         "labels": {
           "app": "sysdigcloud",
@@ -638,7 +638,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/sysdigcloud-backend:2304-nginx",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2363-nginx",
             "name": "nginx",
             "volumeMounts": [
               {
@@ -743,7 +743,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/sysdigcloud-backend:2304-allinone-java",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2363-allinone-java",
             "lifecycle": {
               "preStop": {
                 "exec": {
@@ -833,7 +833,7 @@
     "template": {
       "metadata": {
         "annotations": {
-          "version": "2304"
+          "version": "2363"
         },
         "labels": {
           "app": "sysdigcloud",
@@ -843,7 +843,7 @@
       "spec": {
         "containers": [
           {
-            "image": "quay.io/sysdig/sysdigcloud-backend:2304-email-renderer",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2363-email-renderer",
             "name": "email-renderer"
           },
           {
@@ -929,7 +929,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/sysdigcloud-backend:2304-allinone-java",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2363-allinone-java",
             "lifecycle": {
               "preStop": {
                 "exec": {
@@ -1972,7 +1972,8 @@
   "kind": "Service",
   "metadata": {
     "labels": {
-      "app": "redis-primary"
+      "app": "sysdigcloud",
+      "role": "redis"
     },
     "name": "redis-primary",
     "namespace": "sysdigcloud"
@@ -1980,246 +1981,12 @@
   "spec": {
     "ports": [
       {
-        "name": "redis-primary",
         "port": 6379
       }
     ],
     "selector": {
-      "app": "redis-primary"
-    }
-  }
-}
-{
-  "apiVersion": "v1",
-  "kind": "Service",
-  "metadata": {
-    "labels": {
-      "app": "redis-secondary"
-    },
-    "name": "redis-secondary",
-    "namespace": "sysdigcloud"
-  },
-  "spec": {
-    "ports": [
-      {
-        "name": "redis-secondary",
-        "port": 6379
-      }
-    ],
-    "selector": {
-      "app": "redis-secondary"
-    }
-  }
-}
-{
-  "apiVersion": "v1",
-  "kind": "Service",
-  "metadata": {
-    "labels": {
-      "app": "redis-sentinel"
-    },
-    "name": "redis-sentinel",
-    "namespace": "sysdigcloud"
-  },
-  "spec": {
-    "ports": [
-      {
-        "name": "redis-sentinel",
-        "port": 26379
-      }
-    ],
-    "selector": {
-      "app": "redis-sentinel"
-    }
-  }
-}
-{
-  "apiVersion": "apps/v1beta1",
-  "kind": "StatefulSet",
-  "metadata": {
-    "name": "redis-primary",
-    "namespace": "sysdigcloud"
-  },
-  "spec": {
-    "replicas": 1,
-    "serviceName": "redis-primary",
-    "template": {
-      "metadata": {
-        "labels": {
-          "app": "redis-primary"
-        }
-      },
-      "spec": {
-        "affinity": {
-          "podAntiAffinity": {
-            "requiredDuringSchedulingIgnoredDuringExecution": [
-              {
-                "labelSelector": {
-                  "matchExpressions": [
-                    {
-                      "key": "app",
-                      "operator": "In",
-                      "values": [
-                        "redis-secondary",
-                        "redis-primary"
-                      ]
-                    }
-                  ]
-                },
-                "topologyKey": "kubernetes.io/hostname"
-              }
-            ]
-          }
-        },
-        "containers": [
-          {
-            "env": [
-              {
-                "name": "REDIS_PASSWORD",
-                "valueFrom": {
-                  "configMapKeyRef": {
-                    "name": "sysdigcloud-config"
-                  }
-                }
-              }
-            ],
-            "image": "quay.io/sysdig/redis:4.0.12.5-ha",
-            "imagePullPolicy": "Always",
-            "name": "redis-primary",
-            "ports": [
-              {
-                "containerPort": 6379,
-                "name": "redis-primary"
-              }
-            ],
-            "resources": {
-              "limits": {
-                "cpu": 2,
-                "memory": "2Gi"
-              },
-              "requests": {
-                "cpu": "100m",
-                "memory": "100Mi"
-              }
-            },
-            "volumeMounts": [
-              {
-                "mountPath": "/data",
-                "name": "redis-primary-volume"
-              }
-            ]
-          }
-        ],
-        "imagePullSecrets": [
-          {
-            "name": "sysdigcloud-pull-secret"
-          }
-        ],
-        "terminationGracePeriodSeconds": 10,
-        "volumes": [
-          {
-            "emptyDir": {},
-            "name": "redis-primary-volume"
-          }
-        ]
-      }
-    }
-  }
-}
-{
-  "apiVersion": "apps/v1beta1",
-  "kind": "StatefulSet",
-  "metadata": {
-    "name": "redis-secondary",
-    "namespace": "sysdigcloud"
-  },
-  "spec": {
-    "replicas": 2,
-    "serviceName": "redis-secondary",
-    "template": {
-      "metadata": {
-        "labels": {
-          "app": "redis-secondary"
-        }
-      },
-      "spec": {
-        "affinity": {
-          "podAntiAffinity": {
-            "requiredDuringSchedulingIgnoredDuringExecution": [
-              {
-                "labelSelector": {
-                  "matchExpressions": [
-                    {
-                      "key": "app",
-                      "operator": "In",
-                      "values": [
-                        "redis-secondary",
-                        "redis-primary"
-                      ]
-                    }
-                  ]
-                },
-                "topologyKey": "kubernetes.io/hostname"
-              }
-            ]
-          }
-        },
-        "containers": [
-          {
-            "env": [
-              {
-                "name": "REDIS_PASSWORD",
-                "valueFrom": {
-                  "configMapKeyRef": {
-                    "name": "sysdigcloud-config"
-                  }
-                }
-              },
-              {
-                "name": "REPLICA",
-                "value": "true"
-              }
-            ],
-            "image": "quay.io/sysdig/redis:4.0.12.5-ha",
-            "imagePullPolicy": "Always",
-            "name": "redis-secondary",
-            "ports": [
-              {
-                "containerPort": 6379,
-                "name": "redis-secondary"
-              }
-            ],
-            "resources": {
-              "limits": {
-                "cpu": 2,
-                "memory": "2Gi"
-              },
-              "requests": {
-                "cpu": "100m",
-                "memory": "100Mi"
-              }
-            },
-            "volumeMounts": [
-              {
-                "mountPath": "/data",
-                "name": "redis-secondary-volume"
-              }
-            ]
-          }
-        ],
-        "imagePullSecrets": [
-          {
-            "name": "sysdigcloud-pull-secret"
-          }
-        ],
-        "terminationGracePeriodSeconds": 10,
-        "volumes": [
-          {
-            "emptyDir": {},
-            "name": "redis-secondary-volume"
-          }
-        ]
-      }
+      "app": "sysdigcloud",
+      "role": "redis"
     }
   }
 }
@@ -2231,42 +1998,17 @@
     "namespace": "sysdigcloud"
   },
   "spec": {
-    "replicas": 3,
-    "serviceName": "redis-sentinel",
     "template": {
       "metadata": {
         "labels": {
-          "app": "redis-sentinel"
+          "app": "sysdigcloud",
+          "role": "redis"
         }
       },
       "spec": {
-        "affinity": {
-          "podAntiAffinity": {
-            "requiredDuringSchedulingIgnoredDuringExecution": [
-              {
-                "labelSelector": {
-                  "matchExpressions": [
-                    {
-                      "key": "app",
-                      "operator": "In",
-                      "values": [
-                        "redis-sentinel"
-                      ]
-                    }
-                  ]
-                },
-                "topologyKey": "kubernetes.io/hostname"
-              }
-            ]
-          }
-        },
         "containers": [
           {
             "env": [
-              {
-                "name": "SENTINEL",
-                "value": "redis-primary"
-              },
               {
                 "name": "REDIS_PASSWORD",
                 "valueFrom": {
@@ -2276,23 +2018,16 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/redis:4.0.12.5-ha",
-            "imagePullPolicy": "Always",
-            "name": "redis-sentinel",
-            "ports": [
-              {
-                "containerPort": 26379,
-                "name": "redis-sentinel"
-              }
-            ],
+            "image": "quay.io/sysdig/redis:4.0.12.5",
+            "name": "redis",
             "resources": {
               "limits": {
-                "cpu": "300m",
-                "memory": "20Mi"
+                "cpu": 2,
+                "memory": "2Gi"
               },
               "requests": {
-                "cpu": "50m",
-                "memory": "5Mi"
+                "cpu": "100m",
+                "memory": "100Mi"
               }
             }
           }
@@ -2301,8 +2036,7 @@
           {
             "name": "sysdigcloud-pull-secret"
           }
-        ],
-        "terminationGracePeriodSeconds": 10
+        ]
       }
     }
   }
@@ -2924,7 +2658,7 @@ null
   "kind": "Deployment",
   "metadata": {
     "annotations": {
-      "version": "2304"
+      "version": "2363"
     },
     "labels": {
       "app": "sysdigcloud",
@@ -3144,7 +2878,7 @@ null
                 }
               }
             ],
-            "image": "quay.io/sysdig/scanning:2304",
+            "image": "quay.io/sysdig/scanning:2363",
             "imagePullPolicy": "IfNotPresent",
             "name": "scanning-alertmgr",
             "resources": {
@@ -3173,7 +2907,7 @@ null
   "kind": "Deployment",
   "metadata": {
     "annotations": {
-      "version": "2304"
+      "version": "2363"
     },
     "labels": {
       "affinity": "sysdigcloud-scanning-api",
@@ -3382,7 +3116,7 @@ null
                 }
               }
             ],
-            "image": "quay.io/sysdig/scanning:2304",
+            "image": "quay.io/sysdig/scanning:2363",
             "imagePullPolicy": "IfNotPresent",
             "name": "scanning-api",
             "resources": {

@@ -3,6 +3,18 @@
 # Allow files generated in container be modifiable by host user
 umask 000
 
+#defaults to no overrides
+VALUES_OVERRIDE=""
+while getopts ":f:" opt; do
+  case $opt in
+    f) VALUES_OVERRIDE="$OPTARG"
+    ;;
+    \?) echo "Invalid option -$OPTARG" >&2
+    ;;
+  esac
+done
+
+
 DIR="$(cd "$(dirname "$0")"; pwd -P)"
 source "$DIR/shared-values.sh"
 
@@ -10,7 +22,7 @@ set -euo pipefail
 source "${TEMPLATE_DIR}/framework.sh"
 
 #apps selection
-APPS=$(yq -r .apps "${TEMPLATE_DIR}/values.yaml")
+APPS=$(readConfigFromValuesYaml .apps "$VALUES_OVERRIDE")
 log info "${APPS}"
 SECURE=false
 for app in ${APPS}
@@ -21,7 +33,7 @@ do
 done
 log info "secure enabled: ${SECURE}"
 #size selection
-SIZE=$(yq -r .size "$TEMPLATE_DIR/values.yaml")
+SIZE=$(readConfigFromValuesYaml .size "$VALUES_OVERRIDE")
 log info "size selection: $SIZE"
 
 log info "step1: removing exiting manifests"
@@ -50,13 +62,18 @@ if [[ -z "$(ls -A "${MANIFESTS}/elasticsearch-tls-certs")" ]]; then
 fi
 
 log info "step4: running through helm template engine"
-helm template -f "$TEMPLATE_DIR/values.yaml" -f "$TEMPLATE_DIR/defaultValues.yaml" -f "$GENERATED_SECRET_FILE" --output-dir "$MANIFESTS" "$TEMPLATE_DIR"
+if [[ "$VALUES_OVERRIDE" == "" ]]; then
+  helm template -f "$TEMPLATE_DIR/defaultValues.yaml" -f "$GENERATED_SECRET_FILE" -f "$TEMPLATE_DIR/values.yaml" --output-dir "$MANIFESTS" "$TEMPLATE_DIR"
+else
+  helm template -f "$TEMPLATE_DIR/defaultValues.yaml" -f "$GENERATED_SECRET_FILE" -f "$TEMPLATE_DIR/values.yaml" -f "$VALUES_OVERRIDE" --output-dir "$MANIFESTS" "$TEMPLATE_DIR"
+fi
 
 MANIFESTS_TEMPLATE_BASE="$MANIFESTS/$TEMPLATE_DIR/templates"
-GENERATE_CERTIFICATE=$(yq -r .sysdig.certificate.generate "$TEMPLATE_DIR/values.yaml")
+GENERATE_CERTIFICATE=$(readConfigFromValuesYaml .sysdig.certificate.generate "$VALUES_OVERRIDE")
 GENERATED_CRT=$MANIFESTS/certs/server.crt
 GENERATED_KEY=$MANIFESTS/certs/server.key
-DNS_NAME=$(yq -r .sysdig.dnsName "$TEMPLATE_DIR/values.yaml")
+DNS_NAME=$(readConfigFromValuesYaml .sysdig.dnsName "$VALUES_OVERRIDE")
+
 mkdir "$MANIFESTS_TEMPLATE_BASE/common-config/certs"
 if [ ! -d "$MANIFESTS/certs" ]; then
   log info "Making certs manifests dir"
@@ -71,8 +88,8 @@ if [ "$GENERATE_CERTIFICATE" = "true" ]; then
   fi
   cp "$GENERATED_KEY" "$GENERATED_CRT" "$MANIFESTS_TEMPLATE_BASE/common-config/certs/"
 else
-  CRT_FILE="$MANIFESTS/$(yq -r .sysdig.certificate.crt "$TEMPLATE_DIR/values.yaml")"
-  KEY_FILE="$MANIFESTS/$(yq -r .sysdig.certificate.key "$TEMPLATE_DIR/values.yaml")"
+  CRT_FILE="$MANIFESTS/$(readConfigFromValuesYaml .sysdig.certificate.crt "$VALUES_OVERRIDE")"
+  KEY_FILE="$MANIFESTS/$(readConfigFromValuesYaml .sysdig.certificate.key "$VALUES_OVERRIDE")"
   log info "Using provided certificates at crt:$CRT_FILE key:$KEY_FILE"
   if [[ -f $CRT_FILE && -f $KEY_FILE ]]; then
     cp "$CRT_FILE" "$MANIFESTS_TEMPLATE_BASE/common-config/certs/server.crt"
@@ -125,7 +142,7 @@ fi
 set -e #re-enable exit on error
 
 log info "step5a: generate storage"
-STORAGE_CLASS_PROVISIONER=$(yq -r .storageClassProvisioner "$TEMPLATE_DIR/values.yaml")
+STORAGE_CLASS_PROVISIONER=$(readConfigFromValuesYaml .storageClassProvisioner "$VALUES_OVERRIDE")
 if [[ "$STORAGE_CLASS_PROVISIONER" == "hostPath" ]]; then
   log info "hostPath mode, skipping generating storage configs"
 else
@@ -160,15 +177,15 @@ else
   log info "skipping step7d: data-stores postgres - needed only for secure"
 fi
 
-IS_REDIS_HA=$(yq .sysdig.redisHa "$TEMPLATE_DIR/values.yaml")
-if [[ ${IS_REDIS_HA} == "false" ]]; then
+IS_REDIS_HA=$(readConfigFromValuesYaml .sysdig.redisHa "$VALUES_OVERRIDE")
+if [[ ${IS_REDIS_HA} == "true" ]]; then
   log info "step7e: data-stores redis $SIZE"
   echo "---" >> "$GENERATED_DIR/infra.yaml"
-  kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/redis/"                            >> "$GENERATED_DIR/infra.yaml"
+  kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/redis-ha/"                       >> "$GENERATED_DIR/infra.yaml"
 else
   log info "step7e: data-stores redis-ha $SIZE"
   echo "---" >> "$GENERATED_DIR/infra.yaml"
-  kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/redis-ha/"                         >> "$GENERATED_DIR/infra.yaml"
+  kustomize build "$MANIFESTS_TEMPLATE_BASE/data-stores/redis/"                          >> "$GENERATED_DIR/infra.yaml"
 fi
 
 
