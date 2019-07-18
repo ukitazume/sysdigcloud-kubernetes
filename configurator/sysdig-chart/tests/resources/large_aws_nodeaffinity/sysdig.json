@@ -539,6 +539,10 @@
               {
                 "mountPath": "/opt/kubernets_secrets/elasticsearch_certs",
                 "name": "elasticsearch-certs"
+              },
+              {
+                "mountPath": "/opt/java-certs/",
+                "name": "java-certs"
               }
             ]
           }
@@ -569,6 +573,12 @@
             "name": "elasticsearch-certs",
             "secret": {
               "secretName": "ca-certs"
+            }
+          },
+          {
+            "name": "java-certs",
+            "secret": {
+              "secretName": "sysdigcloud-java-certs"
             }
           }
         ]
@@ -836,6 +846,10 @@
                 "name": "config"
               },
               {
+                "mountPath": "/opt/java-certs/",
+                "name": "java-certs"
+              },
+              {
                 "mountPath": "/opt/kubernets_secrets/elasticsearch_certs",
                 "name": "elasticsearch-certs"
               }
@@ -868,6 +882,12 @@
             "name": "elasticsearch-certs",
             "secret": {
               "secretName": "ca-certs"
+            }
+          },
+          {
+            "name": "java-certs",
+            "secret": {
+              "secretName": "sysdigcloud-java-certs"
             }
           }
         ]
@@ -1042,6 +1062,10 @@
                 "name": "config"
               },
               {
+                "mountPath": "/opt/java-certs/",
+                "name": "java-certs"
+              },
+              {
                 "mountPath": "/opt/kubernets_secrets/elasticsearch_certs",
                 "name": "elasticsearch-certs"
               }
@@ -1068,6 +1092,12 @@
             "name": "elasticsearch-certs",
             "secret": {
               "secretName": "ca-certs"
+            }
+          },
+          {
+            "name": "java-certs",
+            "secret": {
+              "secretName": "sysdigcloud-java-certs"
             }
           }
         ]
