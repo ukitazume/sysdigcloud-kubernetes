@@ -34,6 +34,16 @@ spec:
       ## You may need to disable these if your number of available kubernetes hosts is less than
       ## the replication factor for your statefulset.
       affinity:
+        {{- if kindIs "map" .Values.nodeaffinityLabel }}
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: {{ .Values.nodeaffinityLabel.key }}
+                operator: In
+                values:
+                - {{ .Values.nodeaffinityLabel.value }}
+        {{- end }}
         podAntiAffinity:
           ## Strive to spread the pods across multiple AZs
           {{- if (.Values.cloudProvider.isMultiAZ | default false) }}

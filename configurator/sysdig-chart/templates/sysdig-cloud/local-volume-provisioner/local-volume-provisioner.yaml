@@ -28,6 +28,17 @@ spec:
       labels:
         app: local-volume-provisioner
     spec:
+      {{- if kindIs "map" .Values.nodeaffinityLabel }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: {{ .Values.nodeaffinityLabel.key }}
+                operator: In
+                values:
+                - {{ .Values.nodeaffinityLabel.value }}
+      {{- end }}
       serviceAccountName: local-storage-admin
       containers:
         - image: {{ .Values.airgapped_registry_name | default "quay.io" }}/external_storage/local-volume-provisioner:{{ .Values.sysdig.localVolumeProvisioner }}

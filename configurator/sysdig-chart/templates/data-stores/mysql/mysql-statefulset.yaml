@@ -79,6 +79,17 @@ spec:
         app: sysdigcloud
         role: mysql
     spec:
+      {{- if kindIs "map" .Values.nodeaffinityLabel }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: {{ .Values.nodeaffinityLabel.key }}
+                operator: In
+                values:
+                - {{ .Values.nodeaffinityLabel.value }}
+      {{- end }}
       containers:
         - name: mysql
           image: {{ .Values.airgapped_registry_name | default "quay.io" }}/sysdig/mysql:{{ .Values.sysdig.mysqlVersion }}

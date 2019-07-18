@@ -15,6 +15,11 @@ namespace: sysdigcloud
 quaypullsecret: <change-me>
 #StorageClass config
 storageClassName: <change-me>
+# This is used to drive the nodes that sysdigcloud pods run on, the nodes are expected to have been labeled with the key and value pairs e.g:
+# 'sysdigcloud.node: true'
+#nodeaffinityLabel:
+#  key: 'sysdigcloud.node'
+#  value: true
 #This drives multi-az awareness, if sysdigcloud is deployed to a multi-az setup
 #this should be updated as adequate
 cloudProvider:

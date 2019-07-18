@@ -13,6 +13,16 @@ spec:
         app: redis-secondary
     spec:
       affinity:
+        {{- if kindIs "map" .Values.nodeaffinityLabel }}
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: {{ .Values.nodeaffinityLabel.key }}
+                operator: In
+                values:
+                - {{ .Values.nodeaffinityLabel.value }}
+        {{- end }}
        podAntiAffinity:
          requiredDuringSchedulingIgnoredDuringExecution:
          - labelSelector:

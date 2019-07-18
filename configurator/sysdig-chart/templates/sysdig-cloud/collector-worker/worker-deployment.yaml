@@ -14,6 +14,17 @@ spec:
       annotations:
         version: {{ .Values.sysdig.monitorVersion | quote }}
     spec:
+      {{- if kindIs "map" .Values.nodeaffinityLabel }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: {{ .Values.nodeaffinityLabel.key }}
+                operator: In
+                values:
+                - {{ .Values.nodeaffinityLabel.value }}
+      {{- end }}
       containers:
         - name: email-renderer
           image: {{ .Values.airgapped_registry_name | default "quay.io" }}/sysdig/sysdigcloud-backend:{{ .Values.sysdig.monitorVersion }}-email-renderer

@@ -19,6 +19,17 @@ spec:
         app: sysdigcloud
         role: postgresql
     spec:
+      {{- if kindIs "map" .Values.nodeaffinityLabel }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: {{ .Values.nodeaffinityLabel.key }}
+                operator: In
+                values:
+                - {{ .Values.nodeaffinityLabel.value }}
+      {{- end }}
       imagePullSecrets:
         - name: sysdigcloud-pull-secret
       containers:

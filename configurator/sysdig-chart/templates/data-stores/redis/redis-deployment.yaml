@@ -10,6 +10,17 @@ spec:
         app: sysdigcloud
         role: redis
     spec:
+      {{- if kindIs "map" .Values.nodeaffinityLabel }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: {{ .Values.nodeaffinityLabel.key }}
+                operator: In
+                values:
+                - {{ .Values.nodeaffinityLabel.value }}
+      {{- end }}
       containers:
         - name: redis
           image: {{ .Values.airgapped_registry_name | default "quay.io" }}/sysdig/redis:{{ .Values.sysdig.redisVersion }}
