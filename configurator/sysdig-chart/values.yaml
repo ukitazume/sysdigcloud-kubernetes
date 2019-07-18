@@ -79,5 +79,9 @@ sysdig:
   #Override for default collector port
   #defaults to 6443
   collectorPort:
+  #custom ca(certificate authorities)
+  #adds custom ca to trusted list
+  #true expects certs/custom-ca.pem in manifest directory
+  customCa: false
 elasticsearch:
   jvmOptions: ""

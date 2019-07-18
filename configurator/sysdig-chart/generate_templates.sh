@@ -141,6 +141,17 @@ if [[ "$DNS_NAME" != "$COMMON_NAME" ]]; then
 fi
 set -e #re-enable exit on error
 
+CUSTOM_CA=$(yq -r .sysdig.customCa "$TEMPLATE_DIR/values.yaml")
+if [[ $CUSTOM_CA == "true" ]]; then
+  CUSTOM_CERT=$MANIFESTS/certs/custom-ca.pem
+  if [[ ! -f $CUSTOM_CERT ]]; then
+    log error "Custom ca is set but not provided. Please provide a custom ca cert at certs/custom-ca.pem in the current working directory."
+  else
+    log info "Copying custom ca to $MANIFESTS_TEMPLATE_BASE/common-config/certs/"
+    cp "$CUSTOM_CERT" "$MANIFESTS_TEMPLATE_BASE/common-config/certs/"
+  fi
+fi
+
 log info "step5a: generate storage"
 STORAGE_CLASS_PROVISIONER=$(readConfigFromValuesYaml .storageClassProvisioner "$VALUES_OVERRIDE")
 if [[ "$STORAGE_CLASS_PROVISIONER" == "hostPath" ]]; then
