@@ -17,6 +17,6 @@ secretGenerator:
 - name: sysdigcloud-java-certs
   namespace: {{ .Values.namespace }}
   files:
-  {{ if .Values.sysdig.customCa }}
+  {{ if .Values.sysdig.certificate.customCa }}
     - custom-ca.pem=certs/custom-ca.pem
   {{ end }}
