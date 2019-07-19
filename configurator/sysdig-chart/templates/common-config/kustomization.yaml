@@ -14,3 +14,9 @@ secretGenerator:
   files:
     - tls.crt=certs/server.crt
     - tls.key=certs/server.key
+- name: sysdigcloud-java-certs
+  namespace: {{ .Values.namespace }}
+  files:
+  {{ if .Values.sysdig.customCa }}
+    - custom-ca.pem=certs/custom-ca.pem
+  {{ end }}

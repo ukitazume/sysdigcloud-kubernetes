@@ -2,15 +2,10 @@
 #generate - performs templating & kustomization
 #deploy   - apply's the generated script in k8s environment
 scripts: generate
-#defines applications needed. Monitor installed by default.
-#Secure is optional. Remove secure if not.
-apps: monitor secure
 #Size of the cluster. Takes [ small | medium | large ]
 #This defines CPU & Memory & Disk & Replicas
 #Replicas can be overwritten for medium , large in advanced   config section
 size: small
-#Set k8s namespace for sysdigcloud
-namespace: sysdigcloud
 #Set Quay.Io secrets
 quaypullsecret: foo
 #StorageClass config
@@ -20,53 +15,14 @@ storageClassName: foo
 cloudProvider:
   # example aws
   name: aws
-  # boolean true|false
-  isMultiAZ: false
-  # example us-east-1
-  region: 
 #supports aws | gke | hostPath | local
 #Do not use hostPath in production, currently it is experimental only.
 storageClassProvisioner: local
-#supports openshift | kubernetes defaults to kubernetes install
-deployment: kubernetes
 #Sysdig application config
 sysdig:
-  agentCount: 10
   #Set Sysdig license
   license: foobar
   dnsName: foo.bar.com
-  monitorVersion: 2304
-  anchoreVersion: v0.3.4.1
-  cassandraVersion: 2.1.21.13
-  elasticsearchVersion: 5.6.16.5
-  mysqlVersion: 5.6.44.0
-  postgresVersion: 10.6.10
-  redisVersion: 4.0.12.5
-  redisHaVersion: 4.0.12.5-ha
-  haproxyVersion: v0.7-beta.7
-  rsyslogVersion: 8.34.0-r0-20180708T0208-git-cb867ef
-  localVolumeProvisioner: v2.3.2
-  #Advanced settings
-  #autogenerate certificate by default - generate to
-  #false and provide crt,key to use existing certs, make
-  #sure the key and cert are in your current working
-  #directory
-  certificate:
-    generate: true
-    crt:
-    key:
-  #replicas settings
-  #default replicas are set based on size - small, medium & large
-  #below section acts as a override
-  cassandraReplicaCount:
-  elasticSearchReplicaCount:
-  apiReplicaCount:
-  collectorReplicaCount:
-  workerReplicaCount:
-  anchoreCoreReplicaCount:
-  anchoreWorkerReplicaCount:
-  scanningApiReplicaCount:
-  scanningAlertMgrReplicaCount:
   #SMTP Configurations
   smtpServer: foo.smtp.com
   smtpServerPort: 25
@@ -77,12 +33,3 @@ sysdig:
   smtpProtocolSSL: false
   #Optional Email Header
   smtpFromAddress: foo@bar.com
-  #Please provide openshift parameters
-  openshiftUrl:
-  openshiftUsername:
-  openshiftPassword:
-  #Override for default collector port
-  #defaults to 6443
-  collectorPort:
-elasticsearch:
-  jvmOptions: ""

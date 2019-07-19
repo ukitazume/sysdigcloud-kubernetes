@@ -14,6 +14,17 @@ spec:
       annotations:
         version: {{ .Values.sysdig.monitorVersion | quote }}
     spec:
+      {{- if kindIs "map" .Values.nodeaffinityLabel }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: {{ .Values.nodeaffinityLabel.key }}
+                operator: In
+                values:
+                - {{ .Values.nodeaffinityLabel.value }}
+      {{- end }}
       containers:
         - name: email-renderer
           image: {{ .Values.airgapped_registry_name | default "quay.io" }}/sysdig/sysdigcloud-backend:{{ .Values.sysdig.monitorVersion }}-email-renderer
@@ -24,9 +35,8 @@ spec:
               mountPath: /var/log/sysdigcloud
             - name: config
               mountPath: /opt/kubernets_config
-            # Uncomment this if you need to import self-signed SSL certs
-            #- name: java-certs
-            #  mountPath: /opt/java-certs/
+            - name: java-certs
+              mountPath: /opt/java-certs/
             # Uncomment this if you want to split sysdgicloud configurations into configs and secrets.
             #- name: secrets
             #  mountPath: /opt/kubernets_secrets
@@ -116,11 +126,9 @@ spec:
         - name: elasticsearch-certs
           secret:
             secretName: ca-certs
-        ## Uncomment this if you need to import self-signed SSL certs, wich can be created with
-        # kubectl create secret generic example-cert --from-file=${HOME}/cert.pem
-        #- name: java-certs
-        #  secret:
-        #    secretName: sysdigcloud-java-certs
+        - name: java-certs
+          secret:
+            secretName: sysdigcloud-java-certs
         ## Uncomment this if you want to split sysdgicloud configurations into configs and secrets.
         #- name: secrets
         #  secret:

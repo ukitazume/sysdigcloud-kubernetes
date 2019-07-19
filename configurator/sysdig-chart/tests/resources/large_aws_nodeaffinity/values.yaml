@@ -10,6 +10,11 @@ size: large
 quaypullsecret: foo
 #StorageClass config
 storageClassName: foo
+# This is used to drive the nodes that sysdigcloud pods run on, the nodes are expected to have been labeled with the key and value pairs e.g:
+# 'sysdigcloud.node: true'
+nodeaffinityLabel:
+  key: 'sysdigcloud.node'
+  value: true
 #This drives multi-az awareness, if sysdigcloud is deployed to a multi-az setup
 #this should be updated as adequate
 cloudProvider:
@@ -22,13 +27,3 @@ sysdig:
   #Set Sysdig license
   license: foobar
   dnsName: foo.bar.com
-  #SMTP Configurations
-  smtpServer: foo.smtp.com
-  smtpServerPort: 25
-  #User,Password can be empty if the server does not require authentication
-  smtpUser: foo
-  smtpPassword: bar
-  smtpProtocolTLS: false
-  smtpProtocolSSL: false
-  #Optional Email Header
-  smtpFromAddress: foo@bar.com
