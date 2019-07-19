@@ -1930,7 +1930,7 @@
       "spec": {
         "containers": [
           {
-            "image": "quay.io/sysdig/rsyslog:8.34.0-r0-20180708T0208-git-cb867ef",
+            "image": "quay.io/sysdig/rsyslog:8.34.0.5",
             "imagePullPolicy": "Always",
             "name": "rsyslog-server",
             "resources": {
