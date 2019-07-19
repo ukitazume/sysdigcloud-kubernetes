@@ -50,9 +50,12 @@ sysdig:
   #sure the key and cert are in your current working
   #directory
   certificate:
+    #false expects certs at certs/server.key and certs/server.crt in current working directory
     generate: true
-    crt:
-    key:
+    #custom ca(certificate authorities)
+    #adds custom ca to trusted list
+    #true expects certs/custom-ca.pem in working directory
+    customCa: false
   #replicas settings
   #default replicas are set based on size - small, medium & large
   #below section acts as a override
@@ -84,9 +87,5 @@ sysdig:
   #Override for default collector port
   #defaults to 6443
   collectorPort:
-  #custom ca(certificate authorities)
-  #adds custom ca to trusted list
-  #true expects certs/custom-ca.pem in manifest directory
-  customCa: false
 elasticsearch:
   jvmOptions: ""

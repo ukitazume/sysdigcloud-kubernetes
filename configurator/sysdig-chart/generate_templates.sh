@@ -70,32 +70,28 @@ fi
 
 MANIFESTS_TEMPLATE_BASE="$MANIFESTS/$TEMPLATE_DIR/templates"
 GENERATE_CERTIFICATE=$(readConfigFromValuesYaml .sysdig.certificate.generate "$VALUES_OVERRIDE")
-GENERATED_CRT=$MANIFESTS/certs/server.crt
-GENERATED_KEY=$MANIFESTS/certs/server.key
+CERT_FILE=$MANIFESTS/certs/server.crt
+KEY_FILE=$MANIFESTS/certs/server.key
 DNS_NAME=$(readConfigFromValuesYaml .sysdig.dnsName "$VALUES_OVERRIDE")
 
 mkdir "$MANIFESTS_TEMPLATE_BASE/common-config/certs"
-if [ ! -d "$MANIFESTS/certs" ]; then
-  log info "Making certs manifests dir"
+if [[ ! -d "$MANIFESTS/certs" ]]; then
+  log info "Creating certs manifests dir"
   mkdir "$MANIFESTS/certs"
 fi
-if [ "$GENERATE_CERTIFICATE" = "true" ]; then
-  if [[ -f $GENERATED_KEY && -f $GENERATED_CRT ]]; then
-    log info "Certificates are present. Copying the existing certs"
-  else
-    log info "Generating new certificate"
-    openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 -subj "/C=US/ST=CA/L=SanFrancisco/O=ICT/CN=$DNS_NAME" -keyout "$GENERATED_KEY" -out "$GENERATED_CRT"
-  fi
-  cp "$GENERATED_KEY" "$GENERATED_CRT" "$MANIFESTS_TEMPLATE_BASE/common-config/certs/"
+
+if [[ -f "$CERT_FILE" && -f "$KEY_FILE" ]]; then
+  log info "Certificates are present. Copying the existing certs"
+  cp "$CERT_FILE" "$KEY_FILE" "$MANIFESTS_TEMPLATE_BASE/common-config/certs/"
 else
-  CRT_FILE="$MANIFESTS/$(readConfigFromValuesYaml .sysdig.certificate.crt "$VALUES_OVERRIDE")"
-  KEY_FILE="$MANIFESTS/$(readConfigFromValuesYaml .sysdig.certificate.key "$VALUES_OVERRIDE")"
-  log info "Using provided certificates at crt:$CRT_FILE key:$KEY_FILE"
-  if [[ -f $CRT_FILE && -f $KEY_FILE ]]; then
-    cp "$CRT_FILE" "$MANIFESTS_TEMPLATE_BASE/common-config/certs/server.crt"
-    cp "$KEY_FILE" "$MANIFESTS_TEMPLATE_BASE/common-config/certs/server.key"
+  log info "Certificates are not present."
+  if [[ "$GENERATE_CERTIFICATE" = "true" ]]; then
+    log info "Generating new certificate"
+    openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 -subj "/C=US/ST=CA/L=SanFrancisco/O=ICT/CN=$DNS_NAME" -keyout "$KEY_FILE" -out "$CERT_FILE"
+    log info "Certificates are generated. Copying the generated certs"
+    cp "$CERT_FILE" "$KEY_FILE" "$MANIFESTS_TEMPLATE_BASE/common-config/certs/"
   else
-    log error "Cannot find certificate files. Exiting"
+    log error "Cannot find certificates and Certification generation is set to false. Exiting"
     exit 2
   fi
 fi
@@ -141,15 +137,17 @@ if [[ "$DNS_NAME" != "$COMMON_NAME" ]]; then
 fi
 set -e #re-enable exit on error
 
-CUSTOM_CA=$(yq -r .sysdig.customCa "$TEMPLATE_DIR/values.yaml")
+CUSTOM_CA=$(yq -r .sysdig.certificate.customCa "$VALUES_OVERRIDE")
 if [[ $CUSTOM_CA == "true" ]]; then
-  CUSTOM_CERT=$MANIFESTS/certs/custom-ca.pem
-  if [[ ! -f $CUSTOM_CERT ]]; then
+  CUSTOM_CERT="$MANIFESTS"/certs/custom-ca.pem
+  if [[ ! -f "$CUSTOM_CERT" ]]; then
     log error "Custom ca is set but not provided. Please provide a custom ca cert at certs/custom-ca.pem in the current working directory."
   else
     log info "Copying custom ca to $MANIFESTS_TEMPLATE_BASE/common-config/certs/"
     cp "$CUSTOM_CERT" "$MANIFESTS_TEMPLATE_BASE/common-config/certs/"
   fi
+else
+  log info "Custom Ca not defined. Moving on. $CUSTOM_CA"
 fi
 
 log info "step5a: generate storage"
