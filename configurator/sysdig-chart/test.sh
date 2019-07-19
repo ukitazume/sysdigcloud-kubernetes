@@ -42,9 +42,24 @@ function concat_config() {
 
 function run_tests() {
   for directory in /sysdig-chart/tests/resources/*/; do
+    run_test "$directory"
+  done
+}
+
+function clear_and_copy_manifests(){
+  local directory=$1
+  rm -rf /manifests/*
+  if [[ ! -d /manifests ]]; then
+    mkdir /manifests
+  fi
+  cp -r "$directory"/* /manifests
+}
+
+function run_test() {
+  local directory=$1
     if [[ -d "$directory" ]]; then
       log notice "Running tests for $directory"
-      rm -rf /manifests/*
+      clear_and_copy_manifests "$directory"
       /sysdig-chart/generate_templates.sh -f "$directory/values.yaml"
       TMP_FILE=$(mktemp)
       concat_config /manifests/generated/ "$TMP_FILE"
@@ -53,7 +68,6 @@ function run_tests() {
         exit 1
       fi
     fi
-  done
 }
 
 function run_uber_tar_tests() {
@@ -77,7 +91,7 @@ function run_uber_tar_tests() {
 function config_gen() {
   for directory in /sysdig-chart/tests/resources/*/; do
     if [[ -d "$directory" ]]; then
-      rm -rf /manifests/*
+      clear_and_copy_manifests "$directory"
       log notice "Running config_gen for $directory"
       /sysdig-chart/generate_templates.sh -f "$directory/values.yaml"
       concat_config /manifests/generated/ "$directory/sysdig.json"
@@ -90,6 +104,8 @@ if [[ "$ARG" == "config_gen" ]]; then
   config_gen
 elif [[ "$ARG" == "uber_tests" ]]; then
   run_uber_tar_tests
+elif [[ "$ARG" == "run_test" ]]; then
+  run_test "${2:-}"
 else
   run_tests
 fi
