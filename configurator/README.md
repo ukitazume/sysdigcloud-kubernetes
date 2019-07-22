@@ -73,7 +73,7 @@ https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/Templating_k8s_c
 - Modify the values.yaml
 - Run
 ```bash
-docker run -v ~/.kube:/root/.kube -v $(PWD):/manifests \
+docker run -v ~/.kube:/root/.kube -v $(pwd):/manifests \
   quay.io/sysdig/configurator:0.0.0-alpha
 ```
 
