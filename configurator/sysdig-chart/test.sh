@@ -49,9 +49,7 @@ function run_tests() {
 function clear_and_copy_manifests(){
   local directory=$1
   rm -rf /manifests/*
-  if [[ ! -d /manifests ]]; then
-    mkdir /manifests
-  fi
+  mkdir -p /manifests
   cp -r "$directory"/* /manifests
 }
 
