@@ -91,7 +91,7 @@ else
     log info "Certificates are generated. Copying the generated certs"
     cp "$CERT_FILE" "$KEY_FILE" "$MANIFESTS_TEMPLATE_BASE/common-config/certs/"
   else
-    log error "Cannot find certificates and Certification generation is set to false. Exiting"
+    log error "Cannot find certificates and certificate generation is set to false. Exiting"
     exit 2
   fi
 fi
