@@ -137,7 +137,7 @@ if [[ "$DNS_NAME" != "$COMMON_NAME" ]]; then
 fi
 set -e #re-enable exit on error
 
-CUSTOM_CA=$(yq -r .sysdig.certificate.customCa "$VALUES_OVERRIDE")
+CUSTOM_CA=$(readConfigFromValuesYaml .sysdig.certificate.customCa "$VALUES_OVERRIDE")
 if [[ $CUSTOM_CA == "true" ]]; then
   CUSTOM_CERT="$MANIFESTS"/certs/custom-ca.pem
   if [[ ! -f "$CUSTOM_CERT" ]]; then
