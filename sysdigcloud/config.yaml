@@ -215,7 +215,7 @@ data:
   # you can remove these LDAP settings from this ConfigMap and configure
   # LDAP via the API as described in the following Support article:
   #
-  #   https://sysdigdocs.atlassian.net/wiki/spaces/LDAP/pages/203620377/LDAP+Authentication+Configuration
+  #   https://sysdigdocs.atlassian.net/wiki/spaces/Platform/pages/318931076/LDAP+Authentication+Configuration+for+Platform+v.1586
   #
   # (Deprecated - formerly Required): enable or disable Sysdig Cloud LDAP integration
   sysdigcloud.ldap.enabled: "false"
