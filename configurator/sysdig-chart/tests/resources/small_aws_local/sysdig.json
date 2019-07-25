@@ -2494,7 +2494,7 @@ null
     "namespace": "sysdigcloud"
   },
   "data": {
-    "storageClassMap": "sysdig:\n   hostDir: /sysdig\n   mountDir: /sysdig\n   volumeMode: Filesystem\n   fsType: ext4\n"
+    "storageClassMap": "foo:\n   hostDir: /sysdig\n   mountDir: /sysdig\n   volumeMode: Filesystem\n   fsType: ext4\n"
   }
 }
 {
