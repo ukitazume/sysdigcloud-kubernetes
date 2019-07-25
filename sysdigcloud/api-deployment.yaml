@@ -13,9 +13,9 @@ spec:
     spec:
       containers:
         - name: email-renderer
-          image: quay.io/sysdig/sysdigcloud-backend:2304-email-renderer
+          image: quay.io/sysdig/sysdigcloud-backend:2435-email-renderer
         - name: nginx
-          image: quay.io/sysdig/sysdigcloud-backend:2304-nginx
+          image: quay.io/sysdig/sysdigcloud-backend:2435-nginx
           volumeMounts:
             - name: ssl
               mountPath: /opt/certs/
@@ -30,7 +30,7 @@ spec:
                   name: sysdigcloud-config
                   key: api.url
         - name: api
-          image: quay.io/sysdig/sysdigcloud-backend:2304-allinone-java
+          image: quay.io/sysdig/sysdigcloud-backend:2435-allinone-java
           volumeMounts:
             - name: config
               mountPath: /opt/kubernets_config
