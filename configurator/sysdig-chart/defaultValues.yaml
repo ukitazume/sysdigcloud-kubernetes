@@ -2,7 +2,7 @@
 elasticsearch:
   searchguard:
     enabled: true
-    adminUser: admin
+    adminUser: sysdig
     verifySSL: false
 sysdig:
   monitorVersion: 2363

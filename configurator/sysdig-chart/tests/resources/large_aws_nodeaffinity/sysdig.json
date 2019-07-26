@@ -1133,7 +1133,7 @@
     "elasticsearch.hostname": "sysdigcloud-elasticsearch",
     "elasticsearch.jvm.options": "",
     "elasticsearch.searchguard.enabled": "true",
-    "elasticsearch.user": "admin",
+    "elasticsearch.user": "sysdig",
     "elasticsearch.verifySSL": "false",
     "mysql.endpoint": "sysdigcloud-mysql",
     "mysql.user": "mysql-admin",
@@ -1513,7 +1513,7 @@
   "data": {
     "ELASTICSEARCH_CLUSTER_NAME": "sysdigcloud",
     "ELASTICSEARCH_SERVICE": "sysdigcloud-elasticsearch",
-    "ELASTICSEARCH_USER": "admin",
+    "ELASTICSEARCH_USER": "sysdig",
     "ES_JAVA_OPTS": "",
     "SEARCHGUARD_ENABLED": "true"
   },
