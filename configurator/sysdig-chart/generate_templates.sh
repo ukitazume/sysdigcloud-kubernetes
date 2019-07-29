@@ -68,6 +68,9 @@ else
   helm template -f "$TEMPLATE_DIR/defaultValues.yaml" -f "$GENERATED_SECRET_FILE" -f "$TEMPLATE_DIR/values.yaml" -f "$VALUES_OVERRIDE" --output-dir "$MANIFESTS" "$TEMPLATE_DIR"
 fi
 
+find "$MANIFESTS/$TEMPLATE_DIR" -type d -print0 | xargs -0 chmod 0777
+find "$MANIFESTS/$TEMPLATE_DIR" -type f -print0 | xargs -0 chmod 0666
+
 MANIFESTS_TEMPLATE_BASE="$MANIFESTS/$TEMPLATE_DIR/templates"
 GENERATE_CERTIFICATE=$(readConfigFromValuesYaml .sysdig.certificate.generate "$VALUES_OVERRIDE")
 GENERATED_CRT=$MANIFESTS/certs/server.crt
