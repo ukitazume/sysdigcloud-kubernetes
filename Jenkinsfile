@@ -225,8 +225,10 @@ pipeline {
                 sh("docker pull ${uberImage}")
               }
               docker.withRegistry("https://quay.io", "QUAY") {
+                sh (
                 "docker tag ${uberImage} quay.io/sysdig/configurator:uber-${env.TAG_NAME} && " +
                 "docker push quay.io/sysdig/configurator:uber-${env.TAG_NAME}"
+                )
               }
           }
         }
