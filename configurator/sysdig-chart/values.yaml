@@ -52,10 +52,10 @@ sysdig:
   certificate:
     #false expects certs at certs/server.key and certs/server.crt in current working directory
     generate: true
-    #custom ca(certificate authorities)
-    #adds custom ca to trusted list
+    #custom CA(Certificate Authority)
+    #adds custom CA to trusted list
     #true expects certs/custom-ca.pem in working directory
-    customCa: false
+    customCA: false
   #replicas settings
   #default replicas are set based on size - small, medium & large
   #below section acts as a override

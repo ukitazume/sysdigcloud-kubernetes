@@ -137,17 +137,17 @@ if [[ "$DNS_NAME" != "$COMMON_NAME" ]]; then
 fi
 set -e #re-enable exit on error
 
-CUSTOM_CA=$(readConfigFromValuesYaml .sysdig.certificate.customCa "$VALUES_OVERRIDE")
+CUSTOM_CA=$(readConfigFromValuesYaml .sysdig.certificate.customCA "$VALUES_OVERRIDE")
 if [[ $CUSTOM_CA == "true" ]]; then
   CUSTOM_CERT="$MANIFESTS"/certs/custom-ca.pem
   if [[ ! -f "$CUSTOM_CERT" ]]; then
-    log error "Custom ca is set but not provided. Please provide a custom ca cert at certs/custom-ca.pem in the current working directory."
+    log error "Custom CA is set but not provided. Please provide a custom CA cert at certs/custom-ca.pem in the current working directory."
   else
-    log info "Copying custom ca to $MANIFESTS_TEMPLATE_BASE/common-config/certs/"
+    log info "Copying custom CA to $MANIFESTS_TEMPLATE_BASE/common-config/certs/"
     cp "$CUSTOM_CERT" "$MANIFESTS_TEMPLATE_BASE/common-config/certs/"
   fi
 else
-  log info "Custom Ca not defined. Moving on. $CUSTOM_CA"
+  log info "Custom CA is set to $CUSTOM_CA. Continuing..."
 fi
 
 log info "step5a: generate storage"
