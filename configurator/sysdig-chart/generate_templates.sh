@@ -76,7 +76,7 @@ DNS_NAME=$(readConfigFromValuesYaml .sysdig.dnsName "$VALUES_OVERRIDE")
 
 mkdir "$MANIFESTS_TEMPLATE_BASE/common-config/certs"
 if [[ ! -d "$MANIFESTS/certs" ]]; then
-  log info "Creating certs manifests dir"
+  log info "Creating $MANIFESTS/certs dir"
   mkdir "$MANIFESTS/certs"
 fi
 
