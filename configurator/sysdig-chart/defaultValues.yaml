@@ -10,6 +10,13 @@ elasticsearch:
     enabled: true
     adminUser: sysdig
     verifySSL: false
+#This drives multi-az awareness, if sysdigcloud is deployed to a multi-az setup
+#this should be updated as adequate
+cloudProvider:
+  # example aws
+  name:
+  region:
+  isMultiAZ: false
 sysdig:
   #Advanced settings
   #autogenerate certificate by default - generate to
