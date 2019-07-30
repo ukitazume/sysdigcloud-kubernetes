@@ -27,7 +27,7 @@ spec:
         - name: sysdigcloud-pull-secret
       containers:
         - name: scanning-alertmgr
-          image: quay.io/sysdig/scanning:2.3.0.2452
+          image: quay.io/sysdig/scanning:2.3.0.2461
           imagePullPolicy: IfNotPresent
           resources:
             {}
