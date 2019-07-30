@@ -8,7 +8,6 @@ metadata:
     role: postgresql
 spec:
   serviceName: sysdigcloud-postgresql
-  replicas: 1
   selector:
     matchLabels:
       app: sysdigcloud
