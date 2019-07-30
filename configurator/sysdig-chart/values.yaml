@@ -1,92 +1,15 @@
-#defines which scripts needs to be run
-#generate - performs templating & kustomization
-#deploy   - apply's the generated script in k8s environment
-scripts: generate deploy
-#defines applications needed. Monitor installed by default.
-#Secure is optional. Remove secure if not.
-apps: monitor secure
 #Size of the cluster. Takes [ small | medium | large ]
 #This defines CPU & Memory & Disk & Replicas
 #Replicas can be overwritten for medium , large in advanced   config section
 size: medium
-#Set k8s namespace for sysdigcloud
-namespace: sysdigcloud
 #Set Quay.Io secrets
 quaypullsecret: <change-me>
-#StorageClass config
-storageClassName: <change-me>
-# This is used to drive the nodes that sysdigcloud pods run on, the nodes are expected to have been labeled with the key and value pairs e.g:
-# 'sysdigcloud.node: true'
-#nodeaffinityLabel:
-#  key: 'sysdigcloud.node'
-#  value: true
-#This drives multi-az awareness, if sysdigcloud is deployed to a multi-az setup
-#this should be updated as adequate
-cloudProvider:
-  # example aws
-  name: 
-  # boolean true|false
-  isMultiAZ: false
-  # example us-east-1
-  region: ""
 #supports aws | gke | hostPath | local
 #Do not use hostPath in production, currently it is experimental only.
 storageClassProvisioner: aws
-#supports openshift | kubernetes defaults to kubernetes install
-deployment: kubernetes
-# uncomment this if an airgapped docker registy will be used.
-#airgapped_registry_name:
-#airgapped_registry_username:
-#airgapped_registry_password:
 #Sysdig application config
 sysdig:
   agentCount: 10
   #Set Sysdig license
   license: <change-me>
   dnsName: <change-me>
-  #Advanced settings
-  #autogenerate certificate by default - generate to
-  #false and provide crt,key to use existing certs, make
-  #sure the key and cert are in your current working
-  #directory
-  certificate:
-    generate: true
-    crt:
-    key:
-  #replicas settings
-  #default replicas are set based on size - small, medium & large
-  #below section acts as a override
-  cassandraReplicaCount:
-  elasticSearchReplicaCount:
-  apiReplicaCount:
-  collectorReplicaCount:
-  workerReplicaCount:
-  anchoreCoreReplicaCount:
-  anchoreWorkerReplicaCount:
-  scanningApiReplicaCount:
-  scanningAlertMgrReplicaCount:
-  #set to true for highly available redis
-  redisHa: false
-  #SMTP Configurations
-  smtpServer: ""
-  smtpServerPort: "25"
-  #User,Password can be empty if the server does not require authentication
-  smtpUser: ""
-  smtpPassword: ""
-  smtpProtocolTLS: "false"
-  smtpProtocolSSL: "false"
-  #Optional Email Header
-  smtpFromAddress: ""
-  #Please provide openshift parameters
-  openshiftUrl:
-  openshiftUsername:
-  openshiftPassword:
-  #Override for default collector port
-  #defaults to 6443
-  collectorPort:
-  #custom ca(certificate authorities)
-  #adds custom ca to trusted list
-  #true expects certs/custom-ca.pem in manifest directory
-  customCa: false
-elasticsearch:
-  jvmOptions: ""

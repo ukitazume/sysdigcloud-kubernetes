@@ -9,7 +9,7 @@ function readConfigFromValuesYaml() {
   if [[ "$valueOverride" == "" ]]; then
     yq -r "$valueToRead" "${TEMPLATE_DIR}/values.yaml"
   else
-    yq -r -s ".[0] * .[1] | $valueToRead" "${TEMPLATE_DIR}/values.yaml" "$valueOverride"
+    yq -r -s ".[0] * .[1] * .[2] | $valueToRead" "${TEMPLATE_DIR}/defaultValues.yaml" "${TEMPLATE_DIR}/values.yaml" "$valueOverride"
   fi
 }
 
