@@ -6,7 +6,7 @@ source "$DIR/shared-values.sh"
 set -euo pipefail
 . "/sysdig-chart/framework.sh"
 
-APPS=$(readConfigFromValuesYaml .apps)
+APPS=$(readConfigFromValuesYaml .apps "$TEMPLATE_DIR/values.yaml")
 log info "${APPS}"
 SECURE=false
 for app in ${APPS}

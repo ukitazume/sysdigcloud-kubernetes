@@ -1,2 +1,7 @@
+size: small
+quaypullsecret: foo
+storageClassProvisioner: aws
 sysdig:
+  agentCount: 10
+  license: foo
   dnsName: not-a-valid.domain.com

@@ -4,16 +4,12 @@ export TEMPLATE_DIR="/sysdig-chart"
 
 function readConfigFromValuesYaml() {
   local valueToRead=$1
-  local valueOverride=${2:-''}
+  local valuesYamlFile=$2
 
-  if [[ "$valueOverride" == "" ]]; then
-    yq -r "$valueToRead" "${TEMPLATE_DIR}/values.yaml"
-  else
-    yq -r -s ".[0] * .[1] * .[2] | $valueToRead" "${TEMPLATE_DIR}/defaultValues.yaml" "${TEMPLATE_DIR}/values.yaml" "$valueOverride"
-  fi
+  yq -r -s ".[0] * .[1] | $valueToRead" "${TEMPLATE_DIR}/defaultValues.yaml" "$valuesYamlFile"
 }
 
-K8S_NAMESPACE="$(readConfigFromValuesYaml .namespace)"
+K8S_NAMESPACE="$(readConfigFromValuesYaml .namespace "$TEMPLATE_DIR/values.yaml")"
 export  K8S_NAMESPACE
 
 export MANIFESTS="/manifests"
