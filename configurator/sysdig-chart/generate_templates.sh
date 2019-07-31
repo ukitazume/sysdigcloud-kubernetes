@@ -54,7 +54,10 @@ else
 fi
 
 log info "step3.5: creating elasticsearch certs for Searchguard"
-if [[ -z "$(ls -A "${MANIFESTS}/elasticsearch-tls-certs")" ]]; then
+
+# This checks that the elasticsearch-tls-certs directory either does not exists
+# or exists and is empty.
+if [[ -z "$(ls -A "${MANIFESTS}/elasticsearch-tls-certs" 2> /dev/null)" ]]; then
   log info "Generating certs for Searchguard..."
   (cd /tools/
     ./sgtlstool.sh -c "$TEMPLATE_DIR/elasticsearch-tlsconfig.yaml" -ca -crt
