@@ -1,6 +1,6 @@
 apps: monitor secure
 scripts: generate deploy
-namespace: sysdigcloud
+namespace: sysdig
 deployment: kubernetes
 storageClassName: sysdig
 # Elasticsearch auth and TLS encryption
@@ -15,8 +15,10 @@ elasticsearch:
 cloudProvider:
   # example aws
   name:
-  region:
+  # boolean true|false
   isMultiAZ: false
+  # example us-east-1
+  region:
 sysdig:
   #Advanced settings
   #autogenerate certificate by default - generate to

@@ -10,7 +10,7 @@
       "role": "anchore-core"
     },
     "name": "sysdigcloud-anchore-core",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   }
 }
 {
@@ -22,7 +22,7 @@
       "role": "anchore-core"
     },
     "name": "sysdigcloud-anchore-core",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "ports": [
@@ -73,7 +73,7 @@
       "role": "anchore-worker"
     },
     "name": "sysdigcloud-anchore-worker",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "replicas": 1,
@@ -269,7 +269,7 @@
       "role": "api"
     },
     "name": "sysdigcloud-api",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "clusterIP": "None",
@@ -296,7 +296,7 @@
   "kind": "Deployment",
   "metadata": {
     "name": "sysdigcloud-api",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "replicas": 5,
@@ -559,7 +559,7 @@
       "role": "collector"
     },
     "name": "sysdigcloud-collector",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "clusterIP": "None",
@@ -586,7 +586,7 @@
   "kind": "Deployment",
   "metadata": {
     "name": "sysdigcloud-collector",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "replicas": 5,
@@ -846,7 +846,7 @@
   "apiVersion": "v1",
   "kind": "Namespace",
   "metadata": {
-    "name": "sysdigcloud"
+    "name": "sysdig"
   },
   "spec": {
     "replicas": 5,
@@ -1044,7 +1044,7 @@
     "api.url": "https://foo.bar.com:443",
     "cassandra.compaction.throughput": "",
     "cassandra.datacenter.name": "",
-    "cassandra.endpoint": "sysdigcloud-cassandra.sysdigcloud.svc.cluster.local.",
+    "cassandra.endpoint": "sysdigcloud-cassandra.sysdig.svc.cluster.local.",
     "cassandra.endpoint.snitch": "",
     "cassandra.jvm.options": "",
     "cassandra.password": "",
@@ -1075,7 +1075,7 @@
     "scanning.service.token": "change_me",
     "smtp.from.address": "foo@bar.com",
     "smtp.password": "bar",
-    "smtp.server": "foo.smtp.com",
+    "smtp.server": "",
     "smtp.server.port": "25",
     "smtp.ssl": "false",
     "smtp.tls": "false",
@@ -1105,7 +1105,7 @@
   "kind": "ConfigMap",
   "metadata": {
     "name": "sysdigcloud-config",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   }
 }
 {
@@ -1113,7 +1113,7 @@
   "kind": "Service",
   "metadata": {
     "name": "haproxy-ingress-lb-service",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "ports": [
@@ -1147,7 +1147,7 @@
   "kind": "ConfigMap",
   "metadata": {
     "name": "cassandra-jvm-opts",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   }
 }
 {
@@ -1159,7 +1159,7 @@
       "role": "cassandra"
     },
     "name": "sysdigcloud-cassandra",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "clusterIP": "None",
@@ -1193,7 +1193,7 @@
       "role": "cassandra"
     },
     "name": "sysdigcloud-cassandra",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "podManagementPolicy": "Parallel",
@@ -1413,7 +1413,7 @@
               "storage": "300Gi"
             }
           },
-          "storageClassName": "foo"
+          "storageClassName": "sysdig"
         }
       }
     ]
@@ -1431,7 +1431,7 @@
   "kind": "ConfigMap",
   "metadata": {
     "name": "elasticsearch",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   }
 }
 {
@@ -1446,7 +1446,7 @@
       "role": "elasticsearch"
     },
     "name": "sysdigcloud-elasticsearch",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "clusterIP": "None",
@@ -1478,7 +1478,7 @@
       "role": "elasticsearch"
     },
     "name": "sysdigcloud-elasticsearch",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "podManagementPolicy": "Parallel",
@@ -1627,7 +1627,7 @@
               "storage": "300Gi"
             }
           },
-          "storageClassName": "foo"
+          "storageClassName": "sysdig"
         }
       }
     ]
@@ -1644,7 +1644,7 @@
       "app": "sysdigcloud"
     },
     "name": "sysdigcloud-mysql-config",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   }
 }
 {
@@ -1656,7 +1656,7 @@
       "role": "mysql"
     },
     "name": "sysdigcloud-mysql",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "ports": [
@@ -1679,7 +1679,7 @@
       "role": "mysql"
     },
     "name": "sysdigcloud-mysql",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "replicas": 1,
@@ -1807,7 +1807,7 @@
               "storage": "25Gi"
             }
           },
-          "storageClassName": "foo"
+          "storageClassName": "sysdig"
         }
       }
     ]
@@ -1822,7 +1822,7 @@
       "role": "postgresql"
     },
     "name": "sysdigcloud-postgresql",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "ports": [
@@ -1848,7 +1848,7 @@
       "role": "postgresql"
     },
     "name": "sysdigcloud-postgresql",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "replicas": 1,
@@ -1991,7 +1991,7 @@
               "storage": "60Gi"
             }
           },
-          "storageClassName": "foo"
+          "storageClassName": "sysdig"
         }
       }
     ]
@@ -2006,7 +2006,7 @@
       "role": "redis"
     },
     "name": "redis-primary",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "ports": [
@@ -2025,7 +2025,7 @@
   "kind": "ServiceAccount",
   "metadata": {
     "name": "ingress-controller",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "template": {
@@ -2076,7 +2076,7 @@
   "kind": "Role",
   "metadata": {
     "name": "ingress-controller",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "rules": [
     {
@@ -2136,7 +2136,7 @@
   "kind": "ClusterRole",
   "metadata": {
     "name": "ingress-controller",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "rules": [
     {
@@ -2222,7 +2222,7 @@
   "kind": "RoleBinding",
   "metadata": {
     "name": "ingress-controller",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "roleRef": {
     "apiGroup": "rbac.authorization.k8s.io",
@@ -2246,7 +2246,7 @@
   "kind": "ClusterRoleBinding",
   "metadata": {
     "name": "ingress-controller",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "roleRef": {
     "apiGroup": "rbac.authorization.k8s.io",
@@ -2257,7 +2257,7 @@
     {
       "kind": "ServiceAccount",
       "name": "ingress-controller",
-      "namespace": "sysdigcloud"
+      "namespace": "sysdig"
     },
     {
       "apiGroup": "rbac.authorization.k8s.io",
@@ -2274,18 +2274,18 @@
   "kind": "ConfigMap",
   "metadata": {
     "name": "haproxy-ingress",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   }
 }
 {
   "apiVersion": "v1",
   "data": {
-    "6443": "sysdigcloud/sysdigcloud-collector:6000:::sysdigcloud/sysdigcloud-ssl-secret"
+    "6443": "sysdig/sysdigcloud-collector:6000:::sysdig/sysdigcloud-ssl-secret"
   },
   "kind": "ConfigMap",
   "metadata": {
     "name": "haproxy-tcp-services",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   }
 }
 {
@@ -2293,7 +2293,7 @@
   "kind": "Service",
   "metadata": {
     "name": "ingress-default-backend",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "ports": [
@@ -2314,7 +2314,7 @@
       "run": "ingress-default-backend"
     },
     "name": "ingress-default-backend",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "selector": {
@@ -2364,7 +2364,7 @@
       "role": "scanning-api"
     },
     "name": "sysdigcloud-scanning-api",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "ports": [
@@ -2392,7 +2392,7 @@
       "role": "scanning-alertmgr"
     },
     "name": "sysdigcloud-scanning-alertmgr",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "replicas": 1,
@@ -2642,7 +2642,7 @@
       "role": "scanning-api"
     },
     "name": "sysdigcloud-scanning-api",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "replicas": 1,
@@ -2871,7 +2871,7 @@
   "apiVersion": "storage.k8s.io/v1",
   "kind": "StorageClass",
   "metadata": {
-    "name": "foo"
+    "name": "sysdig"
   },
   "spec": {
     "rules": [
