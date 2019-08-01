@@ -16,14 +16,14 @@ else
   cp /manifests/values.yaml /sysdig-chart/values.yaml
 fi
 
-SCRIPTS=$(readConfigFromValuesYaml .scripts)
+SCRIPTS=$(readConfigFromValuesYaml .scripts "$TEMPLATE_DIR/values.yaml")
 log info "${SCRIPTS}"
 
 #set defaults
 GENERATE=false
 DEPLOY=false
 
-AIRGAPPED=$(readConfigFromValuesYaml .airgapped_registry_name)
+AIRGAPPED=$(readConfigFromValuesYaml .airgapped_registry_name "$TEMPLATE_DIR/values.yaml")
 
 for script in ${SCRIPTS}; do
  if [[ ${script} == "generate" ]]; then
@@ -39,7 +39,7 @@ fi
 
 if [[ ${GENERATE} == "true" ]]; then
   log notice "Generating templates..."
-  "$TEMPLATE_DIR/generate_templates.sh"
+  "$TEMPLATE_DIR/generate_templates.sh" "$TEMPLATE_DIR/values.yaml"
 fi
 
 if [[ "$AIRGAPPED" != "null" ]]; then

@@ -1,10 +1,34 @@
+apps: monitor secure
+scripts: generate deploy
+namespace: sysdig
+deployment: kubernetes
+storageClassName: sysdig
 # Elasticsearch auth and TLS encryption
 elasticsearch:
+  jvmOptions: ""
   searchguard:
     enabled: true
-    adminUser: admin
+    adminUser: sysdig
     verifySSL: false
+#This drives multi-az awareness, if sysdigcloud is deployed to a multi-az setup
+#this should be updated as adequate
+cloudProvider:
+  # example aws
+  name:
+  # boolean true|false
+  isMultiAZ: false
+  # example us-east-1
+  region:
 sysdig:
+  #Advanced settings
+  #autogenerate certificate by default - generate to
+  #false and provide crt,key to use existing certs, make
+  #sure the key and cert are in your current working
+  #directory
+  certificate:
+    generate: true
+    crt:
+    key:
   monitorVersion: 2363
   anchoreVersion: v0.3.4.1
   cassandraVersion: 2.1.21.13
@@ -16,3 +40,16 @@ sysdig:
   haproxyVersion: v0.7-beta.7
   rsyslogVersion: 8.34.0.5
   localVolumeProvisioner: v2.3.2
+  #set to true for highly available redis
+  redisHa: false
+  customCa: false
+  smtpServer:
+  smtpServerPort: 25
+  #User,Password can be empty if the server does not require authentication
+  smtpUser:
+  smtpPassword:
+  smtpProtocolTLS: false
+  smtpProtocolSSL: false
+  #Optional Email Header
+  smtpFromAddress:
+  collectorPort: 6443

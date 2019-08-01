@@ -10,8 +10,6 @@ metadata:
   annotations:
     version: {{ .Values.sysdig.monitorVersion | quote }}
 spec:
-  # Replicas can be scaled up as needed.
-  replicas: 1
   selector:
     matchLabels:
       app: sysdigcloud

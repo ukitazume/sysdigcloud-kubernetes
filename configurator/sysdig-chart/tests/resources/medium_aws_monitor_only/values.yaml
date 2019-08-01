@@ -11,13 +11,6 @@ apps: monitor
 size: medium
 #Set Quay.Io secrets
 quaypullsecret: foo
-#StorageClass config
-storageClassName: foo
-#This drives multi-az awareness, if sysdigcloud is deployed to a multi-az setup
-#this should be updated as adequate
-cloudProvider:
-  # example aws
-  name: aws
 deployment: kubernetes
 #Sysdig application config
 sysdig:
@@ -26,7 +19,6 @@ sysdig:
   dnsName: foo.bar.com
   #SMTP Configurations
   smtpServer: foo.smtp.com
-  smtpServerPort: 25
   #User,Password can be empty if the server does not require authentication
   smtpUser: foo
   smtpPassword: bar
