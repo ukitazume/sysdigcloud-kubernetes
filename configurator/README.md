@@ -116,6 +116,41 @@ move to the new Jenkins this will no longer be needed).
 
 ## Usage
 
+### Quickstart
+
+- Login to quay.io
+  - Retrieve quay username and password from quaypullsecret, e.g:
+  ```bash
+  AUTH=$(echo <REPLACE_WITH_quaypullsecret> | base64 -d | jq -r '.auths."quay.io".auth'| base64 -d)
+  QUAY_USERNAME=${AUTH%:*}
+  QUAY_PASSWORD=${AUTH#*:}
+  ```
+  - Use QUAY_USERNAME and QUAY_PASSWORD retrieved from previous step to login
+  to quay
+  ```bash
+  docker login -u "$QUAY_USERNAME" -p "$QUAY_PASSWORD" quay.io
+  ```
+- Copy [sysdig-chart/values.yaml](sysdig-chart/values.yaml) to your
+working directory, you can do:
+```bash
+wget \
+https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/Templating_k8s_configurations/configurator/sysdig-chart/values.yaml
+```
+- Update the `size`, `quaypullsecret`, `storageClassProvisioner`,
+`sysdig.agentCount`, `sysdig.license` and `sysdig.dnsName`.  See [full
+configuration](configurator/configuration.md) for all possible configuration
+options.
+- Run
+```bash
+docker run -v ~/.kube:/root/.kube -v $(pwd):/manifests \
+  quay.io/sysdig/configurator:0.0.0-alpha
+```
+
+### Configuration
+
+See [full configuration](configurator/configuration.md) for all possible
+configuration options.
+
 ### Non-Airgap deployment
 
 This assumes the Kubernetes cluster has network access to pulling images from
