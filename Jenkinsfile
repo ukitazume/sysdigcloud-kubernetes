@@ -102,16 +102,33 @@ pipeline {
         }
       }
     }
+    stage('Push RC git tag') {
+      when {
+        // branch 'Templating_k8s_configurations'
+        branch 'tagging_scheme'
+      }
+      steps{
+        withCredentials([usernamePassword(credentialsId: 'jenkins-github-ssh-key', 'keyFileVariable')]) {
+          script {
+            gitTag = "${nextReleaseTag}-rc${env.BUILD_NUMBER}"
+            sh(
+              "git tag -m ${gitTag} ${gitTag}" +
+              "GIT_SSH_COMMAND=\"ssh -i ${keyFileVariable}\" git push origin --tags"
+            )
+          }
+        }
+      }
+    }
     stage('Push internal image') {
       when {
-        tag pattern: "^v\\d+\\.\\d+\\.\\d+-rc\\d+\$", comparator: "REGEXP"
+        branch 'Templating_k8s_configurations'
       }
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
           script {
-              nonRCTag = env.TAG_NAME.replaceAll(/-rc\d+/, '')
-              dockerRCImage = "${env.ARTIFACTORY_URL}/configurator:${env.TAG_NAME}"
-              dockerNonRCImage = "${env.ARTIFACTORY_URL}/configurator:${nonRCTag}"
+              nextReleaseTag = new File('configurator/next_version').text
+              dockerImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-rc${env.BUILD_NUMBER}"
+              dockerNonRCImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}"
               docker.withRegistry("https://${env.ARTIFACTORY_URL}", registryCredential) {
                 sh(
                   "cd configurator && IMAGE_NAME=${dockerRCImage} make push && " +
@@ -141,15 +158,15 @@ pipeline {
     }
     stage('Push internal uber_image') {
       when {
-        tag pattern: "^v\\d+\\.\\d+\\.\\d+-rc\\d+\$", comparator: "REGEXP"
+        branch 'Templating_k8s_configurations'
       }
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
           script {
-              nonRCTag = env.TAG_NAME.replaceAll(/-rc\d+/, '')
-              dockerImage = "${env.ARTIFACTORY_URL}/configurator:${env.TAG_NAME}"
-              uberImage = "${env.ARTIFACTORY_URL}/configurator:uber-${env.TAG_NAME}"
-              uberNonRCImage = "${env.ARTIFACTORY_URL}/configurator:uber-${nonRCTag}"
+              nextReleaseTag = new File('configurator/next_version').text
+              dockerImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-rc${env.BUILD_NUMBER}"
+              uberImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-uber-rc${env.BUILD_NUMBER}"
+              uberNonRCImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-uber"
               docker.withRegistry("https://${env.ARTIFACTORY_URL}", registryCredential) {
                 sh(
                   "cd configurator && IMAGE_NAME=${dockerImage} UBER_IMAGE_NAME=${uberImage} make push_uber_tar && " +

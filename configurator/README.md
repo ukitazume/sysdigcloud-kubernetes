@@ -49,31 +49,9 @@ generation workflow.
 
 ### Release Candidates
 
-Every workday morning (Pacific Time), the release personnel tags a release
-candidate with the below:
-
-- Run the below command
-
-```bash
-CURRENT_CONFIGURATOR_RC_VERSION=$(cat configurator/rc_version)
-if [[ ! -z $(git log $CURRENT_CONFIGURATOR_RC_VERSION..) ]]; then
-  RC_VERSION=${CURRENT_CONFIGURATOR_RC_VERSION#*rc}
-  NEXT_VERSION=${CURRENT_CONFIGURATOR_RC_VERSION%-rc*}
-  NEXT_RC_VERSION=$((1 + $RC_VERSION))
-  NEXT_CONFIGURATOR_RC_VERSION="$NEXT_VERSION-$RC_VERSION"
-  git tag $NEXT_CONFIGURATOR_RC_VERSION -F <(git log --oneline \
-  $CURRENT_CONFIGURATOR_RC_VERSION..)
-  git push --tags
-  git checkout -b "${NEXT_CONFIGURATOR_RC_VERSION}_upgrade"
-  echo -n $NEXT_CONFIGURATOR_RC_VERSION > rc_version
-  git commit -am "Tagged $NEXT_CONFIGURATOR_RC_VERSION"
-  git push
-fi
-```
-
-- Open a PR with the upgrade branch.
-- Go to the jenkins UI and click the build button for the tag they just pushed
-(once we move to the new Jenkins this will no longer be needed).
+On every successful build of the main branch, Jenkins tags a release candidate
+version matching `<next_release_tag>-rc<$JENKINS_BUILD_NUMBER>` and pushes
+the git tag, and a docker image matching the git tag.
 
 ### Full Release
 
