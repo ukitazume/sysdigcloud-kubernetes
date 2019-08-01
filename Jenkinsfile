@@ -108,12 +108,12 @@ pipeline {
         branch 'tagging_scheme'
       }
       steps{
-        withCredentials([usernamePassword(credentialsId: 'jenkins-github-ssh-key', 'keyFileVariable')]) {
+        withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-github-ssh-key', keyFileVariable: 'sshkey')]) {
           script {
             gitTag = "${nextReleaseTag}-rc${env.BUILD_NUMBER}"
             sh(
               "git tag -m ${gitTag} ${gitTag}" +
-              "GIT_SSH_COMMAND=\"ssh -i ${keyFileVariable}\" git push origin --tags"
+              "GIT_SSH_COMMAND=\"ssh -i ${sshkey}\" git push origin --tags"
             )
           }
         }
