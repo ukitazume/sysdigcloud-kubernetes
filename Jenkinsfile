@@ -110,6 +110,7 @@ pipeline {
       steps{
         withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-github-ssh-key', keyFileVariable: 'sshkey')]) {
           script {
+            nextReleaseTag = new File('configurator/next_version').text
             gitTag = "${nextReleaseTag}-rc${env.BUILD_NUMBER}"
             sh(
               "git tag -m ${gitTag} ${gitTag}" +
