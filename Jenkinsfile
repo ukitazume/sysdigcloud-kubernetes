@@ -4,6 +4,30 @@ def nextReleaseTag() {
   sh(returnStdout: true, script: "cat configurator/next_version").trim()
 }
 
+def dockerImage() {
+  "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag()}-rc${env.BUILD_NUMBER}"
+}
+
+def dockerNonRCImage() {
+  "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag()}"
+}
+
+def uberImage() {
+  "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag()}-uber-rc${env.BUILD_NUMBER}"
+}
+
+def uberNonRCImage() {
+  "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag()}-uber"
+}
+
+def quayImage() {
+  "quay.io/sysdig/configurator:${env.TAG_NAME}"
+}
+
+def quayUberImage() {
+  "quay.io/sysdig/configurator:${env.TAG_NAME}-uber"
+}
+
 def slackSendNotification(color = '', messageType = '', nonGenericMessage = false) {
   if (color != '' && messageType != '') {
     // slackSend
@@ -68,7 +92,7 @@ pipeline {
           script {
               sh(
                 "cd configurator && " +
-                "IMAGE_NAME=${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER} make test"
+                "IMAGE_NAME=${dockerImage()} make test"
               )
           }
         }
@@ -92,7 +116,7 @@ pipeline {
           docker.withRegistry("https://quay.io", "QUAY") {
             sh(
               "cd configurator && " +
-              "make test_uber_tar"
+              "IMAGE_NAME=${dockerImage()} make test_uber_tar"
             )
           }
         }
@@ -131,13 +155,11 @@ pipeline {
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
           script {
-            dockerImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag()}-rc${env.BUILD_NUMBER}"
-            dockerNonRCImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag()}"
             docker.withRegistry("https://${env.ARTIFACTORY_URL}", registryCredential) {
               sh(
-                "cd configurator && IMAGE_NAME=${dockerImage} make push && " +
-                "docker tag ${dockerImage} ${dockerNonRCImage} && " +
-                "docker push ${dockerNonRCImage}"
+                "cd configurator && IMAGE_NAME=${dockerImage()} make push && " +
+                "docker tag ${dockerImage()} ${dockerNonRCImage()} && " +
+                "docker push ${dockerNonRCImage()}"
               )
             }
           }
@@ -147,16 +169,14 @@ pipeline {
         success {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              dockerImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag()}-rc${env.BUILD_NUMBER}"
-              slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${dockerImage}")
+              slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${dockerImage()}")
             }
           }
         }
         cleanup {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              dockerImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag()}-rc${env.BUILD_NUMBER}"
-              sh("docker rmi ${env.dockerImage} || /bin/true")
+              sh("docker rmi ${dockerImage()} || /bin/true")
             }
           }
         }
@@ -170,14 +190,12 @@ pipeline {
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
           script {
-            dockerImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag()}-rc${env.BUILD_NUMBER}"
-            uberImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag()}-uber-rc${env.BUILD_NUMBER}"
-            uberNonRCImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag()}-uber"
             docker.withRegistry("https://${env.ARTIFACTORY_URL}", registryCredential) {
               sh(
-                "cd configurator && IMAGE_NAME=${dockerImage} UBER_IMAGE_NAME=${uberImage} make push_uber_tar && " +
-                "docker tag ${uberImage} ${uberNonRCImage} && " +
-                "docker push ${uberNonRCImage}"
+                "cd configurator && " +
+                "IMAGE_NAME=${dockerImage()} UBER_IMAGE_NAME=${uberImage()} make push_uber_tar && " +
+                "docker tag ${uberImage()} ${uberNonRCImage()} && " +
+                "docker push ${uberNonRCImage()}"
               )
             }
           }
@@ -187,18 +205,15 @@ pipeline {
         success {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              uberImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag()}-uber-rc${env.BUILD_NUMBER}"
-              slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${uberImage}")
+              slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${uberImage()}")
             }
           }
         }
         cleanup {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              dockerImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag()}-rc${env.BUILD_NUMBER}"
-              uberImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag()}-uber-rc${env.BUILD_NUMBER}"
-              sh("docker rmi ${dockerImage} || /bin/true")
-              sh("docker rmi ${uberImage} || /bin/true")
+              sh("docker rmi ${dockerImage()} || /bin/true")
+              sh("docker rmi ${uberImage()} || /bin/true")
             }
           }
         }
@@ -211,14 +226,13 @@ pipeline {
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
           script {
-              dockerImage = "${env.ARTIFACTORY_URL}/configurator:${env.TAG_NAME}"
               docker.withRegistry("https://${env.ARTIFACTORY_URL}", registryCredential) {
-                sh("docker pull ${dockerImage}")
+                sh("docker pull ${dockerNonRCImage()}")
               }
               docker.withRegistry("https://quay.io", "QUAY") {
                 sh(
-                  "docker tag ${dockerImage} quay.io/sysdig/configurator:${env.TAG_NAME} && " +
-                  "docker push quay.io/sysdig/configurator:${env.TAG_NAME}"
+                  "docker tag ${dockerNonRCImage()} ${quayImage()} && " +
+                  "docker push ${quayImage()}"
                 )
               }
           }
@@ -233,7 +247,7 @@ pipeline {
         cleanup {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.TAG_NAME} || /bin/true")
+              sh("docker rmi ${dockerNonRCImage()} || /bin/true")
             }
           }
         }
@@ -246,14 +260,13 @@ pipeline {
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
           script {
-              uberImage = "${env.ARTIFACTORY_URL}/configurator:uber-${env.TAG_NAME}"
               docker.withRegistry("https://${env.ARTIFACTORY_URL}", registryCredential) {
-                sh("docker pull ${uberImage}")
+                sh("docker pull ${uberNonRCImage()}")
               }
               docker.withRegistry("https://quay.io", "QUAY") {
                 sh (
-                "docker tag ${uberImage} quay.io/sysdig/configurator:uber-${env.TAG_NAME} && " +
-                "docker push quay.io/sysdig/configurator:uber-${env.TAG_NAME}"
+                "docker tag ${uberNonRCImage()} ${quayUberImage()} && " +
+                "docker push ${quayUberImage()}"
                 )
               }
           }
@@ -262,13 +275,13 @@ pipeline {
       post {
         success {
           script {
-            slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: quay.io/sysdig/configurator:uber-${env.TAG_NAME}")
+            slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${quayUberImage()}")
           }
         }
         cleanup {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:uber-${env.TAG_NAME} || /bin/true")
+              sh("docker rmi ${uberNonRCImage()} || /bin/true")
             }
           }
         }
