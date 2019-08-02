@@ -110,7 +110,7 @@ pipeline {
       steps{
         withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-github-ssh-key', keyFileVariable: 'sshkey')]) {
           script {
-            nextReleaseTag = new File('configurator/next_version').text
+            nextReleaseTag = sh(returnStdout: true, script: "cat configurator/next_version").trim()
             gitTag = "${nextReleaseTag}-rc${env.BUILD_NUMBER}"
             sh(
               "git tag -m ${gitTag} ${gitTag}" +
@@ -127,16 +127,16 @@ pipeline {
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
           script {
-              nextReleaseTag = new File('configurator/next_version').text
-              dockerImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-rc${env.BUILD_NUMBER}"
-              dockerNonRCImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}"
-              docker.withRegistry("https://${env.ARTIFACTORY_URL}", registryCredential) {
-                sh(
-                  "cd configurator && IMAGE_NAME=${dockerRCImage} make push && " +
-                  "docker tag ${dockerRCImage} ${dockerNonRCImage} && " +
-                  "docker push ${dockerNonRCImage}"
-                )
-              }
+            nextReleaseTag = sh(returnStdout: true, script: "cat configurator/next_version").trim()
+            dockerImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-rc${env.BUILD_NUMBER}"
+            dockerNonRCImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}"
+            docker.withRegistry("https://${env.ARTIFACTORY_URL}", registryCredential) {
+              sh(
+                "cd configurator && IMAGE_NAME=${dockerRCImage} make push && " +
+                "docker tag ${dockerRCImage} ${dockerNonRCImage} && " +
+                "docker push ${dockerNonRCImage}"
+              )
+            }
           }
         }
       }
