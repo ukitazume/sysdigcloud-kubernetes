@@ -1,5 +1,9 @@
 import groovy.json.JsonOutput
 
+def nextReleaseTag() {
+  sh(returnStdout: true, script: "cat configurator/next_version").trim()
+}
+
 def slackSendNotification(color = '', messageType = '', nonGenericMessage = false) {
   if (color != '' && messageType != '') {
     // slackSend
@@ -47,7 +51,7 @@ pipeline {
   stages {
     stage('ShellCheck') {
       when {
-        not { tag pattern: "^v\\d+\\.\\d+\\.\\d+\$", comparator: "REGEXP" }
+        not { equals expected: nextReleaseTag(), actual: env.TAG_NAME }
       }
       steps {
         script {
@@ -57,7 +61,7 @@ pipeline {
     }
     stage('Test') {
       when {
-        not { tag pattern: "^v\\d+\\.\\d+\\.\\d+\$", comparator: "REGEXP" }
+        not { equals expected: nextReleaseTag(), actual: env.TAG_NAME }
       }
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
@@ -73,7 +77,7 @@ pipeline {
         cleanup {
           withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.TAG_NAME} || /bin/true")
+              sh("docker rmi ${env.ARTIFACTORY_URL}/configurator:${env.BUILD_NUMBER} || /bin/true")
             }
           }
         }
@@ -81,7 +85,7 @@ pipeline {
     }
     stage('Test uber_tar') {
       when {
-        not { tag pattern: "^v\\d+\\.\\d+\\.\\d+\$", comparator: "REGEXP" }
+        not { equals expected: nextReleaseTag(), actual: env.TAG_NAME }
       }
       steps{
         script {
@@ -110,8 +114,7 @@ pipeline {
       steps{
         withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-github-ssh-key', keyFileVariable: 'sshkey')]) {
           script {
-            nextReleaseTag = sh(returnStdout: true, script: "cat configurator/next_version").trim()
-            gitTag = "${nextReleaseTag}-rc${env.BUILD_NUMBER}"
+            gitTag = "${nextReleaseTag()}-rc${env.BUILD_NUMBER}"
             sh(
               "git tag -m ${gitTag} ${gitTag} && " +
               "GIT_SSH_COMMAND=\"ssh -i ${sshkey}\" git push origin --tags"
@@ -128,9 +131,8 @@ pipeline {
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
           script {
-            nextReleaseTag = sh(returnStdout: true, script: "cat configurator/next_version").trim()
-            dockerImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-rc${env.BUILD_NUMBER}"
-            dockerNonRCImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}"
+            dockerImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag()}-rc${env.BUILD_NUMBER}"
+            dockerNonRCImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag()}"
             docker.withRegistry("https://${env.ARTIFACTORY_URL}", registryCredential) {
               sh(
                 "cd configurator && IMAGE_NAME=${dockerImage} make push && " +
@@ -145,8 +147,7 @@ pipeline {
         success {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              nextReleaseTag = sh(returnStdout: true, script: "cat configurator/next_version").trim()
-              dockerImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-rc${env.BUILD_NUMBER}"
+              dockerImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag()}-rc${env.BUILD_NUMBER}"
               slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${dockerImage}")
             }
           }
@@ -169,10 +170,9 @@ pipeline {
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
           script {
-            nextReleaseTag = sh(returnStdout: true, script: "cat configurator/next_version").trim()
-            dockerImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-rc${env.BUILD_NUMBER}"
-            uberImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-uber-rc${env.BUILD_NUMBER}"
-            uberNonRCImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-uber"
+            dockerImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag()}-rc${env.BUILD_NUMBER}"
+            uberImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag()}-uber-rc${env.BUILD_NUMBER}"
+            uberNonRCImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag()}-uber"
             docker.withRegistry("https://${env.ARTIFACTORY_URL}", registryCredential) {
               sh(
                 "cd configurator && IMAGE_NAME=${dockerImage} UBER_IMAGE_NAME=${uberImage} make push_uber_tar && " +
@@ -187,8 +187,7 @@ pipeline {
         success {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              nextReleaseTag = sh(returnStdout: true, script: "cat configurator/next_version").trim()
-              uberImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-uber-rc${env.BUILD_NUMBER}"
+              uberImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag()}-uber-rc${env.BUILD_NUMBER}"
               slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${uberImage}")
             }
           }
@@ -207,7 +206,7 @@ pipeline {
     }
     stage('Promote image to quay') {
       when {
-        tag pattern: "^v\\d+\\.\\d+\\.\\d+\$", comparator: "REGEXP"
+        equals expected: nextReleaseTag(), actual: env.TAG_NAME
       }
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
@@ -242,7 +241,7 @@ pipeline {
     }
     stage('Promote uber_image to quay') {
       when {
-        tag pattern: "^v\\d+\\.\\d+\\.\\d+\$", comparator: "REGEXP"
+        equals expected: nextReleaseTag(), actual: env.TAG_NAME
       }
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
