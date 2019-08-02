@@ -17,6 +17,7 @@ nodeaffinityLabel.value | value of the label used to configure the nodes sysdig 
 cloudProvider.name| Name of the cloud provider | `aws\|gke` | - |
 cloudProvider.isMultiAZ | If the cluster is deployed in multiple availability zones requires `cloudProvider.name` to be configured| `true\|false` | `false` |
 cloudProvider.region | Region the cluster is deployed in e.g: `us-east-1`, required if `cloudProvider.name` is configured| - | - |
+cloudProvider.create_loadbalancer | when set to true a service of type [`LoadBalancer`](https://kubernetes.io/docs/concepts/services-networking/#loadbalancer) is created| `true|false` | `false` |
 airgapped_registry_name | URL of the airgapped (internal) docker registry, this is used for installations where the Kubernetes cluster can not pull images directly from quay, see [airgap instructions multi-homed](README.md#airgap-installation-with-installation-machine-multi-homed) and [full airgap instructions](README.md#full-airgap-installation) for more details | - | - |
 airgapped_registry_username | username for the configured `airgapped_registry_name`, if the registry does not require authentication you can ignore this | - | - |
 airgapped_registry_password | password for the configured `airgapped_registry_username` user, if the registry does not require authentication you can ignore this | - | - |

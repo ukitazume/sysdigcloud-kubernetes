@@ -1,0 +1,19 @@
+#defines which scripts needs to be run
+#generate - performs templating & kustomization
+#deploy   - apply's the generated script in k8s environment
+scripts: generate
+#Size of the cluster. Takes [ small | medium | large ]
+#This defines CPU & Memory & Disk & Replicas
+#Replicas can be overwritten for medium , large in advanced   config section
+size: large
+#Set Quay.Io secrets
+quaypullsecret: foo
+#Sysdig application config
+sysdig:
+  #Set Sysdig license
+  license: foobar
+  dnsName: foo.bar.com
+  smtpFromAddress: foo@bar.com
+cloudProvider:
+  name: aws
+  create_loadbalancer: true

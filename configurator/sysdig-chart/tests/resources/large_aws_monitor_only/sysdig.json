@@ -874,7 +874,7 @@
     "selector": {
       "run": "haproxy-ingress"
     },
-    "type": "LoadBalancer"
+    "type": "NodePort"
   }
 }
 {

@@ -224,11 +224,11 @@
             },
             "resources": {
               "limits": {
-                "cpu": 4,
+                "cpu": "4",
                 "memory": "4Gi"
               },
               "requests": {
-                "cpu": "500m",
+                "cpu": "1",
                 "memory": "1Gi"
               }
             },
@@ -299,7 +299,7 @@
     "namespace": "sysdig"
   },
   "spec": {
-    "replicas": 1,
+    "replicas": 5,
     "template": {
       "metadata": {
         "annotations": {
@@ -483,12 +483,12 @@
             },
             "resources": {
               "limits": {
-                "cpu": "4",
-                "memory": "4Gi"
+                "cpu": "16",
+                "memory": "16Gi"
               },
               "requests": {
-                "cpu": "1",
-                "memory": "1Gi"
+                "cpu": "4",
+                "memory": "4Gi"
               }
             },
             "volumeMounts": [
@@ -589,7 +589,7 @@
     "namespace": "sysdig"
   },
   "spec": {
-    "replicas": 1,
+    "replicas": 5,
     "template": {
       "metadata": {
         "annotations": {
@@ -775,12 +775,12 @@
             },
             "resources": {
               "limits": {
-                "cpu": "4",
-                "memory": "4Gi"
+                "cpu": "16",
+                "memory": "16Gi"
               },
               "requests": {
-                "cpu": "1",
-                "memory": "1Gi"
+                "cpu": "4",
+                "memory": "4Gi"
               }
             },
             "volumeMounts": [
@@ -849,7 +849,7 @@
     "name": "sysdig"
   },
   "spec": {
-    "replicas": 1,
+    "replicas": 5,
     "template": {
       "metadata": {
         "annotations": {
@@ -972,12 +972,12 @@
             },
             "resources": {
               "limits": {
-                "cpu": "4",
-                "memory": "4Gi"
+                "cpu": "16",
+                "memory": "16Gi"
               },
               "requests": {
-                "cpu": "1",
-                "memory": "1Gi"
+                "cpu": "4",
+                "memory": "4Gi"
               }
             },
             "volumeMounts": [
@@ -1049,7 +1049,7 @@
     "cassandra.jvm.options": "",
     "cassandra.password": "",
     "cassandra.port": "9042",
-    "cassandra.replication.factor": "1",
+    "cassandra.replication.factor": "3",
     "cassandra.secure": "false",
     "cassandra.snitch.extract_cmd": "",
     "cassandra.snitch.hostname.file": "",
@@ -1074,12 +1074,12 @@
     "scanning.redis.enabled": "true",
     "scanning.service.token": "change_me",
     "smtp.from.address": "foo@bar.com",
-    "smtp.password": "bar",
-    "smtp.server": "foo.smtp.com",
+    "smtp.password": "",
+    "smtp.server": "",
     "smtp.server.port": "25",
     "smtp.ssl": "false",
     "smtp.tls": "false",
-    "smtp.user": "foo",
+    "smtp.user": "",
     "sysdigcloud.captures.cassandra.storage": "true",
     "sysdigcloud.default.user": "test@sysdig.com",
     "sysdigcloud.google.oauth.client.id": "",
@@ -1136,7 +1136,7 @@
     "selector": {
       "run": "haproxy-ingress"
     },
-    "type": "NodePort"
+    "type": "LoadBalancer"
   }
 }
 {
@@ -1197,7 +1197,7 @@
   },
   "spec": {
     "podManagementPolicy": "Parallel",
-    "replicas": 1,
+    "replicas": 6,
     "selector": {
       "matchLabels": {
         "affinity": "cassandra",
@@ -1360,11 +1360,11 @@
             },
             "resources": {
               "limits": {
-                "cpu": "2",
+                "cpu": "8",
                 "memory": "8Gi"
               },
               "requests": {
-                "cpu": "1",
+                "cpu": "4",
                 "memory": "2Gi"
               }
             },
@@ -1410,7 +1410,7 @@
           ],
           "resources": {
             "requests": {
-              "storage": "30Gi"
+              "storage": "300Gi"
             }
           },
           "storageClassName": "sysdig"
@@ -1482,7 +1482,7 @@
   },
   "spec": {
     "podManagementPolicy": "Parallel",
-    "replicas": 1,
+    "replicas": 6,
     "selector": {
       "matchLabels": {
         "affinity": "elasticsearch",
@@ -1530,7 +1530,7 @@
             "env": [
               {
                 "name": "ELASTICSEARCH_GOSSIP_NODES_NUM",
-                "value": "1"
+                "value": "6"
               }
             ],
             "envFrom": [
@@ -1560,11 +1560,11 @@
             },
             "resources": {
               "limits": {
-                "cpu": "2",
+                "cpu": "8",
                 "memory": "8Gi"
               },
               "requests": {
-                "cpu": "1",
+                "cpu": "4",
                 "memory": "4Gi"
               }
             },
@@ -1624,7 +1624,7 @@
           ],
           "resources": {
             "requests": {
-              "storage": "30Gi"
+              "storage": "300Gi"
             }
           },
           "storageClassName": "sysdig"
@@ -1953,12 +1953,12 @@
             },
             "resources": {
               "limits": {
-                "cpu": "2",
-                "memory": "4Gi"
+                "cpu": "4",
+                "memory": "8Gi"
               },
               "requests": {
-                "cpu": "500m",
-                "memory": "500Mi"
+                "cpu": "2",
+                "memory": "2Gi"
               }
             },
             "volumeMounts": [
@@ -1988,7 +1988,7 @@
           ],
           "resources": {
             "requests": {
-              "storage": "30Gi"
+              "storage": "60Gi"
             }
           },
           "storageClassName": "sysdig"
@@ -2610,11 +2610,11 @@
             "name": "scanning-alertmgr",
             "resources": {
               "limits": {
-                "cpu": 4,
+                "cpu": "4",
                 "memory": "4Gi"
               },
               "requests": {
-                "cpu": "500m",
+                "cpu": "1",
                 "memory": "1Gi"
               }
             }
@@ -2848,11 +2848,11 @@
             "name": "scanning-api",
             "resources": {
               "limits": {
-                "cpu": 4,
+                "cpu": "4",
                 "memory": "4Gi"
               },
               "requests": {
-                "cpu": "500m",
+                "cpu": "1",
                 "memory": "1Gi"
               }
             }

@@ -19,6 +19,7 @@ cloudProvider:
   isMultiAZ: false
   # example us-east-1
   region:
+  create_loadbalancer: false
 sysdig:
   #Advanced settings
   #autogenerate certificate by default - generate to
