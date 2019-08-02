@@ -7,7 +7,7 @@ managed by Kubernetes. Simply edit the configuration ConfigMap and set the prope
 mysql.endpoint: <DNS/IP>
 cassandra.endpoint: <DNS/IP>
 redis.endpoint: <DNS/IP>
-elasticsearch.url: <DNS/IP>
+elasticsearch.hostname: <DNS/IP>
 ```
 
 #### MySQL notes:

@@ -24,12 +24,8 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: redis-sentinel
-        image: quay.io/sysdig/redis:4.0.12.4-ha
+        image: quay.io/sysdig/redis:4.0.12.5-ha
         imagePullPolicy: Always
-        resources:
-          requests:
-            cpu: 100m
-            memory: 1Gi
         env:
         - name: SENTINEL
           value: redis-primary
@@ -40,11 +36,11 @@ spec:
               key: redis.password
         resources:
           limits:
-            cpu: 500m
-            memory: 100Mi
+            cpu: 300m
+            memory: 20Mi
           requests:
-            cpu: 100m
-            memory: 50Mi
+            cpu: 50m
+            memory: 5Mi
         ports:
         - containerPort: 26379
           name: redis-sentinel
