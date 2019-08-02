@@ -113,7 +113,7 @@ pipeline {
             nextReleaseTag = sh(returnStdout: true, script: "cat configurator/next_version").trim()
             gitTag = "${nextReleaseTag}-rc${env.BUILD_NUMBER}"
             sh(
-              "git tag -m ${gitTag} ${gitTag}" +
+              "git tag -m ${gitTag} ${gitTag} && " +
               "GIT_SSH_COMMAND=\"ssh -i ${sshkey}\" git push origin --tags"
             )
           }
@@ -164,17 +164,17 @@ pipeline {
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
           script {
-              nextReleaseTag = new File('configurator/next_version').text
-              dockerImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-rc${env.BUILD_NUMBER}"
-              uberImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-uber-rc${env.BUILD_NUMBER}"
-              uberNonRCImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-uber"
-              docker.withRegistry("https://${env.ARTIFACTORY_URL}", registryCredential) {
-                sh(
-                  "cd configurator && IMAGE_NAME=${dockerImage} UBER_IMAGE_NAME=${uberImage} make push_uber_tar && " +
-                  "docker tag ${uberImage} ${uberNonRCImage} && " +
-                  "docker push ${uberNonRCImage}"
-                )
-              }
+            nextReleaseTag = sh(returnStdout: true, script: "cat configurator/next_version").trim()
+            dockerImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-rc${env.BUILD_NUMBER}"
+            uberImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-uber-rc${env.BUILD_NUMBER}"
+            uberNonRCImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-uber"
+            docker.withRegistry("https://${env.ARTIFACTORY_URL}", registryCredential) {
+              sh(
+                "cd configurator && IMAGE_NAME=${dockerImage} UBER_IMAGE_NAME=${uberImage} make push_uber_tar && " +
+                "docker tag ${uberImage} ${uberNonRCImage} && " +
+                "docker push ${uberNonRCImage}"
+              )
+            }
           }
         }
       }
