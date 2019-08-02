@@ -155,7 +155,7 @@ pipeline {
         cleanup {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              dockerImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-rc${env.BUILD_NUMBER}"
+              dockerImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag()}-rc${env.BUILD_NUMBER}"
               sh("docker rmi ${env.dockerImage} || /bin/true")
             }
           }
@@ -195,8 +195,8 @@ pipeline {
         cleanup {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              dockerImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-rc${env.BUILD_NUMBER}"
-              uberImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-uber-rc${env.BUILD_NUMBER}"
+              dockerImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag()}-rc${env.BUILD_NUMBER}"
+              uberImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag()}-uber-rc${env.BUILD_NUMBER}"
               sh("docker rmi ${dockerImage} || /bin/true")
               sh("docker rmi ${uberImage} || /bin/true")
             }
