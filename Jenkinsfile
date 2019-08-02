@@ -147,7 +147,7 @@ pipeline {
             script {
               nextReleaseTag = sh(returnStdout: true, script: "cat configurator/next_version").trim()
               dockerImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-rc${env.BUILD_NUMBER}"
-              slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${env.dockerImage}")
+              slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${dockerImage}")
             }
           }
         }
@@ -189,7 +189,7 @@ pipeline {
             script {
               nextReleaseTag = sh(returnStdout: true, script: "cat configurator/next_version").trim()
               uberImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-uber-rc${env.BUILD_NUMBER}"
-              slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${env.uberImage}")
+              slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${uberImage}")
             }
           }
         }
@@ -198,8 +198,8 @@ pipeline {
             script {
               dockerImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-rc${env.BUILD_NUMBER}"
               uberImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-uber-rc${env.BUILD_NUMBER}"
-              sh("docker rmi ${env.dockerImage} || /bin/true")
-              sh("docker rmi ${env.uberImage} || /bin/true")
+              sh("docker rmi ${dockerImage} || /bin/true")
+              sh("docker rmi ${uberImage} || /bin/true")
             }
           }
         }
