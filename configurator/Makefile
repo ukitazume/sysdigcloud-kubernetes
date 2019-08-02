@@ -6,7 +6,7 @@ LOCAL_SCRIPTS := $(shell find $(SOURCEDIR) -name '*.sh' -exec basename {} \;)
 CONTAINER_SCRIPTS := $(addprefix /sysdig-chart/, $(LOCAL_SCRIPTS))
 
 clean:
-	docker rm configurator uber_image || true
+	docker rm -fv configurator uber_image || true
 
 build: clean
 	docker build . -t $(IMAGE_NAME)
@@ -21,7 +21,7 @@ build_uber_image: build
 	docker cp configurator:/sysdig_configurator.tar.gz .
 	docker build -f Dockerfile.uber -t $(UBER_IMAGE_NAME) .
 	rm -f sysdig_configurator.tar.gz
-	docker rm configurator || true
+	docker rm -fv configurator || true
 
 shellcheck:
 	docker run --rm -v $(PWD)/sysdig-chart:/sysdig-chart koalaman/shellcheck \
@@ -41,7 +41,7 @@ test_uber_tar: build_uber_image
 		-v $(PWD):/uber_dir \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		$(IMAGE_NAME) uber_tests
-	docker rm uber_image || true
+	docker rm -fv uber_image || true
 	rm -f sysdig_configurator.tar.gz
 
 push: build
