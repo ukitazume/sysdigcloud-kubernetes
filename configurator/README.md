@@ -132,7 +132,7 @@ options.
 - Run
 ```bash
 docker run -v ~/.kube:/root/.kube -v $(pwd):/manifests \
-  quay.io/sysdig/configurator:0.0.0-alpha
+  quay.io/sysdig/configurator:2.3.0-0.0.1
 ```
 
 ### Configuration
@@ -173,13 +173,13 @@ so you do not have to worry about authenticated access to quay.io.
 working directory, you can do:
 ```bash
 wget \
-https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/v0.0.0/configurator/sysdig-chart/values.yaml
+https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/2.3.0-0.0.1/configurator/sysdig-chart/values.yaml
 ```
 - Modify the values.yaml
 - Run
 ```bash
 docker run -v ~/.kube:/root/.kube -v $(PWD):/manifests \
-  quay.io/sysdig/configurator:0.0.0
+  quay.io/sysdig/configurator:2.3.0-0.0.1
 ```
 
 ### Airgap installation with installation machine multi-homed
@@ -217,7 +217,7 @@ registry details updated
 working directory, you can do:
 ```bash
 wget \
-https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/v0.0.0/configurator/sysdig-chart/values.yaml
+https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/2.3.0-0.0.1/configurator/sysdig-chart/values.yaml
 ```
 - Modify the values.yaml
 - Run
@@ -225,7 +225,7 @@ https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/v0.0.0/configura
 docker run -v ~/.kube:/root/.kube -v $(PWD):/manifests \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v ~/.docker:/root/docker \
-  quay.io/sysdig/configurator:0.0.0
+  quay.io/sysdig/configurator:2.3.0-0.0.1
 ```
 
 ### Full Airgap installation
@@ -269,11 +269,11 @@ registry details updated
   ```
 - Pull image containing self-extracting tar:
 ```bash
-docker pull quay.io/sysdig/configurator:uber-0.0.0
+docker pull quay.io/sysdig/configurator:2.3.0-0.0.1-uber
 ```
 - Extract the tarball:
 ```bash
-docker create --name uber_image quay.io/sysdig/configurator:uber-0.0.0
+docker create --name uber_image quay.io/sysdig/configurator:2.3.0-0.0.1-uber
 docker cp uber_image:/sysdig_configurator.tar.gz .
 docker rm uber_image
 ```
@@ -285,7 +285,7 @@ docker rm uber_image
 working directory, you can do:
 ```bash
 wget \
-https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/v0.0.0/configurator/sysdig-chart/values.yaml
+https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/2.3.0-0.0.1/configurator/sysdig-chart/values.yaml
 ```
 - Modify the values.yaml
 - Copy the tar file to the directory
