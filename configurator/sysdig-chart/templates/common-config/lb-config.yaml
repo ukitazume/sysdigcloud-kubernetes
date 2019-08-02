@@ -5,7 +5,11 @@ metadata:
   namespace: {{ .Values.namespace }}
   name: haproxy-ingress-lb-service
 spec:
+{{ if (.Values.cloudProvider.create_loadbalancer | default false) }}
   type: LoadBalancer
+{{ else }}
+  type: NodePort
+{{ end }}
   ports:
   - name: http
     port: 80
