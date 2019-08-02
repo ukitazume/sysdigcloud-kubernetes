@@ -55,42 +55,53 @@ the git tag, and a docker image matching the git tag.
 
 ### Full Release
 
-This should happen on a Wednesday after the Release Candidate build for the
-day has completed. The release personnel should do the below:
+The workflow for doing a full (non-rc) release is as below:
 
-- Checkout to the last release candidate tag:
+- Change `configurator/next_version` to the new tag to be released, for
+example if the new tag is `2.3.0-0.1.0`, do as below:
+```bash
+echo -n 2.3.0-0.1.0 > next_version
 ```
-git checkout $(cat configurator/rc_version)
+- Commit the change, e.g: `git commit -am 'Bumping version to 2.3.0-0.1.0'`
+- Push the change: `git push`
+- Submit a PR and get the PR merged
+- Wait for Jenkins to complete build of the main branch including your last
+commit.
+- Request that no one merges to the main branch till you are done releasing.
+- Once Jenkins is done building and has pushed the docker image and git tag,
+checkout to the last release candidate tag built by Jenkins, e.g:
+```bash
+git checkout 2.3.0-0.1.0-rc${REPLACE_WITH_JENKINS_BUILD_NUMBER}
 ```
 - Read the diff of changes from the last release
 ```bash
-git log $(cat configurator/version)..
+git diff $(cat configurator/current_version)..
 ```
-- Do a deploy with basic configuration with the rc tag pushed to the internal
-docker registry and verify it works.
-- Create a new release tag.
+- Create a new release tag, e.g:
 ```bash
-git tag $NEW_TAG
+git tag -F <(git log --oneline $(cat configurator/current_version)..) $(cat configuration/next_version)
 git push --tags
 ```
+- Go the Jenkins UI and click the build now button for the new tag (this will
+not be necessary when we move to the new Jenkins).
+- Wait for the Jenkins build for the new tag to complete successfully.
 - Update every part of the README.md(this file) that indicates a version to
 indicate the latest release tag.
 - Update the internal wiki instructions pointing at the latest release.
-- Update version file to the current release, e.g:
-```bash
-echo -n $NEW_TAG > configurator/version
+- Update `configurator/current_version` to reflect the new tag, e.g:
 ```
-- Reset RC version file to next RC tag, e.g if the current release tag is
-`0.0.1`, the content of the RC version file should be `0.0.2-rc0`, e.g:
+cat configurator/next_version > configurator/current_version
+```
+- Reset the `configurator/next_version` file to point at some hypothetical
+future version that has not been previously used, e.g:  
 ```bash
-echo -n $NEXT_TAG-rc0 > configurator/rc_version
+echo -n 2.3.0-0.1.1 > configurator/rc_version
 ```
 - Commit the changes
 ```bash
-git commit -am "Tagged $NEXT_TAG"
+git commit -am "Tagged 2.3.0-0.1.0"
 ```
-- Go to the jenkins UI and click the build button for the pushed tag (once we
-move to the new Jenkins this will no longer be needed).
+- Push the change and submit a PR.
 
 ## Usage
 

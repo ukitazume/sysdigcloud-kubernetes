@@ -133,8 +133,8 @@ pipeline {
             dockerNonRCImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}"
             docker.withRegistry("https://${env.ARTIFACTORY_URL}", registryCredential) {
               sh(
-                "cd configurator && IMAGE_NAME=${dockerRCImage} make push && " +
-                "docker tag ${dockerRCImage} ${dockerNonRCImage} && " +
+                "cd configurator && IMAGE_NAME=${dockerImage} make push && " +
+                "docker tag ${dockerImage} ${dockerNonRCImage} && " +
                 "docker push ${dockerNonRCImage}"
               )
             }
