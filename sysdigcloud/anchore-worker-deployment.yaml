@@ -38,13 +38,15 @@ spec:
         #     secretName: sysdigcloud-anchore-custom-certs
       containers:
       - name: anchore-worker
-        image: quay.io/sysdig/anchore:v0.3.4.1
+        image: quay.io/sysdig/anchore:v0.4.1.1
         imagePullPolicy:
         resources:
           {}
         env:
         - name: ANCHORE_ENGINE_SERVICES
           value: anchore-worker
+        - name: ANCHORE_CONFIG_DIR
+          value: /config
         - name: ANCHORE_DB
           valueFrom:
             configMapKeyRef:
@@ -105,7 +107,7 @@ spec:
         - name: config-volume
           mountPath: /config
         - name: analysis-scratch
-          mountPath: /analysis_scratch
+          mountPath: /home/anchore/analysis_scratch
         # Only needed if the engine needs import self-signed SSL certs
         # (see comment above)
         # - name: custom-certs-volume

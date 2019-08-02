@@ -37,7 +37,7 @@ spec:
         #     secretName: sysdigcloud-anchore-custom-certs
       containers:
       - name: anchore-core
-        image: quay.io/sysdig/anchore:v0.3.4.1
+        image: quay.io/sysdig/anchore:v0.4.1.1
         imagePullPolicy:
         resources:
           {}
@@ -53,6 +53,8 @@ spec:
         - containerPort: 8087
           name: policy-engine
         env:
+        - name: ANCHORE_CONFIG_DIR
+          value: /config
         - name: ANCHORE_DB
           valueFrom:
             configMapKeyRef:
@@ -77,6 +79,11 @@ spec:
           value: ""
         - name: ANCHORE_IO_PASSWORD
           value: ""
+        - name: ANCHORE_ADMIN_USER
+          valueFrom:
+            configMapKeyRef:
+              name: sysdigcloud-config
+              key: anchore.admin.user
         - name: ANCHORE_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
