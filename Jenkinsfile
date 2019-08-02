@@ -122,7 +122,8 @@ pipeline {
     }
     stage('Push internal image') {
       when {
-        branch 'Templating_k8s_configurations'
+        // branch 'Templating_k8s_configurations'
+        branch 'tagging_scheme'
       }
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
@@ -144,7 +145,9 @@ pipeline {
         success {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${env.ARTIFACTORY_URL}/configurator:${env.TAG_NAME}")
+              nextReleaseTag = sh(returnStdout: true, script: "cat configurator/next_version").trim()
+              dockerImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-rc${env.BUILD_NUMBER}"
+              slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${env.dockerImage}")
             }
           }
         }
@@ -159,7 +162,8 @@ pipeline {
     }
     stage('Push internal uber_image') {
       when {
-        branch 'Templating_k8s_configurations'
+        // branch 'Templating_k8s_configurations'
+        branch 'tagging_scheme'
       }
       steps{
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
@@ -182,7 +186,9 @@ pipeline {
         success {
         withCredentials([string(credentialsId: 'ARTIFACTORY_URL', variable: 'ARTIFACTORY_URL')]) {
             script {
-              slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${env.ARTIFACTORY_URL}/configurator:uber-${env.BUILD_NUMBER}")
+              nextReleaseTag = sh(returnStdout: true, script: "cat configurator/next_version").trim()
+              uberImage = "${env.ARTIFACTORY_URL}/configurator:${nextReleaseTag}-uber-rc${env.BUILD_NUMBER}"
+              slackSendNotification("${env.SLACK_COLOR_GOOD}", "Pushed docker image: ${env.uberImage}")
             }
           }
         }
