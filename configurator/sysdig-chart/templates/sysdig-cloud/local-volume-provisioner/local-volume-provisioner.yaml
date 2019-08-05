@@ -7,8 +7,8 @@ metadata:
 data:
   storageClassMap: |
     {{ .Values.storageClassName }}:
-       hostDir: /sysdig
-       mountDir: /sysdig
+       hostDir: {{ .Values.localStoragehostDir }}
+       mountDir: {{ .Values.localStoragehostDir }}
        volumeMode: Filesystem
        fsType: ext4
 ---

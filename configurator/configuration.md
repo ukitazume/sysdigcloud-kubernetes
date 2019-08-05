@@ -12,6 +12,7 @@ scripts | defines which scripts needs to be run<br> generate - performs templati
 apps | defines applications needed. |`monitor\|monitor secure` | `monitor secure` |
 namespace | namespace to deploy sysdigcloud in | - | `sysdig` |
 storageClassName | name of preconfigured [storage class](https://kubernetes.io/docs/concepts/storage/storage-classes/), if the storage class does not exist configurator will attempt to create it, using the `storageClassProvisioner` as the provisioner | - | `sysdig` |
+localStoragehostDir | Path on the host where local volumes are mounted under. | - | `/sysdig` |
 nodeaffinityLabel.key | key of the label used to configure the nodes sysdig cloud pods are expected to run on, the nodes are expected to have been labeled with the key | - | - |
 nodeaffinityLabel.value | value of the label used to configure the nodes sysdig cloud pods are expected to run on, the nodes are expected to have been labeled with the value as value to `nodeaffinityLabel.key`, required if `nodeaffinityLabel.key` is configured  | - | - |
 cloudProvider.name| Name of the cloud provider | `aws\|gke` | - |

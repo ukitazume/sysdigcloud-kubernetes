@@ -3,6 +3,7 @@ scripts: generate deploy
 namespace: sysdig
 deployment: kubernetes
 storageClassName: sysdig
+localStoragehostDir: /sysdig
 # Elasticsearch auth and TLS encryption
 elasticsearch:
   jvmOptions: ""
