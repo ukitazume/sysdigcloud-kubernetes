@@ -53,6 +53,16 @@ spec:
                         - cassandra
                 topologyKey: failure-domain.beta.kubernetes.io/zone
           {{- end }}
+          {{- if eq .Values.storageClassProvisioner "hostPath" }}
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: affinity
+                    operator: In
+                    values:
+                      - cassandra
+              topologyKey: kubernetes.io/hostname
+          {{- else }}
           preferredDuringSchedulingIgnoredDuringExecution:
             - weight: 100
               podAffinityTerm:
@@ -63,6 +73,7 @@ spec:
                       values:
                         - cassandra
                 topologyKey: kubernetes.io/hostname
+          {{- end }}
       containers:
         - image: {{ .Values.airgapped_registry_name | default "quay.io" }}/sysdig/cassandra:{{ .Values.sysdig.cassandraVersion }}
           name: cassandra

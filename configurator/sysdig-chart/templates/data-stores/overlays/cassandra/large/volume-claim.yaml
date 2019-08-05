@@ -3,6 +3,15 @@ kind: StatefulSet
 metadata:
   name: sysdigcloud-cassandra
 spec:
+{{- if eq .Values.storageClassProvisioner "hostPath" }}
+  template:
+    spec:
+      volumes:
+        - name: data
+          hostPath:
+            type: DirectoryOrCreate
+            path: {{ .Values.hostPathCustomPaths.cassandra }}
+{{- else }}
   volumeClaimTemplates:
     - metadata:
         name: data
@@ -12,3 +21,4 @@ spec:
           requests:
             storage: 300Gi
         storageClassName: {{ .Values.storageClassName }}
+{{ end }}

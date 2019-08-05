@@ -3,6 +3,15 @@ kind: StatefulSet
 metadata:
   name: sysdigcloud-elasticsearch
 spec:
+{{- if eq .Values.storageClassProvisioner "hostPath" }}
+  template:
+    spec:
+      volumes:
+        - name: data
+          hostPath:
+            type: DirectoryOrCreate
+            path: {{ .Values.hostPathCustomPaths.elasticsearch }}
+{{- else }}
   volumeClaimTemplates:
     - metadata:
         name: data
@@ -12,3 +21,4 @@ spec:
           requests:
             storage: 100Gi
         storageClassName: {{ .Values.storageClassName }}
+{{- end }}

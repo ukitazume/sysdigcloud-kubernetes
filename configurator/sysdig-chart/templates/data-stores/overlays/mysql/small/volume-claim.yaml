@@ -10,7 +10,7 @@ spec:
         - name: data
           hostPath:
             type: DirectoryOrCreate
-            path: /var/lib/mysql
+            path: {{ .Values.hostPathCustomPaths.mysql }}
 {{- else }}
   volumeClaimTemplates:
     - metadata:

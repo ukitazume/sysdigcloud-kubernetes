@@ -1217,23 +1217,20 @@
       "spec": {
         "affinity": {
           "podAntiAffinity": {
-            "preferredDuringSchedulingIgnoredDuringExecution": [
+            "requiredDuringSchedulingIgnoredDuringExecution": [
               {
-                "podAffinityTerm": {
-                  "labelSelector": {
-                    "matchExpressions": [
-                      {
-                        "key": "affinity",
-                        "operator": "In",
-                        "values": [
-                          "cassandra"
-                        ]
-                      }
-                    ]
-                  },
-                  "topologyKey": "kubernetes.io/hostname"
+                "labelSelector": {
+                  "matchExpressions": [
+                    {
+                      "key": "affinity",
+                      "operator": "In",
+                      "values": [
+                        "cassandra"
+                      ]
+                    }
+                  ]
                 },
-                "weight": 100
+                "topologyKey": "kubernetes.io/hostname"
               }
             ]
           }
@@ -1493,23 +1490,20 @@
       "spec": {
         "affinity": {
           "podAntiAffinity": {
-            "preferredDuringSchedulingIgnoredDuringExecution": [
+            "requiredDuringSchedulingIgnoredDuringExecution": [
               {
-                "podAffinityTerm": {
-                  "labelSelector": {
-                    "matchExpressions": [
-                      {
-                        "key": "affinity",
-                        "operator": "In",
-                        "values": [
-                          "elasticsearch"
-                        ]
-                      }
-                    ]
-                  },
-                  "topologyKey": "kubernetes.io/hostname"
+                "labelSelector": {
+                  "matchExpressions": [
+                    {
+                      "key": "affinity",
+                      "operator": "In",
+                      "values": [
+                        "cassandra"
+                      ]
+                    }
+                  ]
                 },
-                "weight": 100
+                "topologyKey": "kubernetes.io/hostname"
               }
             ]
           }

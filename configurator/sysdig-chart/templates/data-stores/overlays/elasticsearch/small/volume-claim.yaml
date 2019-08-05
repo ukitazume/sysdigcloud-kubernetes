@@ -10,7 +10,7 @@ spec:
         - name: data
           hostPath:
             type: DirectoryOrCreate
-            path: /usr/share/elasticsearch
+            path: {{ .Values.hostPathCustomPaths.elasticsearch }}
 {{- else }}
   volumeClaimTemplates:
     - metadata:

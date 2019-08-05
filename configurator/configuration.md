@@ -4,7 +4,7 @@ Parameter | Description | Options | Default|
 |---------|-------------|---------|--------|
 **size** | Size of the cluster.<br>This defines CPU & Memory & Disk & Replicas | `small\|medium\|large` | - |
 **quaypullsecret** | quaypullsecret provided by the marketing team that kubelet will use to pull sysdigcloud images from Quay | - | - |
-**storageClassProvisioner** | name of [storage class provisioner](https://kubernetes.io/docs/concepts/storage/storage-classes/#provisioner) to use when creating the configured `storageClassName` parameter. hostPath is only supported in cluster configured with `size` parameter of `small`, it should only be used for experimentation and not in production. `local` should be used in clusters that do not have a provisioner, see [local storage](README.md#local-storage) for instructions on setting it up | `aws\|gke\|hostPath\|local` | - |
+**storageClassProvisioner** | name of [storage class provisioner](https://kubernetes.io/docs/concepts/storage/storage-classes/#provisioner) to use when creating the configured `storageClassName` parameter. `hostPath` or `local` should be used in clusters that do not have a provisioner however `local` should be preferred over `hostPath` see [local storage](README.md#local-storage) for instructions on setting it up | `aws\|gke\|hostPath\|local` | - |
 **sysdig.agentCount** | number of sysdig agents to deploy | - | - |
 **sysdig.license** | sysdig license as provided by the marketing team | - | - |
 **sysdig.dnsName** | Domain name the sysdig api will be served on| - | - |
@@ -56,3 +56,7 @@ sysdig.localVolumeProvisioner | Version of localVolumeProvisioner run by sysdig 
 elasticsearch.searchguard.enabled | Enables user authentication and TLS-encrypted data-in-transit with [Searchguard](https://search-guard.com/) | `true \| false` | `true` |
 elasticsearch.searchguard.adminUser | The user bound to the ElasticSearch Searchguard admin role | - | `sysdig` |
 elasticsearch.jvmOptions | - | - | - |
+hostPathCustomPaths.cassandra | Directory to bind mount cassandra pod's `/var/lib/cassandra` to on the host, this is only relevant when storageClassProvisioner is `hostPath` | - | `/var/lib/cassandra` |
+hostPathCustomPaths.elasticsearch | Directory to bind mount elasticsearch pod's `/usr/share/elasticsearch` to on the host, this is only relevant when storageClassProvisioner is `hostPath` | - | `/usr/share/elasticsearch` |
+hostPathCustomPaths.mysql | Directory to bind mount mysql pod's `/var/lib/mysql` to on the host, this is only relevant when storageClassProvisioner is `hostPath` | - | `/var/lib/mysql` |
+hostPathCustomPaths.postgresql | Directory to bind mount postgresql pod's `/var/lib/postgresql/data/pgdata` to on the host, this is only relevant when storageClassProvisioner is `hostPath` | - | `/var/lib/postgresql/data/pgdata` |

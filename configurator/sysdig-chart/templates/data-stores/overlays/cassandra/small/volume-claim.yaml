@@ -10,7 +10,7 @@ spec:
         - name: data
           hostPath:
             type: DirectoryOrCreate
-            path: /var/lib/cassandra
+            path: {{ .Values.hostPathCustomPaths.cassandra }}
 {{- else }}
   volumeClaimTemplates:
     - metadata:

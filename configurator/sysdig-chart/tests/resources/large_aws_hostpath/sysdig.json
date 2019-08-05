@@ -177,7 +177,7 @@
                 }
               }
             ],
-            "image": "foo.io/sysdig/anchore:v0.3.4.1",
+            "image": "quay.io/sysdig/anchore:v0.3.4.1",
             "imagePullPolicy": null,
             "livenessProbe": {
               "failureThreshold": 10,
@@ -224,11 +224,11 @@
             },
             "resources": {
               "limits": {
-                "cpu": 4,
+                "cpu": "4",
                 "memory": "4Gi"
               },
               "requests": {
-                "cpu": "500m",
+                "cpu": "1",
                 "memory": "1Gi"
               }
             },
@@ -299,7 +299,7 @@
     "namespace": "sysdig"
   },
   "spec": {
-    "replicas": 1,
+    "replicas": 5,
     "template": {
       "metadata": {
         "annotations": {
@@ -343,7 +343,7 @@
         },
         "containers": [
           {
-            "image": "foo.io/sysdig/sysdigcloud-backend:2363-email-renderer",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2363-email-renderer",
             "name": "email-renderer"
           },
           {
@@ -362,7 +362,7 @@
                 }
               }
             ],
-            "image": "foo.io/sysdig/sysdigcloud-backend:2363-nginx",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2363-nginx",
             "imagePullPolicy": "IfNotPresent",
             "name": "nginx",
             "volumeMounts": [
@@ -459,7 +459,7 @@
                 }
               }
             ],
-            "image": "foo.io/sysdig/sysdigcloud-backend:2363-allinone-java",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2363-allinone-java",
             "imagePullPolicy": "IfNotPresent",
             "lifecycle": {
               "preStop": {
@@ -483,12 +483,12 @@
             },
             "resources": {
               "limits": {
-                "cpu": "4",
-                "memory": "4Gi"
+                "cpu": "16",
+                "memory": "16Gi"
               },
               "requests": {
-                "cpu": "1",
-                "memory": "1Gi"
+                "cpu": "4",
+                "memory": "4Gi"
               }
             },
             "volumeMounts": [
@@ -589,7 +589,7 @@
     "namespace": "sysdig"
   },
   "spec": {
-    "replicas": 1,
+    "replicas": 5,
     "template": {
       "metadata": {
         "annotations": {
@@ -648,7 +648,7 @@
                 }
               }
             ],
-            "image": "foo.io/sysdig/sysdigcloud-backend:2363-nginx",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2363-nginx",
             "name": "nginx",
             "volumeMounts": [
               {
@@ -753,7 +753,7 @@
                 }
               }
             ],
-            "image": "foo.io/sysdig/sysdigcloud-backend:2363-allinone-java",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2363-allinone-java",
             "lifecycle": {
               "preStop": {
                 "exec": {
@@ -775,12 +775,12 @@
             },
             "resources": {
               "limits": {
-                "cpu": "4",
-                "memory": "4Gi"
+                "cpu": "16",
+                "memory": "16Gi"
               },
               "requests": {
-                "cpu": "1",
-                "memory": "1Gi"
+                "cpu": "4",
+                "memory": "4Gi"
               }
             },
             "volumeMounts": [
@@ -849,7 +849,7 @@
     "name": "sysdig"
   },
   "spec": {
-    "replicas": 1,
+    "replicas": 5,
     "template": {
       "metadata": {
         "annotations": {
@@ -863,7 +863,7 @@
       "spec": {
         "containers": [
           {
-            "image": "foo.io/sysdig/sysdigcloud-backend:2363-email-renderer",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2363-email-renderer",
             "name": "email-renderer"
           },
           {
@@ -949,7 +949,7 @@
                 }
               }
             ],
-            "image": "foo.io/sysdig/sysdigcloud-backend:2363-allinone-java",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2363-allinone-java",
             "lifecycle": {
               "preStop": {
                 "exec": {
@@ -972,12 +972,12 @@
             },
             "resources": {
               "limits": {
-                "cpu": "4",
-                "memory": "4Gi"
+                "cpu": "16",
+                "memory": "16Gi"
               },
               "requests": {
-                "cpu": "1",
-                "memory": "1Gi"
+                "cpu": "4",
+                "memory": "4Gi"
               }
             },
             "volumeMounts": [
@@ -1049,7 +1049,7 @@
     "cassandra.jvm.options": "",
     "cassandra.password": "",
     "cassandra.port": "9042",
-    "cassandra.replication.factor": "1",
+    "cassandra.replication.factor": "3",
     "cassandra.secure": "false",
     "cassandra.snitch.extract_cmd": "",
     "cassandra.snitch.hostname.file": "",
@@ -1197,7 +1197,7 @@
   },
   "spec": {
     "podManagementPolicy": "Parallel",
-    "replicas": 1,
+    "replicas": 6,
     "selector": {
       "matchLabels": {
         "affinity": "cassandra",
@@ -1331,7 +1331,7 @@
                 }
               }
             ],
-            "image": "foo.io/sysdig/cassandra:2.1.21.13",
+            "image": "quay.io/sysdig/cassandra:2.1.21.13",
             "lifecycle": {
               "preStop": {
                 "exec": {
@@ -1357,11 +1357,11 @@
             },
             "resources": {
               "limits": {
-                "cpu": "2",
+                "cpu": "8",
                 "memory": "8Gi"
               },
               "requests": {
-                "cpu": "1",
+                "cpu": "4",
                 "memory": "2Gi"
               }
             },
@@ -1386,7 +1386,7 @@
         "volumes": [
           {
             "hostPath": {
-              "path": "/var/lib/cassandra",
+              "path": "/cassandra",
               "type": "DirectoryOrCreate"
             },
             "name": "data"
@@ -1468,7 +1468,7 @@
   },
   "spec": {
     "podManagementPolicy": "Parallel",
-    "replicas": 1,
+    "replicas": 6,
     "selector": {
       "matchLabels": {
         "affinity": "elasticsearch",
@@ -1513,7 +1513,7 @@
             "env": [
               {
                 "name": "ELASTICSEARCH_GOSSIP_NODES_NUM",
-                "value": "1"
+                "value": "6"
               }
             ],
             "envFrom": [
@@ -1528,7 +1528,7 @@
                 }
               }
             ],
-            "image": "foo.io/sysdig/elasticsearch:5.6.16.5",
+            "image": "quay.io/sysdig/elasticsearch:5.6.16.5",
             "name": "elasticsearch",
             "readinessProbe": {
               "exec": {
@@ -1543,11 +1543,11 @@
             },
             "resources": {
               "limits": {
-                "cpu": "2",
+                "cpu": "8",
                 "memory": "8Gi"
               },
               "requests": {
-                "cpu": "1",
+                "cpu": "4",
                 "memory": "4Gi"
               }
             },
@@ -1578,7 +1578,7 @@
         "volumes": [
           {
             "hostPath": {
-              "path": "/usr/share/elasticsearch",
+              "path": "/elasticsearch",
               "type": "DirectoryOrCreate"
             },
             "name": "data"
@@ -1729,7 +1729,7 @@
                 }
               }
             ],
-            "image": "foo.io/sysdig/mysql:5.6.44.0",
+            "image": "quay.io/sysdig/mysql:5.6.44.0",
             "name": "mysql",
             "resources": {
               "requests": {
@@ -1758,7 +1758,7 @@
         "volumes": [
           {
             "hostPath": {
-              "path": "/var/lib/mysql",
+              "path": "/mysql",
               "type": "DirectoryOrCreate"
             },
             "name": "data"
@@ -1880,7 +1880,7 @@
                 }
               }
             ],
-            "image": "foo.io/sysdig/postgres:10.6.10",
+            "image": "quay.io/sysdig/postgres:10.6.10",
             "livenessProbe": {
               "exec": {
                 "command": [
@@ -1914,12 +1914,12 @@
             },
             "resources": {
               "limits": {
-                "cpu": "2",
-                "memory": "4Gi"
+                "cpu": "4",
+                "memory": "8Gi"
               },
               "requests": {
-                "cpu": "500m",
-                "memory": "500Mi"
+                "cpu": "2",
+                "memory": "2Gi"
               }
             },
             "volumeMounts": [
@@ -1939,7 +1939,7 @@
         "volumes": [
           {
             "hostPath": {
-              "path": "/var/lib/postgresql/data/pgdata",
+              "path": "/postgresql/data/pgdata",
               "type": "DirectoryOrCreate"
             },
             "name": "data"
@@ -2000,7 +2000,7 @@
                 }
               }
             ],
-            "image": "foo.io/sysdig/redis:4.0.12.5",
+            "image": "quay.io/sysdig/redis:4.0.12.5",
             "name": "redis",
             "resources": {
               "limits": {
@@ -2283,7 +2283,7 @@
       "spec": {
         "containers": [
           {
-            "image": "foo.io/sysdig/ingress-default-backend:1.0",
+            "image": "quay.io/sysdig/ingress-default-backend:1.0",
             "name": "ingress-default-backend",
             "ports": [
               {
@@ -2557,16 +2557,16 @@
                 }
               }
             ],
-            "image": "foo.io/sysdig/scanning:2363",
+            "image": "quay.io/sysdig/scanning:2363",
             "imagePullPolicy": "IfNotPresent",
             "name": "scanning-alertmgr",
             "resources": {
               "limits": {
-                "cpu": 4,
+                "cpu": "4",
                 "memory": "4Gi"
               },
               "requests": {
-                "cpu": "500m",
+                "cpu": "1",
                 "memory": "1Gi"
               }
             }
@@ -2795,16 +2795,16 @@
                 }
               }
             ],
-            "image": "foo.io/sysdig/scanning:2363",
+            "image": "quay.io/sysdig/scanning:2363",
             "imagePullPolicy": "IfNotPresent",
             "name": "scanning-api",
             "resources": {
               "limits": {
-                "cpu": 4,
+                "cpu": "4",
                 "memory": "4Gi"
               },
               "requests": {
-                "cpu": "500m",
+                "cpu": "1",
                 "memory": "1Gi"
               }
             }
