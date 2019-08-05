@@ -8,7 +8,7 @@ metadata:
     role: anchore-core
 data:
   config.yaml: |
-    service_dir: /anchore_service_config
+    service_dir: /home/anchore/config
     tmp_dir: "/tmp"
     allow_awsecr_iam_auto: false
     cleanup_images: true
@@ -61,9 +61,10 @@ data:
           image_watcher: 3600
           notifications: 30
           policy_bundle_sync: 300
-          policy_eval: 3600
+          policy_eval: 21600
+          vulnerability_scan: 18000
           service_watcher: 15
-
+        max_request_threads: 70
         event_log:
           notification:
             enabled: false
