@@ -65,7 +65,7 @@ generation workflow.
 working directory, you can do:
 ```bash
 wget \
-https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/<replace_with_release_sha_or_tag>/configurator/sysdig-chart/values.yaml
+https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/0d35e2eba6e58118e57aa832a523c4316b2cae09/configurator/sysdig-chart/values.yaml
 ```
 - Update the `size`, `quaypullsecret`, `storageClassProvisioner`,
 `sysdig.agentCount`, `sysdig.license` and `sysdig.dnsName`.  See [full
@@ -114,7 +114,7 @@ so you do not have to worry about authenticated access to quay.io.
 working directory, you can do:
 ```bash
 wget \
-https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/<replace_with_release_sha_or_tag>/configurator/sysdig-chart/values.yaml
+https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/0d35e2eba6e58118e57aa832a523c4316b2cae09/configurator/sysdig-chart/values.yaml
 ```
 - Modify the values.yaml
 - Run
@@ -158,7 +158,7 @@ registry details updated
 working directory, you can do:
 ```bash
 wget \
-https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/<replace_with_release_sha_or_tag>/configurator/sysdig-chart/values.yaml
+https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/0d35e2eba6e58118e57aa832a523c4316b2cae09/configurator/sysdig-chart/values.yaml
 ```
 - Modify the values.yaml
 - Run
@@ -226,7 +226,7 @@ docker rm uber_image
 working directory, you can do:
 ```bash
 wget \
-https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/<replace_with_release_sha_or_tag>/configurator/sysdig-chart/values.yaml
+https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/0d35e2eba6e58118e57aa832a523c4316b2cae09/configurator/sysdig-chart/values.yaml
 ```
 - Modify the values.yaml
 - Copy the tar file to the directory
