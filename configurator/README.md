@@ -73,7 +73,7 @@ configuration](configuration.md) for all possible configuration options.
 - Run
 ```bash
 docker run -v ~/.kube:/root/.kube -v $(pwd):/manifests \
-  quay.io/sysdig/configurator:2.3.0-0.0.1
+  quay.io/sysdig/configurator:2.3.0-1.0.0
 ```
 
 ### Configuration
@@ -120,7 +120,7 @@ https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/0d35e2eba6e58118
 - Run
 ```bash
 docker run -v ~/.kube:/root/.kube -v $(PWD):/manifests \
-  quay.io/sysdig/configurator:2.3.0-0.0.1
+  quay.io/sysdig/configurator:2.3.0-1.0.0
 ```
 
 ### Airgap installation with installation machine multi-homed
@@ -166,7 +166,7 @@ https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/0d35e2eba6e58118
 docker run -v ~/.kube:/root/.kube -v $(PWD):/manifests \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v ~/.docker:/root/docker \
-  quay.io/sysdig/configurator:2.3.0-0.0.1
+  quay.io/sysdig/configurator:2.3.0-1.0.0
 ```
 
 ### Full Airgap installation
@@ -210,11 +210,11 @@ registry details updated
   ```
 - Pull image containing self-extracting tar:
 ```bash
-docker pull quay.io/sysdig/configurator:2.3.0-0.0.1-uber
+docker pull quay.io/sysdig/configurator:2.3.0-1.0.0-uber
 ```
 - Extract the tarball:
 ```bash
-docker create --name uber_image quay.io/sysdig/configurator:2.3.0-0.0.1-uber
+docker create --name uber_image quay.io/sysdig/configurator:2.3.0-1.0.0-uber
 docker cp uber_image:/sysdig_configurator.tar.gz .
 docker rm uber_image
 ```
