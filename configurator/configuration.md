@@ -61,3 +61,15 @@ hostPathCustomPaths.cassandra | Directory to bind mount cassandra pod's `/var/li
 hostPathCustomPaths.elasticsearch | Directory to bind mount elasticsearch pod's `/usr/share/elasticsearch` to on the host, this is only relevant when storageClassProvisioner is `hostPath` | - | `/usr/share/elasticsearch` |
 hostPathCustomPaths.mysql | Directory to bind mount mysql pod's `/var/lib/mysql` to on the host, this is only relevant when storageClassProvisioner is `hostPath` | - | `/var/lib/mysql` |
 hostPathCustomPaths.postgresql | Directory to bind mount postgresql pod's `/var/lib/postgresql/data/pgdata` to on the host, this is only relevant when storageClassProvisioner is `hostPath` | - | `/var/lib/postgresql/data/pgdata` |
+pvStorageSize.small.cassandra | Size of the persistent volume assigned to cassandra in a cluster of `size` small, this option is ignored if `storageClassProvisioner` is `hostPath` | - | `30Gi` |
+pvStorageSize.small.elasticsearch | Size of the persistent volume assigned to elasticsearch in a cluster of `size` small, this option is ignored if `storageClassProvisioner` is `hostPath` | - | `30Gi` |
+pvStorageSize.small.mysql | Size of the persistent volume assigned to mysql in a cluster of `size` small, this option is ignored if `storageClassProvisioner` is `hostPath` | - | `25Gi` |
+pvStorageSize.small.postgresql | Size of the persistent volume assigned to postgresql in a cluster of `size` small, this option is ignored if `storageClassProvisioner` is `hostPath` | - | `30Gi` |
+pvStorageSize.medium.cassandra | Size of the persistent volume assigned to cassandra in a cluster of `size` medium, this option is ignored if `storageClassProvisioner` is `hostPath` | - | `100Gi` |
+pvStorageSize.medium.elasticsearch | Size of the persistent volume assigned to elasticsearch in a cluster of `size` medium, this option is ignored if `storageClassProvisioner` is `hostPath` | - | `100Gi` |
+pvStorageSize.medium.mysql | Size of the persistent volume assigned to mysql in a cluster of `size` medium, this option is ignored if `storageClassProvisioner` is `hostPath` | - | `25Gi` |
+pvStorageSize.medium.postgresql | Size of the persistent volume assigned to postgresql in a cluster of `size` medium, this option is ignored if `storageClassProvisioner` is `hostPath` | - | `60Gi` |
+pvStorageSize.large.cassandra | Size of the persistent volume assigned to cassandra in a cluster of `size` large, this option is ignored if `storageClassProvisioner` is `hostPath` | - | `300Gi` |
+pvStorageSize.large.elasticsearch | Size of the persistent volume assigned to elasticsearch in a cluster of `size` large, this option is ignored if `storageClassProvisioner` is `hostPath` | - | `300Gi` |
+pvStorageSize.large.mysql | Size of the persistent volume assigned to mysql in a cluster of `size` large, this option is ignored if `storageClassProvisioner` is `hostPath` | - | `25Gi` |
+pvStorageSize.large.postgresql | Size of the persistent volume assigned to postgresql in a cluster of `size` large, this option is ignored if `storageClassProvisioner` is `hostPath` | - | `60Gi` |

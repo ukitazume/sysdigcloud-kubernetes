@@ -60,3 +60,19 @@ hostPathCustomPaths:
   elasticsearch: /usr/share/elasticsearch
   mysql: /var/lib/mysql
   postgresql: /var/lib/postgresql/data/pgdata
+pvStorageSize:
+  small:
+    cassandra: 30Gi
+    elasticsearch: 30Gi
+    mysql: 25Gi
+    postgresql: 30Gi
+  medium:
+    cassandra: 100Gi
+    elasticsearch: 100Gi
+    mysql: 25Gi
+    postgresql: 60Gi
+  large:
+    cassandra: 300Gi
+    elasticsearch: 300Gi
+    mysql: 25Gi
+    postgresql: 60Gi

@@ -19,6 +19,6 @@ spec:
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            storage: 60Gi
+            storage: {{ .Values.pvStorageSize.large.postgresql }}
         storageClassName: {{ .Values.storageClassName }}
 {{- end }}

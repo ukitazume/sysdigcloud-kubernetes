@@ -19,6 +19,6 @@ spec:
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            storage: 25Gi
+            storage: {{ .Values.pvStorageSize.medium.mysql }}
         storageClassName: {{ .Values.storageClassName }}
 {{- end }}

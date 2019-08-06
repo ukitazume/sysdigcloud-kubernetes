@@ -19,6 +19,6 @@ spec:
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            storage: 100Gi
+            storage: {{ .Values.pvStorageSize.medium.cassandra }}
         storageClassName: {{ .Values.storageClassName }}
 {{- end }}

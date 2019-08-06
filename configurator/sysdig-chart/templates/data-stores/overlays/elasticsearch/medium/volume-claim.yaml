@@ -19,6 +19,6 @@ spec:
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            storage: 100Gi
+            storage: {{ .Values.pvStorageSize.medium.elasticsearch }}
         storageClassName: {{ .Values.storageClassName }}
 {{- end }}
