@@ -5,7 +5,6 @@ size: medium
 #Set Quay.Io secrets
 quaypullsecret: <change-me>
 #supports aws | gke | hostPath | local
-#Do not use hostPath in production, currently it is experimental only.
 storageClassProvisioner: aws
 #Sysdig application config
 sysdig:
