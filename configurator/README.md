@@ -65,22 +65,21 @@ generation workflow.
 working directory, you can do:
 ```bash
 wget \
-https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/Templating_k8s_configurations/configurator/sysdig-chart/values.yaml
+https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/<replace_with_release_sha_or_tag>/configurator/sysdig-chart/values.yaml
 ```
 - Update the `size`, `quaypullsecret`, `storageClassProvisioner`,
 `sysdig.agentCount`, `sysdig.license` and `sysdig.dnsName`.  See [full
-configuration](configurator/configuration.md) for all possible configuration
-options.
+configuration](configuration.md) for all possible configuration options.
 - Run
 ```bash
 docker run -v ~/.kube:/root/.kube -v $(pwd):/manifests \
-  quay.io/sysdig/configurator:0.0.0-alpha
+  quay.io/sysdig/configurator:2.3.0-0.0.1
 ```
 
 ### Configuration
 
-See [full configuration](configurator/configuration.md) for all possible
-configuration options.
+See [full configuration](configuration.md) for all possible configuration
+options.
 
 ### Non-Airgap deployment
 
@@ -99,17 +98,29 @@ so you do not have to worry about authenticated access to quay.io.
 
 #### Workflow
 
+- Login to quay.io
+  - Retrieve quay username and password from quaypullsecret, e.g:
+  ```bash
+  AUTH=$(echo <REPLACE_WITH_quaypullsecret> | base64 -d | jq -r '.auths."quay.io".auth'| base64 -d)
+  QUAY_USERNAME=${AUTH%:*}
+  QUAY_PASSWORD=${AUTH#*:}
+  ```
+  - Use QUAY_USERNAME and QUAY_PASSWORD retrieved from previous step to login
+  to quay
+  ```bash
+  docker login -u "$QUAY_USERNAME" -p "$QUAY_PASSWORD" quay.io
+  ```
 - Copy [sysdig-chart/values.yaml](sysdig-chart/values.yaml) to your
 working directory, you can do:
 ```bash
 wget \
-https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/Templating_k8s_configurations/configurator/sysdig-chart/values.yaml
+https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/<replace_with_release_sha_or_tag>/configurator/sysdig-chart/values.yaml
 ```
 - Modify the values.yaml
 - Run
 ```bash
-docker run -v ~/.kube:/root/.kube -v $(pwd):/manifests \
-  quay.io/sysdig/configurator:0.0.0-alpha
+docker run -v ~/.kube:/root/.kube -v $(PWD):/manifests \
+  quay.io/sysdig/configurator:2.3.0-0.0.1
 ```
 
 ### Airgap installation with installation machine multi-homed
@@ -147,7 +158,7 @@ registry details updated
 working directory, you can do:
 ```bash
 wget \
-https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/Templating_k8s_configurations/configurator/sysdig-chart/values.yaml
+https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/<replace_with_release_sha_or_tag>/configurator/sysdig-chart/values.yaml
 ```
 - Modify the values.yaml
 - Run
@@ -155,7 +166,7 @@ https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/Templating_k8s_c
 docker run -v ~/.kube:/root/.kube -v $(PWD):/manifests \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v ~/.docker:/root/docker \
-  quay.io/sysdig/configurator:0.0.0-alpha
+  quay.io/sysdig/configurator:2.3.0-0.0.1
 ```
 
 ### Full Airgap installation
@@ -199,11 +210,11 @@ registry details updated
   ```
 - Pull image containing self-extracting tar:
 ```bash
-docker pull quay.io/sysdig/uber_configurator:0.0.0-alpha
+docker pull quay.io/sysdig/configurator:2.3.0-0.0.1-uber
 ```
 - Extract the tarball:
 ```bash
-docker create --name uber_image quay.io/sysdig/uber_configurator:0.0.0-alpha
+docker create --name uber_image quay.io/sysdig/configurator:2.3.0-0.0.1-uber
 docker cp uber_image:/sysdig_configurator.tar.gz .
 docker rm uber_image
 ```
@@ -215,7 +226,7 @@ docker rm uber_image
 working directory, you can do:
 ```bash
 wget \
-https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/Templating_k8s_configurations/configurator/sysdig-chart/values.yaml
+https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/<replace_with_release_sha_or_tag>/configurator/sysdig-chart/values.yaml
 ```
 - Modify the values.yaml
 - Copy the tar file to the directory
