@@ -3,6 +3,15 @@ kind: StatefulSet
 metadata:
   name: sysdigcloud-mysql
 spec:
+{{- if eq .Values.storageClassProvisioner "hostPath" }}
+  template:
+    spec:
+      volumes:
+        - name: data
+          hostPath:
+            type: DirectoryOrCreate
+            path: {{ .Values.hostPathCustomPaths.mysql }}
+{{- else }}
   volumeClaimTemplates:
     - metadata:
         name: data
@@ -10,5 +19,6 @@ spec:
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            storage: 25Gi
+            storage: {{ .Values.pvStorageSize.large.mysql }}
         storageClassName: {{ .Values.storageClassName }}
+{{- end }}

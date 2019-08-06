@@ -9,7 +9,6 @@ metadata:
   annotations:
     version: {{ .Values.sysdig.anchoreVersion | quote }}
 spec:
-  replicas: 1
   revisionHistoryLimit: 2
   selector:
     matchLabels:
@@ -91,6 +90,8 @@ spec:
         env:
         - name: ANCHORE_ENGINE_SERVICES
           value: anchore-worker
+        - name: ANCHORE_CONFIG_DIR
+          value: /config
         - name: ANCHORE_DB
           valueFrom:
             configMapKeyRef:
@@ -151,7 +152,7 @@ spec:
         - name: config-volume
           mountPath: /config
         - name: analysis-scratch
-          mountPath: /analysis_scratch
+          mountPath: /home/anchore/analysis_scratch
         # Only needed if the engine needs import self-signed SSL certs
         # (see comment above)
         # - name: custom-certs-volume

@@ -237,11 +237,11 @@
             },
             "resources": {
               "limits": {
-                "cpu": 4,
+                "cpu": "4",
                 "memory": "4Gi"
               },
               "requests": {
-                "cpu": "500m",
+                "cpu": "1",
                 "memory": "1Gi"
               }
             },
@@ -312,7 +312,7 @@
     "namespace": "sysdig"
   },
   "spec": {
-    "replicas": 1,
+    "replicas": 5,
     "template": {
       "metadata": {
         "annotations": {
@@ -496,12 +496,12 @@
             },
             "resources": {
               "limits": {
-                "cpu": "4",
-                "memory": "4Gi"
+                "cpu": "16",
+                "memory": "16Gi"
               },
               "requests": {
-                "cpu": "1",
-                "memory": "1Gi"
+                "cpu": "4",
+                "memory": "4Gi"
               }
             },
             "volumeMounts": [
@@ -602,7 +602,7 @@
     "namespace": "sysdig"
   },
   "spec": {
-    "replicas": 1,
+    "replicas": 5,
     "template": {
       "metadata": {
         "annotations": {
@@ -788,12 +788,12 @@
             },
             "resources": {
               "limits": {
-                "cpu": "4",
-                "memory": "4Gi"
+                "cpu": "16",
+                "memory": "16Gi"
               },
               "requests": {
-                "cpu": "1",
-                "memory": "1Gi"
+                "cpu": "4",
+                "memory": "4Gi"
               }
             },
             "volumeMounts": [
@@ -862,7 +862,7 @@
     "name": "sysdig"
   },
   "spec": {
-    "replicas": 1,
+    "replicas": 5,
     "template": {
       "metadata": {
         "annotations": {
@@ -985,12 +985,12 @@
             },
             "resources": {
               "limits": {
-                "cpu": "4",
-                "memory": "4Gi"
+                "cpu": "16",
+                "memory": "16Gi"
               },
               "requests": {
-                "cpu": "1",
-                "memory": "1Gi"
+                "cpu": "4",
+                "memory": "4Gi"
               }
             },
             "volumeMounts": [
@@ -1062,7 +1062,7 @@
     "cassandra.jvm.options": "",
     "cassandra.password": "",
     "cassandra.port": "9042",
-    "cassandra.replication.factor": "1",
+    "cassandra.replication.factor": "3",
     "cassandra.secure": "false",
     "cassandra.snitch.extract_cmd": "",
     "cassandra.snitch.hostname.file": "",
@@ -1210,7 +1210,7 @@
   },
   "spec": {
     "podManagementPolicy": "Parallel",
-    "replicas": 1,
+    "replicas": 6,
     "selector": {
       "matchLabels": {
         "affinity": "cassandra",
@@ -1370,11 +1370,11 @@
             },
             "resources": {
               "limits": {
-                "cpu": "2",
+                "cpu": "8",
                 "memory": "8Gi"
               },
               "requests": {
-                "cpu": "1",
+                "cpu": "4",
                 "memory": "2Gi"
               }
             },
@@ -1399,7 +1399,7 @@
         "volumes": [
           {
             "hostPath": {
-              "path": "/var/lib/cassandra",
+              "path": "/cassandra",
               "type": "DirectoryOrCreate"
             },
             "name": "data"
@@ -1481,7 +1481,7 @@
   },
   "spec": {
     "podManagementPolicy": "Parallel",
-    "replicas": 1,
+    "replicas": 6,
     "selector": {
       "matchLabels": {
         "affinity": "elasticsearch",
@@ -1526,7 +1526,7 @@
             "env": [
               {
                 "name": "ELASTICSEARCH_GOSSIP_NODES_NUM",
-                "value": "1"
+                "value": "6"
               }
             ],
             "envFrom": [
@@ -1556,11 +1556,11 @@
             },
             "resources": {
               "limits": {
-                "cpu": "2",
+                "cpu": "8",
                 "memory": "8Gi"
               },
               "requests": {
-                "cpu": "1",
+                "cpu": "4",
                 "memory": "4Gi"
               }
             },
@@ -1591,7 +1591,7 @@
         "volumes": [
           {
             "hostPath": {
-              "path": "/usr/share/elasticsearch",
+              "path": "/elasticsearch",
               "type": "DirectoryOrCreate"
             },
             "name": "data"
@@ -1771,7 +1771,7 @@
         "volumes": [
           {
             "hostPath": {
-              "path": "/var/lib/mysql",
+              "path": "/mysql",
               "type": "DirectoryOrCreate"
             },
             "name": "data"
@@ -1927,12 +1927,12 @@
             },
             "resources": {
               "limits": {
-                "cpu": "2",
-                "memory": "4Gi"
+                "cpu": "4",
+                "memory": "8Gi"
               },
               "requests": {
-                "cpu": "500m",
-                "memory": "500Mi"
+                "cpu": "2",
+                "memory": "2Gi"
               }
             },
             "volumeMounts": [
@@ -1952,7 +1952,7 @@
         "volumes": [
           {
             "hostPath": {
-              "path": "/var/lib/postgresql/data/pgdata",
+              "path": "/postgresql/data/pgdata",
               "type": "DirectoryOrCreate"
             },
             "name": "data"
@@ -2575,11 +2575,11 @@
             "name": "scanning-alertmgr",
             "resources": {
               "limits": {
-                "cpu": 4,
+                "cpu": "4",
                 "memory": "4Gi"
               },
               "requests": {
-                "cpu": "500m",
+                "cpu": "1",
                 "memory": "1Gi"
               }
             }
@@ -2813,11 +2813,11 @@
             "name": "scanning-api",
             "resources": {
               "limits": {
-                "cpu": 4,
+                "cpu": "4",
                 "memory": "4Gi"
               },
               "requests": {
-                "cpu": "500m",
+                "cpu": "1",
                 "memory": "1Gi"
               }
             }

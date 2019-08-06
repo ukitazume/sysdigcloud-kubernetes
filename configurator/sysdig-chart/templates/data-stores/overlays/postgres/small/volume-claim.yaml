@@ -10,7 +10,7 @@ spec:
         - name: data
           hostPath:
             type: DirectoryOrCreate
-            path: /var/lib/postgresql/data/pgdata
+            path: {{ .Values.hostPathCustomPaths.postgresql }}
 {{- else }}
   volumeClaimTemplates:
     - metadata:
@@ -19,6 +19,6 @@ spec:
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            storage: 30Gi
+            storage: {{ .Values.pvStorageSize.small.postgresql }}
         storageClassName: {{ .Values.storageClassName }}
 {{- end }}

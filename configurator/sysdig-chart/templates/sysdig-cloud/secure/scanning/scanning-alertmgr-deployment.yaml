@@ -9,8 +9,6 @@ metadata:
   annotations:
     version: {{ .Values.sysdig.monitorVersion | quote }}
 spec:
-  # There must only be one alertmgr replica running.
-  replicas: 1
   revisionHistoryLimit: 2
   selector:
     matchLabels:

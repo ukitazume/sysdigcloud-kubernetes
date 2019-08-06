@@ -7,7 +7,7 @@
       "role": "api"
     },
     "name": "sysdigcloud-api",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "clusterIP": "None",
@@ -34,14 +34,14 @@
   "kind": "Deployment",
   "metadata": {
     "name": "sysdigcloud-api",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "replicas": 5,
     "template": {
       "metadata": {
         "annotations": {
-          "version": "2363"
+          "version": "2.3.0.2461"
         },
         "labels": {
           "app": "sysdigcloud",
@@ -81,7 +81,7 @@
         },
         "containers": [
           {
-            "image": "quay.io/sysdig/sysdigcloud-backend:2363-email-renderer",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2.3.0.2461-email-renderer",
             "name": "email-renderer"
           },
           {
@@ -100,7 +100,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/sysdigcloud-backend:2363-nginx",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2.3.0.2461-nginx",
             "imagePullPolicy": "IfNotPresent",
             "name": "nginx",
             "volumeMounts": [
@@ -197,7 +197,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/sysdigcloud-backend:2363-allinone-java",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2.3.0.2461-allinone-java",
             "imagePullPolicy": "IfNotPresent",
             "lifecycle": {
               "preStop": {
@@ -297,7 +297,7 @@
       "role": "collector"
     },
     "name": "sysdigcloud-collector",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "clusterIP": "None",
@@ -324,14 +324,14 @@
   "kind": "Deployment",
   "metadata": {
     "name": "sysdigcloud-collector",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "replicas": 5,
     "template": {
       "metadata": {
         "annotations": {
-          "version": "2363"
+          "version": "2.3.0.2461"
         },
         "labels": {
           "app": "sysdigcloud",
@@ -386,7 +386,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/sysdigcloud-backend:2363-nginx",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2.3.0.2461-nginx",
             "name": "nginx",
             "volumeMounts": [
               {
@@ -491,7 +491,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/sysdigcloud-backend:2363-allinone-java",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2.3.0.2461-allinone-java",
             "lifecycle": {
               "preStop": {
                 "exec": {
@@ -584,14 +584,14 @@
   "apiVersion": "v1",
   "kind": "Namespace",
   "metadata": {
-    "name": "sysdigcloud"
+    "name": "sysdig"
   },
   "spec": {
     "replicas": 5,
     "template": {
       "metadata": {
         "annotations": {
-          "version": "2363"
+          "version": "2.3.0.2461"
         },
         "labels": {
           "app": "sysdigcloud",
@@ -601,7 +601,7 @@
       "spec": {
         "containers": [
           {
-            "image": "quay.io/sysdig/sysdigcloud-backend:2363-email-renderer",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2.3.0.2461-email-renderer",
             "name": "email-renderer"
           },
           {
@@ -687,7 +687,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/sysdigcloud-backend:2363-allinone-java",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2.3.0.2461-allinone-java",
             "lifecycle": {
               "preStop": {
                 "exec": {
@@ -782,7 +782,7 @@
     "api.url": "https://foo.bar.com:443",
     "cassandra.compaction.throughput": "",
     "cassandra.datacenter.name": "",
-    "cassandra.endpoint": "sysdigcloud-cassandra.sysdigcloud.svc.cluster.local.",
+    "cassandra.endpoint": "sysdigcloud-cassandra.sysdig.svc.cluster.local.",
     "cassandra.endpoint.snitch": "",
     "cassandra.jvm.options": "",
     "cassandra.password": "",
@@ -799,7 +799,7 @@
     "elasticsearch.hostname": "sysdigcloud-elasticsearch",
     "elasticsearch.jvm.options": "",
     "elasticsearch.searchguard.enabled": "true",
-    "elasticsearch.user": "admin",
+    "elasticsearch.user": "sysdig",
     "elasticsearch.verifySSL": "false",
     "mysql.endpoint": "sysdigcloud-mysql",
     "mysql.user": "mysql-admin",
@@ -843,7 +843,7 @@
   "kind": "ConfigMap",
   "metadata": {
     "name": "sysdigcloud-config",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   }
 }
 {
@@ -851,7 +851,7 @@
   "kind": "Service",
   "metadata": {
     "name": "haproxy-ingress-lb-service",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "ports": [
@@ -874,7 +874,7 @@
     "selector": {
       "run": "haproxy-ingress"
     },
-    "type": "LoadBalancer"
+    "type": "NodePort"
   }
 }
 {
@@ -885,7 +885,7 @@
   "kind": "ConfigMap",
   "metadata": {
     "name": "cassandra-jvm-opts",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   }
 }
 {
@@ -897,7 +897,7 @@
       "role": "cassandra"
     },
     "name": "sysdigcloud-cassandra",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "clusterIP": "None",
@@ -931,7 +931,7 @@
       "role": "cassandra"
     },
     "name": "sysdigcloud-cassandra",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "podManagementPolicy": "Parallel",
@@ -1151,7 +1151,7 @@
               "storage": "300Gi"
             }
           },
-          "storageClassName": "foo"
+          "storageClassName": "sysdig"
         }
       }
     ]
@@ -1162,14 +1162,14 @@
   "data": {
     "ELASTICSEARCH_CLUSTER_NAME": "sysdigcloud",
     "ELASTICSEARCH_SERVICE": "sysdigcloud-elasticsearch",
-    "ELASTICSEARCH_USER": "admin",
+    "ELASTICSEARCH_USER": "sysdig",
     "ES_JAVA_OPTS": "",
     "SEARCHGUARD_ENABLED": "true"
   },
   "kind": "ConfigMap",
   "metadata": {
     "name": "elasticsearch",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   }
 }
 {
@@ -1184,7 +1184,7 @@
       "role": "elasticsearch"
     },
     "name": "sysdigcloud-elasticsearch",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "clusterIP": "None",
@@ -1216,7 +1216,7 @@
       "role": "elasticsearch"
     },
     "name": "sysdigcloud-elasticsearch",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "podManagementPolicy": "Parallel",
@@ -1365,7 +1365,7 @@
               "storage": "300Gi"
             }
           },
-          "storageClassName": "foo"
+          "storageClassName": "sysdig"
         }
       }
     ]
@@ -1382,7 +1382,7 @@
       "app": "sysdigcloud"
     },
     "name": "sysdigcloud-mysql-config",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   }
 }
 {
@@ -1394,7 +1394,7 @@
       "role": "mysql"
     },
     "name": "sysdigcloud-mysql",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "ports": [
@@ -1417,7 +1417,7 @@
       "role": "mysql"
     },
     "name": "sysdigcloud-mysql",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "replicas": 1,
@@ -1545,7 +1545,7 @@
               "storage": "25Gi"
             }
           },
-          "storageClassName": "foo"
+          "storageClassName": "sysdig"
         }
       }
     ]
@@ -1560,7 +1560,7 @@
       "role": "redis"
     },
     "name": "redis-primary",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "ports": [
@@ -1579,7 +1579,7 @@
   "kind": "ServiceAccount",
   "metadata": {
     "name": "ingress-controller",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "template": {
@@ -1630,7 +1630,7 @@
   "kind": "Role",
   "metadata": {
     "name": "ingress-controller",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "rules": [
     {
@@ -1690,7 +1690,7 @@
   "kind": "ClusterRole",
   "metadata": {
     "name": "ingress-controller",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "rules": [
     {
@@ -1776,7 +1776,7 @@
   "kind": "RoleBinding",
   "metadata": {
     "name": "ingress-controller",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "roleRef": {
     "apiGroup": "rbac.authorization.k8s.io",
@@ -1800,7 +1800,7 @@
   "kind": "ClusterRoleBinding",
   "metadata": {
     "name": "ingress-controller",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "roleRef": {
     "apiGroup": "rbac.authorization.k8s.io",
@@ -1811,7 +1811,7 @@
     {
       "kind": "ServiceAccount",
       "name": "ingress-controller",
-      "namespace": "sysdigcloud"
+      "namespace": "sysdig"
     },
     {
       "apiGroup": "rbac.authorization.k8s.io",
@@ -1828,18 +1828,18 @@
   "kind": "ConfigMap",
   "metadata": {
     "name": "haproxy-ingress",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   }
 }
 {
   "apiVersion": "v1",
   "data": {
-    "6443": "sysdigcloud/sysdigcloud-collector:6000:::sysdigcloud/sysdigcloud-ssl-secret"
+    "6443": "sysdig/sysdigcloud-collector:6000:::sysdig/sysdigcloud-ssl-secret"
   },
   "kind": "ConfigMap",
   "metadata": {
     "name": "haproxy-tcp-services",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   }
 }
 {
@@ -1847,7 +1847,7 @@
   "kind": "Service",
   "metadata": {
     "name": "ingress-default-backend",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "ports": [
@@ -1868,7 +1868,7 @@
       "run": "ingress-default-backend"
     },
     "name": "ingress-default-backend",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "selector": {
@@ -1913,7 +1913,7 @@
   "apiVersion": "storage.k8s.io/v1",
   "kind": "StorageClass",
   "metadata": {
-    "name": "foo"
+    "name": "sysdig"
   },
   "spec": {
     "selector": {
@@ -1930,7 +1930,7 @@
       "spec": {
         "containers": [
           {
-            "image": "quay.io/sysdig/rsyslog:8.34.0-r0-20180708T0208-git-cb867ef",
+            "image": "quay.io/sysdig/rsyslog:8.34.0.5",
             "imagePullPolicy": "Always",
             "name": "rsyslog-server",
             "resources": {

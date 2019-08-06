@@ -5,7 +5,7 @@ scripts: generate
 #Size of the cluster. Takes [ small | medium | large ]
 #This defines CPU & Memory & Disk & Replicas
 #Replicas can be overwritten for medium , large in advanced   config section
-size: small
+size: large
 #Set Quay.Io secrets
 quaypullsecret: foo
 #supports aws | gke | hostPath | local
@@ -25,3 +25,8 @@ sysdig:
   smtpProtocolSSL: false
   #Optional Email Header
   smtpFromAddress: foo@bar.com
+hostPathCustomPaths:
+  cassandra: /cassandra
+  elasticsearch: /elasticsearch
+  mysql: /mysql
+  postgresql: /postgresql/data/pgdata

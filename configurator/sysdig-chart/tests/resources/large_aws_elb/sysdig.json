@@ -237,11 +237,11 @@
             },
             "resources": {
               "limits": {
-                "cpu": 4,
+                "cpu": "4",
                 "memory": "4Gi"
               },
               "requests": {
-                "cpu": "500m",
+                "cpu": "1",
                 "memory": "1Gi"
               }
             },
@@ -312,7 +312,7 @@
     "namespace": "sysdig"
   },
   "spec": {
-    "replicas": 1,
+    "replicas": 5,
     "template": {
       "metadata": {
         "annotations": {
@@ -496,12 +496,12 @@
             },
             "resources": {
               "limits": {
-                "cpu": "4",
-                "memory": "4Gi"
+                "cpu": "16",
+                "memory": "16Gi"
               },
               "requests": {
-                "cpu": "1",
-                "memory": "1Gi"
+                "cpu": "4",
+                "memory": "4Gi"
               }
             },
             "volumeMounts": [
@@ -602,7 +602,7 @@
     "namespace": "sysdig"
   },
   "spec": {
-    "replicas": 1,
+    "replicas": 5,
     "template": {
       "metadata": {
         "annotations": {
@@ -788,12 +788,12 @@
             },
             "resources": {
               "limits": {
-                "cpu": "4",
-                "memory": "4Gi"
+                "cpu": "16",
+                "memory": "16Gi"
               },
               "requests": {
-                "cpu": "1",
-                "memory": "1Gi"
+                "cpu": "4",
+                "memory": "4Gi"
               }
             },
             "volumeMounts": [
@@ -862,7 +862,7 @@
     "name": "sysdig"
   },
   "spec": {
-    "replicas": 1,
+    "replicas": 5,
     "template": {
       "metadata": {
         "annotations": {
@@ -985,12 +985,12 @@
             },
             "resources": {
               "limits": {
-                "cpu": "4",
-                "memory": "4Gi"
+                "cpu": "16",
+                "memory": "16Gi"
               },
               "requests": {
-                "cpu": "1",
-                "memory": "1Gi"
+                "cpu": "4",
+                "memory": "4Gi"
               }
             },
             "volumeMounts": [
@@ -1062,7 +1062,7 @@
     "cassandra.jvm.options": "",
     "cassandra.password": "",
     "cassandra.port": "9042",
-    "cassandra.replication.factor": "1",
+    "cassandra.replication.factor": "3",
     "cassandra.secure": "false",
     "cassandra.snitch.extract_cmd": "",
     "cassandra.snitch.hostname.file": "",
@@ -1087,12 +1087,12 @@
     "scanning.redis.enabled": "true",
     "scanning.service.token": "change_me",
     "smtp.from.address": "foo@bar.com",
-    "smtp.password": "bar",
-    "smtp.server": "foo.smtp.com",
+    "smtp.password": "",
+    "smtp.server": "",
     "smtp.server.port": "25",
     "smtp.ssl": "false",
     "smtp.tls": "false",
-    "smtp.user": "foo",
+    "smtp.user": "",
     "sysdigcloud.captures.cassandra.storage": "true",
     "sysdigcloud.default.user": "test@sysdig.com",
     "sysdigcloud.google.oauth.client.id": "",
@@ -1149,7 +1149,7 @@
     "selector": {
       "run": "haproxy-ingress"
     },
-    "type": "NodePort"
+    "type": "LoadBalancer"
   }
 }
 {
@@ -1210,7 +1210,7 @@
   },
   "spec": {
     "podManagementPolicy": "Parallel",
-    "replicas": 1,
+    "replicas": 6,
     "selector": {
       "matchLabels": {
         "affinity": "cassandra",
@@ -1230,20 +1230,23 @@
       "spec": {
         "affinity": {
           "podAntiAffinity": {
-            "requiredDuringSchedulingIgnoredDuringExecution": [
+            "preferredDuringSchedulingIgnoredDuringExecution": [
               {
-                "labelSelector": {
-                  "matchExpressions": [
-                    {
-                      "key": "affinity",
-                      "operator": "In",
-                      "values": [
-                        "cassandra"
-                      ]
-                    }
-                  ]
+                "podAffinityTerm": {
+                  "labelSelector": {
+                    "matchExpressions": [
+                      {
+                        "key": "affinity",
+                        "operator": "In",
+                        "values": [
+                          "cassandra"
+                        ]
+                      }
+                    ]
+                  },
+                  "topologyKey": "kubernetes.io/hostname"
                 },
-                "topologyKey": "kubernetes.io/hostname"
+                "weight": 100
               }
             ]
           }
@@ -1370,11 +1373,11 @@
             },
             "resources": {
               "limits": {
-                "cpu": "2",
+                "cpu": "8",
                 "memory": "8Gi"
               },
               "requests": {
-                "cpu": "1",
+                "cpu": "4",
                 "memory": "2Gi"
               }
             },
@@ -1398,13 +1401,6 @@
         ],
         "volumes": [
           {
-            "hostPath": {
-              "path": "/var/lib/cassandra",
-              "type": "DirectoryOrCreate"
-            },
-            "name": "data"
-          },
-          {
             "configMap": {
               "name": "cassandra-jvm-opts"
             },
@@ -1415,7 +1411,25 @@
     },
     "updateStrategy": {
       "type": "OnDelete"
-    }
+    },
+    "volumeClaimTemplates": [
+      {
+        "metadata": {
+          "name": "data"
+        },
+        "spec": {
+          "accessModes": [
+            "ReadWriteOnce"
+          ],
+          "resources": {
+            "requests": {
+              "storage": "300Gi"
+            }
+          },
+          "storageClassName": "sysdig"
+        }
+      }
+    ]
   }
 }
 {
@@ -1481,7 +1495,7 @@
   },
   "spec": {
     "podManagementPolicy": "Parallel",
-    "replicas": 1,
+    "replicas": 6,
     "selector": {
       "matchLabels": {
         "affinity": "elasticsearch",
@@ -1503,20 +1517,23 @@
       "spec": {
         "affinity": {
           "podAntiAffinity": {
-            "requiredDuringSchedulingIgnoredDuringExecution": [
+            "preferredDuringSchedulingIgnoredDuringExecution": [
               {
-                "labelSelector": {
-                  "matchExpressions": [
-                    {
-                      "key": "affinity",
-                      "operator": "In",
-                      "values": [
-                        "cassandra"
-                      ]
-                    }
-                  ]
+                "podAffinityTerm": {
+                  "labelSelector": {
+                    "matchExpressions": [
+                      {
+                        "key": "affinity",
+                        "operator": "In",
+                        "values": [
+                          "elasticsearch"
+                        ]
+                      }
+                    ]
+                  },
+                  "topologyKey": "kubernetes.io/hostname"
                 },
-                "topologyKey": "kubernetes.io/hostname"
+                "weight": 100
               }
             ]
           }
@@ -1526,7 +1543,7 @@
             "env": [
               {
                 "name": "ELASTICSEARCH_GOSSIP_NODES_NUM",
-                "value": "1"
+                "value": "6"
               }
             ],
             "envFrom": [
@@ -1556,11 +1573,11 @@
             },
             "resources": {
               "limits": {
-                "cpu": "2",
+                "cpu": "8",
                 "memory": "8Gi"
               },
               "requests": {
-                "cpu": "1",
+                "cpu": "4",
                 "memory": "4Gi"
               }
             },
@@ -1590,13 +1607,6 @@
         ],
         "volumes": [
           {
-            "hostPath": {
-              "path": "/usr/share/elasticsearch",
-              "type": "DirectoryOrCreate"
-            },
-            "name": "data"
-          },
-          {
             "name": "elasticsearch-certs",
             "secret": {
               "defaultMode": 256,
@@ -1615,7 +1625,25 @@
     },
     "updateStrategy": {
       "type": "OnDelete"
-    }
+    },
+    "volumeClaimTemplates": [
+      {
+        "metadata": {
+          "name": "data"
+        },
+        "spec": {
+          "accessModes": [
+            "ReadWriteOnce"
+          ],
+          "resources": {
+            "requests": {
+              "storage": "300Gi"
+            }
+          },
+          "storageClassName": "sysdig"
+        }
+      }
+    ]
   }
 }
 {
@@ -1770,13 +1798,6 @@
         ],
         "volumes": [
           {
-            "hostPath": {
-              "path": "/var/lib/mysql",
-              "type": "DirectoryOrCreate"
-            },
-            "name": "data"
-          },
-          {
             "configMap": {
               "name": "sysdigcloud-mysql-config"
             },
@@ -1784,7 +1805,25 @@
           }
         ]
       }
-    }
+    },
+    "volumeClaimTemplates": [
+      {
+        "metadata": {
+          "name": "data"
+        },
+        "spec": {
+          "accessModes": [
+            "ReadWriteOnce"
+          ],
+          "resources": {
+            "requests": {
+              "storage": "25Gi"
+            }
+          },
+          "storageClassName": "sysdig"
+        }
+      }
+    ]
   }
 }
 {
@@ -1927,12 +1966,12 @@
             },
             "resources": {
               "limits": {
-                "cpu": "2",
-                "memory": "4Gi"
+                "cpu": "4",
+                "memory": "8Gi"
               },
               "requests": {
-                "cpu": "500m",
-                "memory": "500Mi"
+                "cpu": "2",
+                "memory": "2Gi"
               }
             },
             "volumeMounts": [
@@ -1948,18 +1987,27 @@
           {
             "name": "sysdigcloud-pull-secret"
           }
-        ],
-        "volumes": [
-          {
-            "hostPath": {
-              "path": "/var/lib/postgresql/data/pgdata",
-              "type": "DirectoryOrCreate"
-            },
-            "name": "data"
-          }
         ]
       }
-    }
+    },
+    "volumeClaimTemplates": [
+      {
+        "metadata": {
+          "name": "data"
+        },
+        "spec": {
+          "accessModes": [
+            "ReadWriteOnce"
+          ],
+          "resources": {
+            "requests": {
+              "storage": "60Gi"
+            }
+          },
+          "storageClassName": "sysdig"
+        }
+      }
+    ]
   }
 }
 {
@@ -2575,11 +2623,11 @@
             "name": "scanning-alertmgr",
             "resources": {
               "limits": {
-                "cpu": 4,
+                "cpu": "4",
                 "memory": "4Gi"
               },
               "requests": {
-                "cpu": "500m",
+                "cpu": "1",
                 "memory": "1Gi"
               }
             }
@@ -2813,11 +2861,11 @@
             "name": "scanning-api",
             "resources": {
               "limits": {
-                "cpu": 4,
+                "cpu": "4",
                 "memory": "4Gi"
               },
               "requests": {
-                "cpu": "500m",
+                "cpu": "1",
                 "memory": "1Gi"
               }
             }
@@ -2833,23 +2881,10 @@
   }
 }
 {
-  "apiVersion": "extensions/v1beta1",
-  "kind": "Ingress",
+  "apiVersion": "storage.k8s.io/v1",
+  "kind": "StorageClass",
   "metadata": {
-    "annotations": {
-      "ingress.kubernetes.io/affinity": "cookie",
-      "ingress.kubernetes.io/session-cookie-name": "INGRESSCOOKIEAPI",
-      "kubernetes.io/ingress.class": "haproxy"
-    },
-    "labels": {
-      "app.kubernetes.io/managed-by": "ingress-config",
-      "app.kubernetes.io/name": "ingress-config",
-      "app.kubernetes.io/part-of": "sysdigcloud",
-      "role": "ingress-config",
-      "tier": "infra"
-    },
-    "name": "sysdigcloud-api-ingress",
-    "namespace": "sysdig"
+    "name": "sysdig"
   },
   "spec": {
     "rules": [
@@ -2883,5 +2918,11 @@
         "secretName": "sysdigcloud-ssl-secret"
       }
     ]
-  }
+  },
+  "parameters": {
+    "type": "gp2"
+  },
+  "provisioner": "kubernetes.io/aws-ebs",
+  "reclaimPolicy": "Retain",
+  "volumeBindingMode": "Immediate"
 }

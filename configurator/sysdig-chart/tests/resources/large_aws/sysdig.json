@@ -1,7 +1,7 @@
 {
   "apiVersion": "v1",
   "data": {
-    "config.yaml": "service_dir: /anchore_service_config\ntmp_dir: \"/tmp\"\nallow_awsecr_iam_auto: false\ncleanup_images: true\nlog_level: INFO\nhost_id: ${ANCHORE_POD_NAME}\ninternal_ssl_verify: false\nmetrics:\n  enabled: false\nfeeds:\n  selective_sync:\n    enabled: True\n    feeds:\n      vulnerabilities: True\n      nvd: True\n      packages: False\ndefault_admin_password: ${ANCHORE_ADMIN_PASSWORD}\ndefault_admin_email: 'admin@myemail.com'\ncredentials:\n  database:\n    db_connect: \"postgresql+pg8000://${ANCHORE_DB_USER}:${ANCHORE_DB_PASSWORD}@${ANCHORE_DB_ENDPOINT}/${ANCHORE_DB}\"\n    db_connect_args:\n      timeout: 120\n      ssl: false\n    db_pool_size: 30\n    db_pool_max_overflow: 30\nservices:\n  apiext:\n    enabled: True\n    require_auth: True\n    endpoint_hostname: sysdigcloud-anchore-core\n    listen: '0.0.0.0'\n    port: 8228\n  kubernetes_webhook:\n    enabled: True\n    require_auth: False\n    endpoint_hostname: sysdigcloud-anchore-core\n    listen: '0.0.0.0'\n    port: 8338\n  catalog:\n    enabled: True\n    require_auth: True\n    endpoint_hostname: sysdigcloud-anchore-core\n    listen: '0.0.0.0'\n    port: 8082\n    use_db: True\n    cycle_timer_seconds: 1\n    cycle_timers:\n      analyzer_queue: 1\n      feed_sync: 14400\n      image_watcher: 3600\n      notifications: 30\n      policy_bundle_sync: 300\n      policy_eval: 3600\n      service_watcher: 15\n\n    event_log:\n      notification:\n        enabled: false\n        level:\n          - error\n    archive:\n      compression:\n        enabled: true\n        min_size_kbytes: 100\n      storage_driver:\n        name: db\n        config: {}\n  simplequeue:\n    enabled: True\n    require_auth: True\n    endpoint_hostname: sysdigcloud-anchore-core\n    listen: '0.0.0.0'\n    port: 8083\n  policy_engine:\n    enabled: True\n    require_auth: True\n    endpoint_hostname: sysdigcloud-anchore-core\n    listen: '0.0.0.0'\n    port: 8087\n"
+    "config.yaml": "service_dir: /home/anchore/config\ntmp_dir: \"/tmp\"\nallow_awsecr_iam_auto: false\ncleanup_images: true\nlog_level: INFO\nhost_id: ${ANCHORE_POD_NAME}\ninternal_ssl_verify: false\nmetrics:\n  enabled: false\nfeeds:\n  selective_sync:\n    enabled: True\n    feeds:\n      vulnerabilities: True\n      nvd: True\n      packages: False\ndefault_admin_password: ${ANCHORE_ADMIN_PASSWORD}\ndefault_admin_email: 'admin@myemail.com'\ncredentials:\n  database:\n    db_connect: \"postgresql+pg8000://${ANCHORE_DB_USER}:${ANCHORE_DB_PASSWORD}@${ANCHORE_DB_ENDPOINT}/${ANCHORE_DB}\"\n    db_connect_args:\n      timeout: 120\n      ssl: false\n    db_pool_size: 30\n    db_pool_max_overflow: 30\nservices:\n  apiext:\n    enabled: True\n    require_auth: True\n    endpoint_hostname: sysdigcloud-anchore-core\n    listen: '0.0.0.0'\n    port: 8228\n  kubernetes_webhook:\n    enabled: True\n    require_auth: False\n    endpoint_hostname: sysdigcloud-anchore-core\n    listen: '0.0.0.0'\n    port: 8338\n  catalog:\n    enabled: True\n    require_auth: True\n    endpoint_hostname: sysdigcloud-anchore-core\n    listen: '0.0.0.0'\n    port: 8082\n    use_db: True\n    cycle_timer_seconds: 1\n    cycle_timers:\n      analyzer_queue: 1\n      feed_sync: 14400\n      image_watcher: 3600\n      notifications: 30\n      policy_bundle_sync: 300\n      policy_eval: 21600\n      vulnerability_scan: 18000\n      service_watcher: 15\n    max_request_threads: 70\n    event_log:\n      notification:\n        enabled: false\n        level:\n          - error\n    archive:\n      compression:\n        enabled: true\n        min_size_kbytes: 100\n      storage_driver:\n        name: db\n        config: {}\n  simplequeue:\n    enabled: True\n    require_auth: True\n    endpoint_hostname: sysdigcloud-anchore-core\n    listen: '0.0.0.0'\n    port: 8083\n  policy_engine:\n    enabled: True\n    require_auth: True\n    endpoint_hostname: sysdigcloud-anchore-core\n    listen: '0.0.0.0'\n    port: 8087\n"
   },
   "kind": "ConfigMap",
   "metadata": {
@@ -10,7 +10,7 @@
       "role": "anchore-core"
     },
     "name": "sysdigcloud-anchore-core",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   }
 }
 {
@@ -22,7 +22,7 @@
       "role": "anchore-core"
     },
     "name": "sysdigcloud-anchore-core",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "ports": [
@@ -73,7 +73,7 @@
       "role": "anchore-worker"
     },
     "name": "sysdigcloud-anchore-worker",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "replicas": 1,
@@ -95,6 +95,10 @@
         "containers": [
           {
             "env": [
+              {
+                "name": "ANCHORE_CONFIG_DIR",
+                "value": "/config"
+              },
               {
                 "name": "ANCHORE_DB",
                 "valueFrom": {
@@ -140,6 +144,15 @@
                 "value": ""
               },
               {
+                "name": "ANCHORE_ADMIN_USER",
+                "valueFrom": {
+                  "configMapKeyRef": {
+                    "key": "anchore.admin.user",
+                    "name": "sysdigcloud-config"
+                  }
+                }
+              },
+              {
                 "name": "ANCHORE_ADMIN_PASSWORD",
                 "valueFrom": {
                   "secretKeyRef": {
@@ -177,7 +190,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/anchore:v0.3.4.1",
+            "image": "quay.io/sysdig/anchore:v0.4.1.1",
             "imagePullPolicy": null,
             "livenessProbe": {
               "failureThreshold": 10,
@@ -257,7 +270,7 @@
     }
   },
   "data": {
-    "config.yaml": "service_dir: /anchore_service_config\ntmp_dir: /analysis_scratch\nallow_awsecr_iam_auto: false\ncleanup_images: true\nlog_level: INFO\nhost_id: ${ANCHORE_POD_NAME}\ninternal_ssl_verify: false\nmetrics:\n  enabled: false\ndefault_admin_password: ${ANCHORE_ADMIN_PASSWORD}\ndefault_admin_email: 'admin@myemail.com'\ncredentials:\n  database:\n    db_connect: \"postgresql+pg8000://${ANCHORE_DB_USER}:${ANCHORE_DB_PASSWORD}@${ANCHORE_DB_ENDPOINT}/${ANCHORE_DB}\"\n    db_connect_args:\n      timeout: 120\n      ssl: false\n    db_pool_size: 30\n    db_pool_max_overflow: 30\nservices:\n  analyzer:\n    enabled: true\n    endpoint_hostname: ${ANCHORE_POD_IP}\n    listen: '0.0.0.0'\n    port: 8084\n    cycle_timer_seconds: 1\n    max_threads: 1\n    analyzer_driver: nodocker\n"
+    "config.yaml": "service_dir: /home/anchore/config\ntmp_dir: /home/anchore/analysis_scratch\nallow_awsecr_iam_auto: false\ncleanup_images: true\nlog_level: INFO\nhost_id: ${ANCHORE_POD_NAME}\ninternal_ssl_verify: false\nmetrics:\n  enabled: false\ndefault_admin_password: ${ANCHORE_ADMIN_PASSWORD}\ndefault_admin_email: 'admin@myemail.com'\ncredentials:\n  database:\n    db_connect: \"postgresql+pg8000://${ANCHORE_DB_USER}:${ANCHORE_DB_PASSWORD}@${ANCHORE_DB_ENDPOINT}/${ANCHORE_DB}\"\n    db_connect_args:\n      timeout: 120\n      ssl: false\n    db_pool_size: 30\n    db_pool_max_overflow: 30\nservices:\n  analyzer:\n    enabled: true\n    endpoint_hostname: ${ANCHORE_POD_IP}\n    listen: '0.0.0.0'\n    port: 8084\n    cycle_timer_seconds: 1\n    max_threads: 1\n    analyzer_driver: nodocker\n"
   }
 }
 {
@@ -269,7 +282,7 @@
       "role": "api"
     },
     "name": "sysdigcloud-api",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "clusterIP": "None",
@@ -296,14 +309,14 @@
   "kind": "Deployment",
   "metadata": {
     "name": "sysdigcloud-api",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "replicas": 5,
     "template": {
       "metadata": {
         "annotations": {
-          "version": "2363"
+          "version": "2.3.0.2461"
         },
         "labels": {
           "app": "sysdigcloud",
@@ -343,7 +356,7 @@
         },
         "containers": [
           {
-            "image": "quay.io/sysdig/sysdigcloud-backend:2363-email-renderer",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2.3.0.2461-email-renderer",
             "name": "email-renderer"
           },
           {
@@ -362,7 +375,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/sysdigcloud-backend:2363-nginx",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2.3.0.2461-nginx",
             "imagePullPolicy": "IfNotPresent",
             "name": "nginx",
             "volumeMounts": [
@@ -459,7 +472,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/sysdigcloud-backend:2363-allinone-java",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2.3.0.2461-allinone-java",
             "imagePullPolicy": "IfNotPresent",
             "lifecycle": {
               "preStop": {
@@ -559,7 +572,7 @@
       "role": "collector"
     },
     "name": "sysdigcloud-collector",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "clusterIP": "None",
@@ -586,14 +599,14 @@
   "kind": "Deployment",
   "metadata": {
     "name": "sysdigcloud-collector",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "replicas": 5,
     "template": {
       "metadata": {
         "annotations": {
-          "version": "2363"
+          "version": "2.3.0.2461"
         },
         "labels": {
           "app": "sysdigcloud",
@@ -648,7 +661,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/sysdigcloud-backend:2363-nginx",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2.3.0.2461-nginx",
             "name": "nginx",
             "volumeMounts": [
               {
@@ -753,7 +766,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/sysdigcloud-backend:2363-allinone-java",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2.3.0.2461-allinone-java",
             "lifecycle": {
               "preStop": {
                 "exec": {
@@ -846,14 +859,14 @@
   "apiVersion": "v1",
   "kind": "Namespace",
   "metadata": {
-    "name": "sysdigcloud"
+    "name": "sysdig"
   },
   "spec": {
     "replicas": 5,
     "template": {
       "metadata": {
         "annotations": {
-          "version": "2363"
+          "version": "2.3.0.2461"
         },
         "labels": {
           "app": "sysdigcloud",
@@ -863,7 +876,7 @@
       "spec": {
         "containers": [
           {
-            "image": "quay.io/sysdig/sysdigcloud-backend:2363-email-renderer",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2.3.0.2461-email-renderer",
             "name": "email-renderer"
           },
           {
@@ -949,7 +962,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/sysdigcloud-backend:2363-allinone-java",
+            "image": "quay.io/sysdig/sysdigcloud-backend:2.3.0.2461-allinone-java",
             "lifecycle": {
               "preStop": {
                 "exec": {
@@ -1044,7 +1057,7 @@
     "api.url": "https://foo.bar.com:443",
     "cassandra.compaction.throughput": "",
     "cassandra.datacenter.name": "",
-    "cassandra.endpoint": "sysdigcloud-cassandra.sysdigcloud.svc.cluster.local.",
+    "cassandra.endpoint": "sysdigcloud-cassandra.sysdig.svc.cluster.local.",
     "cassandra.endpoint.snitch": "",
     "cassandra.jvm.options": "",
     "cassandra.password": "",
@@ -1061,7 +1074,7 @@
     "elasticsearch.hostname": "sysdigcloud-elasticsearch",
     "elasticsearch.jvm.options": "",
     "elasticsearch.searchguard.enabled": "true",
-    "elasticsearch.user": "admin",
+    "elasticsearch.user": "sysdig",
     "elasticsearch.verifySSL": "false",
     "mysql.endpoint": "sysdigcloud-mysql",
     "mysql.user": "mysql-admin",
@@ -1075,7 +1088,7 @@
     "scanning.service.token": "change_me",
     "smtp.from.address": "foo@bar.com",
     "smtp.password": "bar",
-    "smtp.server": "foo.smtp.com",
+    "smtp.server": "",
     "smtp.server.port": "25",
     "smtp.ssl": "false",
     "smtp.tls": "false",
@@ -1105,7 +1118,7 @@
   "kind": "ConfigMap",
   "metadata": {
     "name": "sysdigcloud-config",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   }
 }
 {
@@ -1113,7 +1126,7 @@
   "kind": "Service",
   "metadata": {
     "name": "haproxy-ingress-lb-service",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "ports": [
@@ -1136,7 +1149,7 @@
     "selector": {
       "run": "haproxy-ingress"
     },
-    "type": "LoadBalancer"
+    "type": "NodePort"
   }
 }
 {
@@ -1147,7 +1160,7 @@
   "kind": "ConfigMap",
   "metadata": {
     "name": "cassandra-jvm-opts",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   }
 }
 {
@@ -1159,7 +1172,7 @@
       "role": "cassandra"
     },
     "name": "sysdigcloud-cassandra",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "clusterIP": "None",
@@ -1193,7 +1206,7 @@
       "role": "cassandra"
     },
     "name": "sysdigcloud-cassandra",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "podManagementPolicy": "Parallel",
@@ -1413,7 +1426,7 @@
               "storage": "300Gi"
             }
           },
-          "storageClassName": "foo"
+          "storageClassName": "sysdig"
         }
       }
     ]
@@ -1424,14 +1437,14 @@
   "data": {
     "ELASTICSEARCH_CLUSTER_NAME": "sysdigcloud",
     "ELASTICSEARCH_SERVICE": "sysdigcloud-elasticsearch",
-    "ELASTICSEARCH_USER": "admin",
+    "ELASTICSEARCH_USER": "sysdig",
     "ES_JAVA_OPTS": "",
     "SEARCHGUARD_ENABLED": "true"
   },
   "kind": "ConfigMap",
   "metadata": {
     "name": "elasticsearch",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   }
 }
 {
@@ -1446,7 +1459,7 @@
       "role": "elasticsearch"
     },
     "name": "sysdigcloud-elasticsearch",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "clusterIP": "None",
@@ -1478,7 +1491,7 @@
       "role": "elasticsearch"
     },
     "name": "sysdigcloud-elasticsearch",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "podManagementPolicy": "Parallel",
@@ -1627,7 +1640,7 @@
               "storage": "300Gi"
             }
           },
-          "storageClassName": "foo"
+          "storageClassName": "sysdig"
         }
       }
     ]
@@ -1644,7 +1657,7 @@
       "app": "sysdigcloud"
     },
     "name": "sysdigcloud-mysql-config",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   }
 }
 {
@@ -1656,7 +1669,7 @@
       "role": "mysql"
     },
     "name": "sysdigcloud-mysql",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "ports": [
@@ -1679,7 +1692,7 @@
       "role": "mysql"
     },
     "name": "sysdigcloud-mysql",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "replicas": 1,
@@ -1807,7 +1820,7 @@
               "storage": "25Gi"
             }
           },
-          "storageClassName": "foo"
+          "storageClassName": "sysdig"
         }
       }
     ]
@@ -1822,7 +1835,7 @@
       "role": "postgresql"
     },
     "name": "sysdigcloud-postgresql",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "ports": [
@@ -1848,7 +1861,7 @@
       "role": "postgresql"
     },
     "name": "sysdigcloud-postgresql",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "replicas": 1,
@@ -1991,7 +2004,7 @@
               "storage": "60Gi"
             }
           },
-          "storageClassName": "foo"
+          "storageClassName": "sysdig"
         }
       }
     ]
@@ -2006,7 +2019,7 @@
       "role": "redis"
     },
     "name": "redis-primary",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "ports": [
@@ -2025,7 +2038,7 @@
   "kind": "ServiceAccount",
   "metadata": {
     "name": "ingress-controller",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "template": {
@@ -2076,7 +2089,7 @@
   "kind": "Role",
   "metadata": {
     "name": "ingress-controller",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "rules": [
     {
@@ -2136,7 +2149,7 @@
   "kind": "ClusterRole",
   "metadata": {
     "name": "ingress-controller",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "rules": [
     {
@@ -2222,7 +2235,7 @@
   "kind": "RoleBinding",
   "metadata": {
     "name": "ingress-controller",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "roleRef": {
     "apiGroup": "rbac.authorization.k8s.io",
@@ -2246,7 +2259,7 @@
   "kind": "ClusterRoleBinding",
   "metadata": {
     "name": "ingress-controller",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "roleRef": {
     "apiGroup": "rbac.authorization.k8s.io",
@@ -2257,7 +2270,7 @@
     {
       "kind": "ServiceAccount",
       "name": "ingress-controller",
-      "namespace": "sysdigcloud"
+      "namespace": "sysdig"
     },
     {
       "apiGroup": "rbac.authorization.k8s.io",
@@ -2274,18 +2287,18 @@
   "kind": "ConfigMap",
   "metadata": {
     "name": "haproxy-ingress",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   }
 }
 {
   "apiVersion": "v1",
   "data": {
-    "6443": "sysdigcloud/sysdigcloud-collector:6000:::sysdigcloud/sysdigcloud-ssl-secret"
+    "6443": "sysdig/sysdigcloud-collector:6000:::sysdig/sysdigcloud-ssl-secret"
   },
   "kind": "ConfigMap",
   "metadata": {
     "name": "haproxy-tcp-services",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   }
 }
 {
@@ -2293,7 +2306,7 @@
   "kind": "Service",
   "metadata": {
     "name": "ingress-default-backend",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "ports": [
@@ -2314,7 +2327,7 @@
       "run": "ingress-default-backend"
     },
     "name": "ingress-default-backend",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "selector": {
@@ -2364,7 +2377,7 @@
       "role": "scanning-api"
     },
     "name": "sysdigcloud-scanning-api",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "ports": [
@@ -2385,14 +2398,14 @@
   "kind": "Deployment",
   "metadata": {
     "annotations": {
-      "version": "2363"
+      "version": "2.3.0.2461"
     },
     "labels": {
       "app": "sysdigcloud",
       "role": "scanning-alertmgr"
     },
     "name": "sysdigcloud-scanning-alertmgr",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "replicas": 1,
@@ -2605,7 +2618,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/scanning:2363",
+            "image": "quay.io/sysdig/scanning:2.3.0.2461",
             "imagePullPolicy": "IfNotPresent",
             "name": "scanning-alertmgr",
             "resources": {
@@ -2634,7 +2647,7 @@
   "kind": "Deployment",
   "metadata": {
     "annotations": {
-      "version": "2363"
+      "version": "2.3.0.2461"
     },
     "labels": {
       "affinity": "sysdigcloud-scanning-api",
@@ -2642,7 +2655,7 @@
       "role": "scanning-api"
     },
     "name": "sysdigcloud-scanning-api",
-    "namespace": "sysdigcloud"
+    "namespace": "sysdig"
   },
   "spec": {
     "replicas": 1,
@@ -2843,7 +2856,7 @@
                 }
               }
             ],
-            "image": "quay.io/sysdig/scanning:2363",
+            "image": "quay.io/sysdig/scanning:2.3.0.2461",
             "imagePullPolicy": "IfNotPresent",
             "name": "scanning-api",
             "resources": {
@@ -2871,7 +2884,7 @@
   "apiVersion": "storage.k8s.io/v1",
   "kind": "StorageClass",
   "metadata": {
-    "name": "foo"
+    "name": "sysdig"
   },
   "spec": {
     "rules": [

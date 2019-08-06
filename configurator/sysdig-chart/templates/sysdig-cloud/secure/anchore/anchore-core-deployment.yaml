@@ -9,8 +9,6 @@ metadata:
   annotations:
     version: {{ .Values.sysdig.anchoreVersion | quote }}
 spec:
-  # Replicas can be scaled up as needed.
-  replicas: 1
   revisionHistoryLimit: 2
   selector:
     matchLabels:
@@ -67,6 +65,8 @@ spec:
         - containerPort: 8087
           name: policy-engine
         env:
+        - name: ANCHORE_CONFIG_DIR
+          value: /config
         - name: ANCHORE_DB
           valueFrom:
             configMapKeyRef:
@@ -91,6 +91,11 @@ spec:
           value: ""
         - name: ANCHORE_IO_PASSWORD
           value: ""
+        - name: ANCHORE_ADMIN_USER
+          valueFrom:
+            configMapKeyRef:
+              name: sysdigcloud-config
+              key: anchore.admin.user
         - name: ANCHORE_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
