@@ -1,3 +1,6 @@
+#This represents the schema version of this config, this version follows semver
+#and maintains semver guarantees around versioning.
+schema_version: 1.0.0
 #Size of the cluster. Takes [ small | medium | large ]
 #This defines CPU & Memory & Disk & Replicas
 #Replicas can be overwritten for medium , large in advanced   config section

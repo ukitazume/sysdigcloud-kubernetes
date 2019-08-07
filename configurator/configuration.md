@@ -2,6 +2,7 @@ Required parameters are in bold letters.
 
 Parameter | Description | Options | Default|
 |---------|-------------|---------|--------|
+**schema_version** | This represents the schema version of the values.yaml configuration, it follows semver and maintain server guarantees around versioning | - | `1.0.0` |
 **size** | Size of the cluster.<br>This defines CPU & Memory & Disk & Replicas | `small\|medium\|large` | - |
 **quaypullsecret** | quaypullsecret provided by the marketing team that kubelet will use to pull sysdigcloud images from Quay | - | - |
 **storageClassProvisioner** | name of [storage class provisioner](https://kubernetes.io/docs/concepts/storage/storage-classes/#provisioner) to use when creating the configured `storageClassName` parameter. `hostPath` or `local` should be used in clusters that do not have a provisioner however `local` should be preferred over `hostPath` see [local storage](README.md#local-storage) for instructions on setting it up | `aws\|gke\|hostPath\|local` | - |
