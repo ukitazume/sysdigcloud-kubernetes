@@ -45,6 +45,29 @@ The rationale for the workflow is it helps the code reviewers to see the
 effect(s) of the changes introduced, it also helps exercise the config
 generation workflow.
 
+### Versioning
+
+The Configurator versioning scheme is as below:
+
+<sysdig_platform_version>-<monotonous integer>
+
+The integer starts at 1 and is bumped for every release of the configurator,
+then reset to 1 for a release of sysdig_platform_version. E.g:
+
+For the first release of configurator the release of sysdig platform is
+`2.3.0`, hence the configurator version is `2.3.0-1` next release of
+configurator for this sysdig platform is `2.3.0-2`, if a new sysdig platform
+is released tomorrow as `2.3.1` a new release of configurator will be cut at
+`2.3.1-1`.
+
+For uber images containing a tarball of all images for [airgap
+installations](#full-airgap-installation) the versioning scheme is:
+
+<configurator_version>-uber
+
+For release candidates the version is:
+
+<next_configurator_version>-rc-<JENKINS_BUILD_NUMBER>
 ## Usage
 
 ### Quickstart
@@ -73,7 +96,7 @@ configuration](configuration.md) for all possible configuration options.
 - Run
 ```bash
 docker run -v ~/.kube:/root/.kube -v $(pwd):/manifests \
-  quay.io/sysdig/configurator:2.3.0-1.0.0
+  quay.io/sysdig/configurator:2.3.0-1
 ```
 
 ### Configuration
@@ -120,7 +143,7 @@ https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/5c56fcd96fe0ef60
 - Run
 ```bash
 docker run -v ~/.kube:/root/.kube -v $(PWD):/manifests \
-  quay.io/sysdig/configurator:2.3.0-1.0.0
+  quay.io/sysdig/configurator:2.3.0-1
 ```
 
 ### Airgap installation with installation machine multi-homed
@@ -166,7 +189,7 @@ https://raw.githubusercontent.com/draios/sysdigcloud-kubernetes/5c56fcd96fe0ef60
 docker run -v ~/.kube:/root/.kube -v $(PWD):/manifests \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v ~/.docker:/root/docker \
-  quay.io/sysdig/configurator:2.3.0-1.0.0
+  quay.io/sysdig/configurator:2.3.0-1
 ```
 
 ### Full Airgap installation
@@ -210,11 +233,11 @@ registry details updated
   ```
 - Pull image containing self-extracting tar:
 ```bash
-docker pull quay.io/sysdig/configurator:2.3.0-1.0.0-uber
+docker pull quay.io/sysdig/configurator:2.3.0-1-uber
 ```
 - Extract the tarball:
 ```bash
-docker create --name uber_image quay.io/sysdig/configurator:2.3.0-1.0.0-uber
+docker create --name uber_image quay.io/sysdig/configurator:2.3.0-1-uber
 docker cp uber_image:/sysdig_configurator.tar.gz .
 docker rm uber_image
 ```
