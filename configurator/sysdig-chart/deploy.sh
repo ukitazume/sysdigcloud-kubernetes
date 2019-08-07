@@ -24,3 +24,10 @@ then
   "$TEMPLATE_DIR/secure.sh"
 fi
 
+username=$(readConfigFromValuesYaml .sysdig.admin.username "$MANIFESTS/values.yaml")
+password=$(readConfigFromValuesYaml .sysdig.admin.password "$MANIFESTS/secrets-values.yaml")
+dns_name=$(readConfigFromValuesYaml .sysdig.dnsName "$MANIFESTS/values.yaml")
+log notice "Congratulations your sysdig installation was successfull you can now login to the UI at https://$dns_name with:
+
+username: ${username}
+password: ${password}"

@@ -8,6 +8,8 @@ Parameter | Description | Options | Default|
 **sysdig.agentCount** | number of sysdig agents to deploy | - | - |
 **sysdig.license** | sysdig license as provided by the marketing team | - | - |
 **sysdig.dnsName** | Domain name the sysdig api will be served on| - | - |
+sysdig.admin.username | Sysdig Platform super admin user. This will be used for initial login to the web interface. | - | `test@sysdig.com` |
+sysdig.admin.password | Sysdig Platform super admin password. This along with `sysdig.admin.username` will be used for initial login to the web interface. It is auto-generated when not explicitly configured | - | Auto-generated 16 random alphanumeric characters. |
 scripts | defines which scripts needs to be run<br> generate - performs templating & kustomization<br>deploy - applies the generated script in k8s environment| `generate\|deploy\|generate deploy`| `generate deploy` |
 apps | defines applications needed. |`monitor\|monitor secure` | `monitor secure` |
 namespace | namespace to deploy sysdigcloud in | - | `sysdig` |

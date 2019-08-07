@@ -158,10 +158,10 @@ data:
   # found in the file api-ingress.yaml
   api.url: https://{{ .Values.sysdig.dnsName }}:443
   # Required: Sysdig Cloud super admin user. This will be used for the initial login in the web interface
-  sysdigcloud.default.user: {{ .Values.sysdig.default.username }}
+  sysdigcloud.default.user: {{ .Values.sysdig.admin.username }}
   # Required: Sysdig Cloud super admin user password
   # NOTE: Change upon first login
-  sysdigcloud.default.user.password: {{ .Values.sysdig.default.password }}
+  sysdigcloud.default.user.password: {{ .Values.sysdig.admin.password }}
   # Required: Restrict password login to super admin user
   # Force all non-default users to login using the configured IdP
   sysdigcloud.restrict.password.login: "true"
