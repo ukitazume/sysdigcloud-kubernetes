@@ -13,14 +13,16 @@ The following steps only highlight steps specific to the secure Elasticsearch up
         NAMESPACE=<replace-this>
         kubectl -n $NAMESPACE create secret generic ca-certs --from-file=generated_elasticsearch_certs
 
-3. Generate the password secrets for the admin/readonly searchguard roles.
+3. Change the `password` secret values for the admin/readonly searchguard roles in: `datastores/as_kubernetes_pods/manifests/elasticsearch/sg_users`. You can use the following command to generate a secure password:
 
-        SG_ADMIN_PASSWORD=$(date +%s | sha256sum | base64 | head -c 16)
-        SG_READONLY_PASSWORD=$(date | sha256sum | base64 | head -c 16)
-        kubectl -n $NAMESPACE create secret generic sg-admin-secret --from-literal=password=$SG_ADMIN_PASSWORD
-        kubectl -n $NAMESPACE create secret generic sg-readonly-secret --from-literal=password=$SG_READONLY_PASSWORD
+        LC_CTYPE=C tr -dc A-Za-z0-9 < /dev/urandom | head -c 32
 
-4. Create Searchguard config files.
+4. Apply the `sg_users` files. Note: if you are saving these in source-control, please ensure they are secured (e.g. encrypted).
+
+        kubectl -n $NAMESPACE apply -f datastores/as_kubernetes_pods/manifests/elasticsearch/sg_users/sg_admin_secret.yml
+        kubectl -n $NAMESPACE apply -f datastores/as_kubernetes_pods/manifests/elasticsearch/sg_users/sg_readonly_secret.yml
+
+4. Create Searchguard configs secret.
 
         kubectl -n $NAMESPACE create secret generic sg-config-files --from-file=datastores/as_kubernetes_pods/manifests/elasticsearch/sgconfig
 
