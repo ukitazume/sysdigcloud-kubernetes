@@ -41,7 +41,7 @@ if [ -f "$GENERATED_SECRET_FILE" ]; then
     log info "$SECRET_FILE exists"
 else
     log info "Secret file does not exist. Creating Secretfile"
-    helm template -f "$TEMPLATE_DIR/defaultValues.yaml" -x "templates/$SECRET_FILE" "$TEMPLATE_DIR/secret-generator" > "$GENERATED_SECRET_FILE"
+    helm template -f "$TEMPLATE_DIR/defaultValues.yaml" -f "$VALUES_FILE" -x "templates/$SECRET_FILE" "$TEMPLATE_DIR/secret-generator" > "$GENERATED_SECRET_FILE"
 fi
 
 log info "step3.5: creating elasticsearch certs for Searchguard"
