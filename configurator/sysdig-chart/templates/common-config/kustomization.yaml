@@ -14,6 +14,13 @@ secretGenerator:
   files:
     - tls.crt=certs/server.crt
     - tls.key=certs/server.key
+{{- if ne "" (.Values.sysdig.collector.dnsName | default "") }}
+- name: collector-ssl-secret
+  namespace: {{ .Values.namespace }}
+  files:
+    - tls.crt=certs/collector.crt
+    - tls.key=certs/collector.key
+{{- end }}
 - name: sysdigcloud-java-certs
   namespace: {{ .Values.namespace }}
   files:

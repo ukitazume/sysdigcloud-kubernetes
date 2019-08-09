@@ -29,5 +29,9 @@ spec:
             path: /api/scanning
   tls:
     - hosts:
-        - {{ .Values.sysdig.dnsName }}
+        - {{ or .Values.sysdig.collector.dnsName .Values.sysdig.dnsName }}
+      {{- if eq "" (.Values.sysdig.collector.dnsName | default "") }}
       secretName: sysdigcloud-ssl-secret
+      {{- else }}
+      secretName: collector-ssl-secret
+      {{- end }}

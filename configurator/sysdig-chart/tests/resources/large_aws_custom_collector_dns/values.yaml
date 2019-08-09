@@ -1,0 +1,30 @@
+#defines which scripts needs to be run
+#generate - performs templating & kustomization
+#deploy   - apply's the generated script in k8s environment
+scripts: generate
+#Size of the cluster. Takes [ small | medium | large ]
+#This defines CPU & Memory & Disk & Replicas
+#Replicas can be overwritten for medium , large in advanced   config section
+size: large
+#Set Quay.Io secrets
+quaypullsecret: foo
+#Sysdig application config
+sysdig:
+  #Set Sysdig license
+  license: foobar
+  dnsName: foo.bar.com
+  collector:
+    dnsName: collector.bar.com
+    certificate:
+      generate: true
+      crt:
+      key:
+  #SMTP Configurations
+  smtpServerPort: 25
+  #User,Password can be empty if the server does not require authentication
+  smtpUser: foo
+  smtpPassword: bar
+  smtpProtocolTLS: false
+  smtpProtocolSSL: false
+  #Optional Email Header
+  smtpFromAddress: foo@bar.com

@@ -35,6 +35,10 @@ oc adm policy add-scc-to-user anyuid -n "${NAMESPACE}" -z default
 oc adm policy add-scc-to-user privileged -n "${NAMESPACE}" -z default
 
 DNS_NAME=$(readConfigFromValuesYaml .sysdig.dnsName "$TEMPLATE_DIR/values.yaml")
+COLLECTOR_DNS_NAME=$(readConfigFromValuesYaml .sysdig.collectorDNSName "$TEMPLATE_DIR/values.yaml")
+if [[ "$COLLECTOR_DNS_NAME" == null ]]; then
+  COLLECTOR_DNS_NAME=collector-"$DNS_NAME"
+fi
 
 if oc get route sysdigcloud-api; then
   log info "Route sysdigcloud-api exists."
@@ -55,5 +59,5 @@ else
   oc create route passthrough sysdigcloud-collector \
     --service sysdigcloud-collector \
     --port=6443 \
-    --hostname=collector-"${DNS_NAME}"
+    --hostname="${COLLECTOR_DNS_NAME}"
 fi

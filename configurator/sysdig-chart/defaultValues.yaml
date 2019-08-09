@@ -62,6 +62,12 @@ sysdig:
   #Optional Email Header
   smtpFromAddress:
   collectorPort: 6443
+  collector:
+    dnsName:
+    certificate:
+      generate: true
+      crt:
+      key:
 hostPathCustomPaths:
   cassandra: /var/lib/cassandra
   elasticsearch: /usr/share/elasticsearch

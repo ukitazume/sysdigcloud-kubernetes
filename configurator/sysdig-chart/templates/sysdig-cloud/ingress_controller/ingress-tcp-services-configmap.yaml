@@ -5,4 +5,8 @@ metadata:
   name: haproxy-tcp-services
   namespace: {{ .Values.namespace }}
 data:
+{{- if eq "" (.Values.sysdig.collector.dnsName | default "") }}
   "{{ .Values.sysdig.collectorPort | default 6443 }}": {{ .Values.namespace }}/sysdigcloud-collector:6000:::{{ .Values.namespace }}/sysdigcloud-ssl-secret
+{{- else }}
+  "{{ .Values.sysdig.collectorPort | default 6443 }}": {{ .Values.namespace }}/sysdigcloud-collector:6000:::{{ .Values.namespace }}/collector-ssl-secret
+{{- end }}

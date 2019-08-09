@@ -151,7 +151,7 @@ data:
   ####################################
   # Required: Collector service endpoint is the FQDN which should match the <EXTERNAL-DNS-NAME>
   # found in the file api-ingress.yaml
-  collector.endpoint: {{ .Values.sysdig.dnsName }}
+  collector.endpoint: {{ or .Values.sysdig.collector.dnsName .Values.sysdig.dnsName }}
   # Required: Collector port. If using a LoadBalancer service for the collector, the port can be left as the default.
   collector.port: "6443"
   # Required: Api service https URL is the URL using the FQDN which should match the <EXTERNAL-DNS-NAME>

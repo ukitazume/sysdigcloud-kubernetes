@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# shellcheck source=/dev/null
 # Allow files generated in container be modifiable by host user
 umask 000
 
@@ -11,6 +12,78 @@ source "$DIR/shared-values.sh"
 
 set -euo pipefail
 source "${TEMPLATE_DIR}/framework.sh"
+
+function process_certs() {
+  local generate_certificate=$1
+  local generated_key=$2
+  local generated_crt=$3
+  local crt_file=$4
+  local key_file=$5
+  local dns_name=$6
+  if [ "$generate_certificate" = "true" ]; then
+    if [[ -f $generated_key && -f $generated_crt ]]; then
+      log info "Certificates are present. Copying the existing certs"
+    else
+      log info "Generating new certificate"
+      openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 -subj "/C=US/ST=CA/L=SanFrancisco/O=ICT/CN=$dns_name" -keyout "$generated_key" -out "$generated_crt"
+    fi
+    cp "$generated_key" "$generated_crt" "$MANIFESTS_TEMPLATE_BASE/common-config/certs/"
+  else
+    log info "Using provided certificates at crt:$crt_file key:$key_file"
+    if [[ -f $crt_file && -f $key_file ]]; then
+      cp "$crt_file" "$MANIFESTS_TEMPLATE_BASE/common-config/certs/$(basename "$generated_crt")"
+      cp "$key_file" "$MANIFESTS_TEMPLATE_BASE/common-config/certs/$(basename "$generated_key")"
+    else
+      log error "Cannot find certificate files. Exiting"
+      exit 2
+    fi
+  fi
+}
+
+function validate_cert() {
+  local dns_name=$1
+  local server_cert=$2
+  # credit:
+  # https://unix.stackexchange.com/questions/103461/get-common-name-cn-from-ssl-certificate#comment283029_103464
+  local common_name
+  common_name=$(openssl x509 -noout -subject -in "$server_cert" | sed -e \
+    's/^subject.*CN\s*=\s*\([a-zA-Z0-9\.\-]*\).*$/\1/' | tr -d ' ')
+
+  set +e #disable exit on error for expr
+  if [[ "$dns_name" != "$common_name" ]]; then
+    # check that it is a wildcard common name and it matches the domain
+    if expr "$common_name" : '.*\*' && \
+      expr "$dns_name" : "${common_name//\*/.*}"; then
+      log info "Certificate's common name '${common_name}' is a wildcard cert that
+      matches domain name: ${dns_name}"
+    else
+      log info "Certificate's common name '${common_name}' does not match domain
+      ${dns_name}, checking alternate name"
+      IFS=', ' array=$(openssl x509 -noout -ext subjectAltName -in "$server_cert" | tail -n1)
+      match="false"
+      alt_dNS_NAME="DNS:${dns_name}"
+      for domain in ${array}; do
+      # example line: DNS:foo.bar.baz.com
+        if [[ "$alt_dNS_NAME" == "$domain" ]]; then
+          match="true"
+          break
+        fi
+        if expr "$domain" : '.*\*' && \
+          expr "$alt_dNS_NAME" : "${domain//\*/.*}"; then
+          match="true"
+          break
+        fi
+      done
+
+      if [[ $match == "false" ]]; then
+        log error "Certificate's common name or alternate names do not match domain name
+        ${dns_name}"
+        exit 2
+      fi
+    fi
+  fi
+  set -e #re-enable exit on error
+}
 
 #apps selection
 APPS=$(readConfigFromValuesYaml .apps "$VALUES_FILE")
@@ -62,81 +135,37 @@ else
   helm template -f "$TEMPLATE_DIR/defaultValues.yaml" -f "$GENERATED_SECRET_FILE" -f "$TEMPLATE_DIR/values.yaml" -f "$VALUES_FILE" --output-dir "$MANIFESTS" "$TEMPLATE_DIR"
 fi
 
-find "$MANIFESTS/$TEMPLATE_DIR" -type d -print0 | xargs -0 chmod 0777
-find "$MANIFESTS/$TEMPLATE_DIR" -type f -print0 | xargs -0 chmod 0666
-
 MANIFESTS_TEMPLATE_BASE="$MANIFESTS/$TEMPLATE_DIR/templates"
-GENERATE_CERTIFICATE=$(readConfigFromValuesYaml .sysdig.certificate.generate "$VALUES_FILE")
-GENERATED_CRT=$MANIFESTS/certs/server.crt
-GENERATED_KEY=$MANIFESTS/certs/server.key
-DNS_NAME=$(readConfigFromValuesYaml .sysdig.dnsName "$VALUES_FILE")
 
 mkdir "$MANIFESTS_TEMPLATE_BASE/common-config/certs"
 if [ ! -d "$MANIFESTS/certs" ]; then
   log info "Making certs manifests dir"
   mkdir "$MANIFESTS/certs"
 fi
-if [ "$GENERATE_CERTIFICATE" = "true" ]; then
-  if [[ -f $GENERATED_KEY && -f $GENERATED_CRT ]]; then
-    log info "Certificates are present. Copying the existing certs"
-  else
-    log info "Generating new certificate"
-    openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 -subj "/C=US/ST=CA/L=SanFrancisco/O=ICT/CN=$DNS_NAME" -keyout "$GENERATED_KEY" -out "$GENERATED_CRT"
-  fi
-  cp "$GENERATED_KEY" "$GENERATED_CRT" "$MANIFESTS_TEMPLATE_BASE/common-config/certs/"
+
+
+GENERATE_CERTIFICATE=$(readConfigFromValuesYaml .sysdig.certificate.generate "$VALUES_FILE")
+GENERATE_COLLECTOR_CERTIFICATE=$(readConfigFromValuesYaml .sysdig.collector.certificate.generate "$VALUES_FILE")
+GENERATED_CRT=$MANIFESTS/certs/server.crt
+SUPPLIED_CRT="$MANIFESTS/$(readConfigFromValuesYaml .sysdig.certificate.crt "$VALUES_FILE")"
+GENERATED_KEY=$MANIFESTS/certs/server.key
+SUPPLIED_KEY="$MANIFESTS/$(readConfigFromValuesYaml .sysdig.certificate.key "$VALUES_FILE")"
+COLLECTOR_CRT=$MANIFESTS/certs/collector.crt
+SUPPLIED_COLLECTOR_CRT="$MANIFESTS/$(readConfigFromValuesYaml .sysdig.collector.certificate.crt "$VALUES_FILE")"
+COLLECTOR_KEY=$MANIFESTS/certs/collector.key
+SUPPLIED_COLLECTOR_KEY="$MANIFESTS/$(readConfigFromValuesYaml .sysdig.collector.certificate.key "$VALUES_FILE")"
+DNS_NAME=$(readConfigFromValuesYaml .sysdig.dnsName "$VALUES_FILE")
+COLLECTOR_DNS_NAME=$(readConfigFromValuesYaml .sysdig.collector.dnsName "$VALUES_FILE")
+
+process_certs "$GENERATE_CERTIFICATE" "$GENERATED_KEY" "$GENERATED_CRT" "$SUPPLIED_CRT" "$SUPPLIED_KEY" "$DNS_NAME"
+validate_cert "$DNS_NAME" "$MANIFESTS_TEMPLATE_BASE/common-config/certs/$(basename "$GENERATED_CRT")"
+
+if [[ "$COLLECTOR_DNS_NAME" == null ]]; then
+  log info "Collector domain not supplied"
 else
-  CRT_FILE="$MANIFESTS/$(readConfigFromValuesYaml .sysdig.certificate.crt "$VALUES_FILE")"
-  KEY_FILE="$MANIFESTS/$(readConfigFromValuesYaml .sysdig.certificate.key "$VALUES_FILE")"
-  log info "Using provided certificates at crt:$CRT_FILE key:$KEY_FILE"
-  if [[ -f $CRT_FILE && -f $KEY_FILE ]]; then
-    cp "$CRT_FILE" "$MANIFESTS_TEMPLATE_BASE/common-config/certs/server.crt"
-    cp "$KEY_FILE" "$MANIFESTS_TEMPLATE_BASE/common-config/certs/server.key"
-  else
-    log error "Cannot find certificate files. Exiting"
-    exit 2
-  fi
+  process_certs "$GENERATE_COLLECTOR_CERTIFICATE" "$COLLECTOR_KEY" "$COLLECTOR_CRT" "$SUPPLIED_COLLECTOR_CRT" "$SUPPLIED_COLLECTOR_KEY" "$COLLECTOR_DNS_NAME"
+  validate_cert "$COLLECTOR_DNS_NAME" "$MANIFESTS_TEMPLATE_BASE/common-config/certs/$(basename "$COLLECTOR_CRT")"
 fi
-
-SERVER_CERT=$MANIFESTS_TEMPLATE_BASE/common-config/certs/server.crt
-# credit:
-# https://unix.stackexchange.com/questions/103461/get-common-name-cn-from-ssl-certificate#comment283029_103464
-COMMON_NAME=$(openssl x509 -noout -subject -in "$SERVER_CERT" | sed -e \
-  's/^subject.*CN\s*=\s*\([a-zA-Z0-9\.\-]*\).*$/\1/' | tr -d ' ')
-
-set +e #disable exit on error for expr
-if [[ "$DNS_NAME" != "$COMMON_NAME" ]]; then
-  # check that it is a wildcard common name and it matches the domain
-  if expr "$COMMON_NAME" : '.*\*' && \
-    expr "$DNS_NAME" : "${COMMON_NAME//\*/.*}"; then
-    log info "Certificate's common name '${COMMON_NAME}' is a wildcard cert that
-    matches domain name: ${DNS_NAME}"
-  else
-    log info "Certificate's common name '${COMMON_NAME}' does not match domain
-    ${DNS_NAME}, checking alternate name"
-    IFS=', ' array=$(openssl x509 -noout -ext subjectAltName -in "$SERVER_CERT" | tail -n1)
-    MATCH="false"
-    ALT_DNS_NAME="DNS:${DNS_NAME}"
-    for domain in ${array}; do
-    # example line: DNS:foo.bar.baz.com
-      if [[ "$ALT_DNS_NAME" == "$domain" ]]; then
-        MATCH="true"
-        break
-      fi
-      if expr "$domain" : '.*\*' && \
-        expr "$ALT_DNS_NAME" : "${domain//\*/.*}"; then
-        MATCH="true"
-        break
-      fi
-    done
-
-    if [[ $MATCH == "false" ]]; then
-      log error "Certificate's common name or alternate names do not match domain name
-      ${DNS_NAME}"
-      exit 2
-    fi
-  fi
-fi
-set -e #re-enable exit on error
 
 CUSTOM_CA=$(yq -r .sysdig.customCa "$TEMPLATE_DIR/values.yaml")
 if [[ $CUSTOM_CA == "true" ]]; then
@@ -213,3 +242,7 @@ if [[ ${SECURE} == "true" ]]; then
 else
   log info "skipping step 9: genrating secure yaml - needed only for secure"
 fi
+
+find "$MANIFESTS/$TEMPLATE_DIR" -type d -print0 | xargs -0 chmod 0777
+find "$MANIFESTS/$TEMPLATE_DIR" -type f -print0 | xargs -0 chmod 0666
+
