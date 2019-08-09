@@ -51,10 +51,11 @@ sysdig.openshiftUser | specifies openshift username, this is required if `deploy
 sysdig.openshiftPassword | specifies openshift password, this is required if `deployment` is `openshift` | - | - |
 sysdig.collectorPort | sepecify alternative collector port | `1024-65535` | `6443` |
 sysdig.customCa | expects certs/custom-ca.pem in manifets folder, adds it to java's trusted list | - | - |
-sysdig.monitorVersion | Version of the sysdig monitor | - | `2363` |
-sysdig.anchoreVersion | Version of the sysdig anchore | - | `v0.3.4.1` |
+sysdig.monitorVersion | Version of the sysdig monitor | - | `2.3.0.2461` |
+sysdig.anchoreVersion | Version of the sysdig anchore | - | `v0.4.1.1` |
 sysdig.cassandraVersion | Version of Cassandra run by sysdig cloud | - | `2.1.21.13` |
-sysdig.elasticsearchVersion | Version of ElasticSearch run by sysdig cloud | - | `5.6.44.0` |
+sysdig.elasticsearchVersion | Version of ElasticSearch run by sysdig cloud | - | `5.6.16.5` |
+sysdig.mysqlVersion | Version of mysql run by sysdig cloud | - | `5.6.44.0` |
 sysdig.postgresVersion | Version of PostgreSQL run by sysdig cloud | - | `10.6.10` |
 sysdig.redisVersion | Version of Redis run by sysdig cloud | - | `4.0.12.5` |
 sysdig.redisHaVersion | Version of HA Redis run by sysdig cloud | - | `4.0.12.5-ha` |
