@@ -45,6 +45,8 @@ The rationale for the workflow is it helps the code reviewers to see the
 effect(s) of the changes introduced, it also helps exercise the config
 generation workflow.
 
+## Releasing
+
 ### Versioning
 
 The Configurator versioning scheme is as below:
@@ -68,6 +70,64 @@ installations](#full-airgap-installation) the versioning scheme is:
 For release candidates the version is:
 
 <next_configurator_version>-rc-<JENKINS_BUILD_NUMBER>
+
+### Release Candidates
+
+On every successful build of the main branch, Jenkins tags a release candidate
+version matching `<next_release_tag>-rc<$JENKINS_BUILD_NUMBER>` and pushes
+the git tag, and a docker image matching the git tag.
+
+### Full Release
+
+The workflow for doing a full (non-rc) release is as below:
+
+- Change `configurator/next_version` to the new tag to be released, for
+example if the new tag is `2.3.0-2`, do as below:
+```bash
+echo -n 2.3.0-2 > next_version
+```
+- Commit the change, e.g: `git commit -am 'Bumping version to 2.3.0-2'`
+- Push the change: `git push`
+- Submit a PR and get the PR merged
+- Wait for Jenkins to complete build of the main branch including your last
+commit.
+- Request that no one merges to the main branch till you are done releasing.
+- Once Jenkins is done building and has pushed the docker image and git tag,
+checkout to the last release candidate tag built by Jenkins, e.g:
+```bash
+git checkout 2.3.0-2-rc${REPLACE_WITH_JENKINS_BUILD_NUMBER}
+```
+- Read the diff of changes from the last release
+```bash
+git diff $(cat configurator/current_version)..
+```
+- Create a new release tag, e.g:
+```bash
+git tag -F <(git log --oneline $(cat configurator/current_version)..) $(cat configurator/next_version)
+git push origin refs/tags/"$(cat configurator/next_version)"
+```
+- Go the Jenkins UI and click the build now button for the new tag (this will
+not be necessary when we move to the new Jenkins).
+- Wait for the Jenkins build for the new tag to complete successfully.
+- Update every part of the README.md(this file) that indicates a version to
+indicate the latest release tag.
+- Update the internal wiki instructions pointing at the latest release.
+- Update `configurator/current_version` to reflect the new tag, e.g:
+```
+cat configurator/next_version > configurator/current_version
+```
+- Increment the number after the hypen e.g `1` in `2.3.0-2` by `1` and update
+the `configurator/next_version` file, this is hypothetically the next future
+version, e.g:
+```bash
+echo -n 2.3.0-3 > configurator/next_version
+```
+- Commit the changes
+```bash
+git commit -am "Tagged 2.3.0-2"
+```
+- Push the change and submit a PR.
+
 ## Usage
 
 ### Quickstart
@@ -117,7 +177,7 @@ so you do not have to worry about authenticated access to quay.io.
 
 - Network access to Kubernetes cluster
 - Docker
-- Edited [sysdig-chart/values.yaml](sysdig-chart/values.yaml) 
+- Edited [sysdig-chart/values.yaml](sysdig-chart/values.yaml)
 
 #### Workflow
 
