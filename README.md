@@ -1,4 +1,4 @@
-# sdc-kubernetes: Sysdig Pro Software deployment on Kubernetes
+# sdc-kubernetes: Sysdig Platform deployment on Kubernetes
 
 [Sysdig](https://sysdig.com/) is the the first unified approach to container security, monitoring and forensics.
 

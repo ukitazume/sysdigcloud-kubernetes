@@ -39,7 +39,7 @@ spec:
             topologyKey: kubernetes.io/hostname
       containers:
         - name: elasticsearch
-          image: quay.io/sysdig/elasticsearch:5.6.16.2
+          image: quay.io/sysdig/elasticsearch:5.6.16.7
           securityContext:
             privileged: true
           ## Recommended resource limits for Elasticsearch pods.
@@ -77,21 +77,21 @@ spec:
                   name: sysdigcloud-config
                   key: elasticsearch.user
             ## If enabling elasticsearch auth, uncomment ADMIN_PASSWORD, READONLY_PASSWORD, and READONLY_PASSWORD env var sections
-            #- name: ADMIN_PASSWORD
-              #valueFrom:
-                #secretKeyRef:
-                  #name: sg-admin-secret
-                  #key: password
-            #- name: READONLY_PASSWORD
-              #valueFrom:
-                #secretKeyRef:
-                  #name: sg-readonly-secret
-                  #key: password
-            #- name: SG_PASSWORD
-              #valueFrom:
-                #secretKeyRef:
-                  #name: sg-admin-secret
-                  #key: password
+            # - name: ADMIN_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: sg-admin-secret
+            #       key: password
+            # - name: READONLY_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: sg-readonly-secret
+            #       key: password
+            # - name: SG_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: sg-admin-secret
+            #       key: password
           readinessProbe:
             exec:
               command:
@@ -104,22 +104,22 @@ spec:
             - mountPath: /usr/share/elasticsearch/data
               name: data
             ## If enabling elasticsearch auth, uncomment tool-cert and sg-config volume mounts
-            #- mountPath: /tmp/elasticsearch-certs/
-              #name: tool-cert
-            #- mountPath: /tmp/sgconfig/
-              #name: sg-config
+            # - mountPath: /tmp/elasticsearch-certs/
+            #   name: tool-cert
+            # - mountPath: /tmp/sgconfig/
+            #   name: sg-config
       imagePullSecrets:
         - name: sysdigcloud-pull-secret
       volumes:
       ## If enabling elasticsearch auth, uncomment tool-cert and sg-config volumes
-      #- name: tool-cert
-        #secret:
-          #secretName: ca-certs
-          #defaultMode: 256
-      #- name: sg-config
-        #secret:
-          #secretName: sg-config-files
-          #defaultMode: 256
+      # - name: tool-cert
+      #   secret:
+      #     secretName: ca-certs
+      #     defaultMode: 256
+      # - name: sg-config
+      #   secret:
+      #     secretName: sg-config-files
+      #     defaultMode: 256
   volumeClaimTemplates:
     - metadata:
         name: data

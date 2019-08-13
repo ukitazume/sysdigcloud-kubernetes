@@ -25,7 +25,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
         - name: redis-secondary
-          image: quay.io/sysdig/redis:4.0.12.4-ha
+          image: quay.io/sysdig/redis:4.0.12.5-ha
           imagePullPolicy: Always
           env:
             - name: REDIS_PASSWORD
