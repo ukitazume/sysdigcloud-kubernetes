@@ -73,22 +73,24 @@ spec:
                 configMapKeyRef:
                   name: sysdigcloud-config
                   key: elasticsearch.hostname
-            ## Uncomment the next 3 env vars starting AUDIT_EVENTS_ with if you need to enable Audit Events logging
-            #- name: AUDIT_EVENTS_STORAGE_TYPE
-            #  valueFrom:
-            #    configMapKeyRef:
-            #      name: sysdigcloud-config
-            #      key: audit.events.storage.type
-            #- name: AUDIT_EVENTS_RETENTION_DAYS
-            #  valueFrom:
-            #    configMapKeyRef:
-            #      name: sysdigcloud-config
-            #      key: audit.events.retention.days
-            #- name: AUDIT_EVENTS_MAX_EVENTS_PER_DAY
-            #  valueFrom:
-            #    configMapKeyRef:
-            #      name: sysdigcloud-config
-            #      key: audit.events.max.events.per.day
+            - name: AUDIT_EVENTS_STORAGE_TYPE
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: audit.events.storage.type
+                  optional: true
+            - name: AUDIT_EVENTS_RETENTION_DAYS
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: audit.events.retention.days
+                  optional: true
+            - name: AUDIT_EVENTS_MAX_EVENTS_PER_DAY
+              valueFrom:
+                configMapKeyRef:
+                  name: sysdigcloud-config
+                  key: audit.events.max.events.per.day
+                  optional: true
             ## If enabling elasticsearch auth, uncomment ES_SEARCHGUARD_USER, ES_SEARCHGUARD_ENABLED, and ES_SEARCHGUARD_PASSWORD env vars
             # - name: ES_SEARCHGUARD_USER
             #   valueFrom:
