@@ -205,7 +205,7 @@ data:
   # anchore.no.proxy: 127.0.0.1, localhost, sysdigcloud-anchore-core
   
   ####################################
-  # SCANNING and ANCHORE #
+  # AUDIT EVENTS LOGGING #
   ####################################
   # The following settings are needed for configuring AUDIT EVENTS LOGGING
   audit.events.storage.type: "MYSQL"
