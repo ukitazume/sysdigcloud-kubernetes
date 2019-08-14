@@ -30,7 +30,7 @@ spec:
             secretName: anchore-enterprise-license
       containers:
         - name: anchore-reports
-          image: quay.io/sysdig/anchore-reports:v0.4.1.1
+          image: quay.io/sysdig/anchore-enterprise:v0.4.1
           imagePullPolicy:
           command: ["/usr/local/bin/anchore-enterprise-manager"]
           args: ["service", "start", "reports"]
