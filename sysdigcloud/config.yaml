@@ -203,6 +203,14 @@ data:
   # anchore.worker.https.proxy: https://user:password@proxy.corp.example2.com:8128
   #
   # anchore.no.proxy: 127.0.0.1, localhost, sysdigcloud-anchore-core
+  
+  ####################################
+  # AUDIT EVENTS LOGGING #
+  ####################################
+  # The following settings are needed for configuring AUDIT EVENTS LOGGING
+  audit.events.storage.type: "MYSQL"
+  audit.events.retention.days: "14"
+  audit.events.max.events.per.day: "1000"
 
   ####################################
   # ======= BEGIN DEPRECATED LDAP OPTIONS =======
