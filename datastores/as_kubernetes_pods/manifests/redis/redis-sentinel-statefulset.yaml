@@ -24,7 +24,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: redis-sentinel
-        image: quay.io/sysdig/redis:4.0.12.6-ha
+        image: quay.io/sysdig/redis:4.0.12.7-ha
         imagePullPolicy: Always
         env:
         - name: SENTINEL
