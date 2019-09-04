@@ -54,7 +54,8 @@ sg_readonly:
   indices:
     '*':
       '*':
-        - INDICES_ALL
+        - READ
+        - INDICES_MONITOR
 
 # Allows each user to access own named index
 sg_own_index:
