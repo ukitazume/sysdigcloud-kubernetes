@@ -112,7 +112,7 @@ spec:
         #   valueFrom:
         #     configMapKeyRef:
         #       name: sysdigcloud-config
-        #       key: anchore.no_proxy
+        #       key: anchore.no.proxy
         volumeMounts:
         - name: config-volume
           mountPath: /config

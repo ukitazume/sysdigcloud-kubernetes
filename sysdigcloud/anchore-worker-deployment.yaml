@@ -99,7 +99,7 @@ spec:
         #   valueFrom:
         #     configMapKeyRef:
         #       name: sysdigcloud-config
-        #       key: anchore.no_proxy
+        #       key: anchore.no.proxy
         ports:
         - name: analyzer-api
           containerPort: 8084
