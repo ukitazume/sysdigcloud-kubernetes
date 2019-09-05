@@ -209,8 +209,8 @@ data:
   ####################################
   # The following settings are needed for configuring AUDIT EVENTS LOGGING
   audit.events.storage.type: "MYSQL"
-  audit.events.retention.days: 14
-  audit.events.max.events.per.day: 100000
+  audit.events.retention.days: "14"
+  audit.events.max.events.per.day: "100000"
 
   ####################################
   # ======= BEGIN DEPRECATED LDAP OPTIONS =======
