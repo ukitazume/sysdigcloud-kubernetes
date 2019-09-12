@@ -12,20 +12,20 @@ spec:
         app: redis-primary
     spec:
       affinity:
-       podAntiAffinity:
-         requiredDuringSchedulingIgnoredDuringExecution:
-         - labelSelector:
-             matchExpressions:
-             - key: app
-               operator: In
-               values:
-               - redis-secondary
-               - redis-primary
-           topologyKey: "kubernetes.io/hostname"
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - redis-secondary
+                      - redis-primary
+              topologyKey: "kubernetes.io/hostname"
       terminationGracePeriodSeconds: 10
       containers:
         - name: redis-primary
-          image: quay.io/sysdig/redis:4.0.12.7-ha
+          image: quay.io/sysdig/redis:4.0.12.8-ha
           env:
             - name: REDIS_PASSWORD
               valueFrom:

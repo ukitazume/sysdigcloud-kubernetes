@@ -31,15 +31,15 @@ spec:
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: affinity
-                operator: In
-                values:
-                - cassandra
-            topologyKey: kubernetes.io/hostname
+            - labelSelector:
+                matchExpressions:
+                  - key: affinity
+                    operator: In
+                    values:
+                      - cassandra
+              topologyKey: kubernetes.io/hostname
       containers:
-        - image: quay.io/sysdig/cassandra:2.1.21.14
+        - image: quay.io/sysdig/cassandra:2.1.21.15
           name: cassandra
           env:
             - name: CASSANDRA_SERVICE
