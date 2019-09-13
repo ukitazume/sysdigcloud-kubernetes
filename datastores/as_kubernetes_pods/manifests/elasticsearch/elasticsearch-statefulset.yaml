@@ -30,13 +30,13 @@ spec:
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: affinity
-                    operator: In
-                    values:
-                      - elasticsearch
-              topologyKey: kubernetes.io/hostname
+          - labelSelector:
+              matchExpressions:
+              - key: affinity
+                operator: In
+                values:
+                - elasticsearch
+            topologyKey: kubernetes.io/hostname
       containers:
         - name: elasticsearch
           image: quay.io/sysdig/elasticsearch:5.6.16.14
