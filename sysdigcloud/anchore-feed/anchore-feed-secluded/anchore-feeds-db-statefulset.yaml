@@ -51,7 +51,7 @@ spec:
               topologyKey: "kubernetes.io/hostname"
       containers:
       - name: postgresql
-        image: quay.io/sysdig/postgres:10.6.10
+        image: quay.io/sysdig/postgres:10.6.11
         resources: {}
         volumeMounts:
         - name: anchore-feeds-data

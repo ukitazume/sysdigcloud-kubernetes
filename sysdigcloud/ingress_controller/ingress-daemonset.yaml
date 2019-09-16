@@ -21,7 +21,7 @@ spec:
       containers:
         # When we upgrade to an ingress controller with HAProxy 1.9 we should
         # remove this and use HAProxy's logging to stdout functionality
-        - image: "quay.io/sysdig/rsyslog:8.34.0.5"
+        - image: "quay.io/sysdig/rsyslog:8.34.0.6"
           imagePullPolicy: Always
           name: rsyslog-server
           resources:
